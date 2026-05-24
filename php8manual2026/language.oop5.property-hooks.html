@@ -1,0 +1,414 @@
+    <!DOCTYPE HTML>
+    <html>
+     <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <style>
+        .navbar__local {
+          flex-grow: 1;
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr min-content 1fr;
+          margin: 0;
+          height: 100%;
+          
+          .navbar__item {
+            align-content: center;
+          }
+          .navbar__link {
+            display: inline;
+          }
+          .search {
+            text-align: center;
+          }
+          .next {
+            text-align: right;
+          }
+        }
+      </style>
+      <title>属性挂钩</title>
+      <link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-base.css" />
+<link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-medium.css" />
+
+     </head>
+     <body class="docs">    <div class="navbar navbar-fixed-top">
+      <div class="navbar__inner clearfix">
+          <ul class="navbar__local">
+            <li class="navbar__item prev"><a href="language.oop5.properties.html" class="navbar__link">« 属性</a></li>
+            <li class="navbar__item search">
+              <!-- Desktop encanced search -->
+              <button
+                id="navbar__search-button"
+                class="navbar__search-button"
+                hidden
+              >
+                    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        width="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+                Search
+              </button>
+            </li>
+            <li class="navbar__item next"><a href="language.oop5.constants.html" class="navbar__link">类常量 »</a></li>
+          </ul>
+      </div>
+    </div>    <div id="breadcrumbs" class="clearfix">
+      <ul class="breadcrumbs-container">
+        <li><a href="index.html">PHP Manual</a></li>
+        <li><a href="language.oop5.html">类与对象</a></li>
+        <li>属性挂钩</li>
+      </ul>
+    </div>    <div id="layout">
+      <div id="layout-content"><div id="language.oop5.property-hooks" class="sect1">
+ <h2 class="title">属性挂钩</h2>
+
+ <p class="simpara">
+  属性挂钩在某些其他语言中也被称为&quot;属性访问器&quot;，是一种拦截和覆盖属性读写行为的方式。此功能有两个用途：
+ </p>
+ <ol type="1">
+  <li class="listitem">
+   <span class="simpara">
+    允许直接使用属性，而不需要 get 和 set 方法，同时保留在未来添加额外行为的可能性。这使得大多数样板式的 get/set 方法变得不再必要，即使不使用挂钩也是如此。
+   </span>
+  </li>
+  <li class="listitem">
+   <span class="simpara">
+    允许属性描述对象而不需要直接存储值。
+   </span>
+  </li>
+ </ol>
+ <p class="simpara">
+  非静态属性有两个可用的挂钩：<code class="literal">get</code> 和 <code class="literal">set</code>，分别用于覆盖属性的读取和写入行为。挂钩可用于有类型和无类型的属性。
+ </p>
+ <p class="simpara">
+  属性可以是&quot;backed&quot;（有后备存储）或&quot;virtual&quot;（虚拟的）。backed 属性是实际存储值的属性，任何没有挂钩的属性都是 backed 属性。虚拟属性是具有挂钩且这些挂钩不与属性本身交互的属性。在这种情况下，挂钩实际上等同于方法，对象不会为该属性使用任何内存空间来存储值。
+ </p>
+ <p class="simpara">
+  属性挂钩与 <code class="literal">readonly</code> 属性不兼容。如果需要在更改行为的同时限制对 <code class="literal">get</code> 或 <code class="literal">set</code> 操作的访问，请使用<a href="language.oop5.visibility.html#language.oop5.visibility-members-aviz" class="link">非对称属性可见性</a>。
+ </p>
+
+ <blockquote class="note"><p><strong class="note">注意</strong>: 
+  <strong>版本信息</strong><br />
+  <span class="simpara">
+   属性挂钩在 PHP 8.4 中引入。
+  </span>
+ </p></blockquote>
+
+ <div class="sect2">
+  <h3 class="title">基本挂钩语法</h3>
+  <p class="simpara">
+   声明挂钩的通用语法如下。
+  </p>
+  <div class="example" id="example-1">
+   <p><strong>示例 #1 属性挂钩（完整版本）</strong></p>
+   <div class="example-contents">
+<div class="annotation-interactive phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Example<br /></span><span style="color: #007700">{<br />    private </span><span style="color: #0000BB">bool $modified </span><span style="color: #007700">= </span><span style="color: #0000BB">false</span><span style="color: #007700">;<br /><br />    public </span><span style="color: #0000BB">string $foo </span><span style="color: #007700">= </span><span style="color: #DD0000">'default value' </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">get </span><span style="color: #007700">{<br />            if (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">modified</span><span style="color: #007700">) {<br />                return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foo </span><span style="color: #007700">. </span><span style="color: #DD0000">' (modified)'</span><span style="color: #007700">;<br />            }<br />            return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foo</span><span style="color: #007700">;<br />        }<br />        </span><span style="color: #0000BB">set</span><span style="color: #007700">(</span><span style="color: #0000BB">string $value</span><span style="color: #007700">) {<br />            </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foo </span><span style="color: #007700">= </span><span style="color: #0000BB">strtolower</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">);<br />            </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">modified </span><span style="color: #007700">= </span><span style="color: #0000BB">true</span><span style="color: #007700">;<br />        }<br />    }<br />}<br /><br /></span><span style="color: #0000BB">$example </span><span style="color: #007700">= new </span><span style="color: #0000BB">Example</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$example</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foo </span><span style="color: #007700">= </span><span style="color: #DD0000">'changed'</span><span style="color: #007700">;<br />print </span><span style="color: #0000BB">$example</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foo</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span></span></code></div>
+   </div>
+
+  </div>
+  <p class="simpara">
+   <var class="varname">$foo</var> 属性以 <code class="literal">{}</code> 结尾，而不是分号，这表示存在挂钩。同时定义了 <code class="literal">get</code> 和 <code class="literal">set</code> 挂钩，但也允许只定义其中一个。两个挂钩都有一个由 <code class="literal">{}</code> 表示的主体，可以包含任意代码。
+  </p>
+  <p class="simpara">
+   <code class="literal">set</code> 挂钩还允许使用与方法相同的语法指定传入值的类型和名称。类型必须与属性的类型相同，或者对其<a href="language.oop5.variance.html#language.oop5.variance.contravariance" class="link">逆变</a>（更宽泛）。例如，<span class="type"><a href="language.types.string.html" class="type string">string</a></span> 类型的属性可以有一个接受 <span class="type"><span class="type"><a href="language.types.string.html" class="type string">string</a></span>|<span class="type"><a href="class.stringable.html" class="type Stringable">Stringable</a></span></span> 的 <code class="literal">set</code> 挂钩，但不能有一个仅接受 <span class="type"><a href="language.types.array.html" class="type array">array</a></span> 的挂钩。
+  </p>
+  <p class="simpara">
+   至少有一个挂钩引用了 <code class="code">$this-&gt;foo</code>，即属性本身。这意味着该属性将是&quot;backed&quot;的。当调用 <code class="code">$example-&gt;foo = &#039;changed&#039;</code> 时，提供的字符串将首先被转换为小写，然后保存到后备值中。当读取属性时，之前保存的值可能会有条件地附加额外的文本。
+  </p>
+  <p class="simpara">
+   还有许多简写语法变体可用于处理常见情况。
+  </p>
+  <p class="simpara">
+   如果 <code class="literal">get</code> 挂钩是单个表达式，则可以省略 <code class="literal">{}</code>，替换为箭头表达式。
+  </p>
+  <div class="example" id="example-2">
+   <p><strong>示例 #2 属性 get 表达式</strong></p>
+   <div class="example-contents"><p>
+    此示例与前一个等价。
+   </p></div>
+   <div class="example-contents">
+<div class="annotation-interactive phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Example<br /></span><span style="color: #007700">{<br />    private </span><span style="color: #0000BB">bool $modified </span><span style="color: #007700">= </span><span style="color: #0000BB">false</span><span style="color: #007700">;<br /><br />    public </span><span style="color: #0000BB">string $foo </span><span style="color: #007700">= </span><span style="color: #DD0000">'default value' </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">get </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foo </span><span style="color: #007700">. (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">modified </span><span style="color: #007700">? </span><span style="color: #DD0000">' (modified)' </span><span style="color: #007700">: </span><span style="color: #DD0000">''</span><span style="color: #007700">);<br /><br />        </span><span style="color: #0000BB">set</span><span style="color: #007700">(</span><span style="color: #0000BB">string $value</span><span style="color: #007700">) {<br />            </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foo </span><span style="color: #007700">= </span><span style="color: #0000BB">strtolower</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">);<br />            </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">modified </span><span style="color: #007700">= </span><span style="color: #0000BB">true</span><span style="color: #007700">;<br />        }<br />    }<br />}<br /></span><span style="color: #0000BB">?&gt;</span></span></code></div>
+   </div>
+
+  </div>
+  <p class="simpara">
+   如果 <code class="literal">set</code> 挂钩的参数类型与属性类型相同（通常如此），则可以省略。在这种情况下，要设置的值会自动命名为 <var class="varname">$value</var>。
+  </p>
+  <div class="example" id="example-3">
+   <p><strong>示例 #3 属性 set 默认值</strong></p>
+   <div class="example-contents"><p>
+    此示例与前一个等价。
+   </p></div>
+   <div class="example-contents">
+<div class="annotation-interactive phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Example<br /></span><span style="color: #007700">{<br />    private </span><span style="color: #0000BB">bool $modified </span><span style="color: #007700">= </span><span style="color: #0000BB">false</span><span style="color: #007700">;<br /><br />    public </span><span style="color: #0000BB">string $foo </span><span style="color: #007700">= </span><span style="color: #DD0000">'default value' </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">get </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foo </span><span style="color: #007700">. (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">modified </span><span style="color: #007700">? </span><span style="color: #DD0000">' (modified)' </span><span style="color: #007700">: </span><span style="color: #DD0000">''</span><span style="color: #007700">);<br /><br />        </span><span style="color: #0000BB">set </span><span style="color: #007700">{<br />            </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foo </span><span style="color: #007700">= </span><span style="color: #0000BB">strtolower</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">);<br />            </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">modified </span><span style="color: #007700">= </span><span style="color: #0000BB">true</span><span style="color: #007700">;<br />        }<br />    }<br />}<br /></span><span style="color: #0000BB">?&gt;</span></span></code></div>
+   </div>
+
+  </div>
+  <p class="simpara">
+   如果 <code class="literal">set</code> 挂钩只是设置传入值的修改版本，那么也可以将其简化为箭头表达式。表达式求值的结果将被设置到后备值上。
+  </p>
+  <div class="example" id="example-4">
+   <p><strong>示例 #4 属性 set 表达式</strong></p>
+   <div class="example-contents">
+<div class="annotation-interactive phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Example<br /></span><span style="color: #007700">{<br />    public </span><span style="color: #0000BB">string $foo </span><span style="color: #007700">= </span><span style="color: #DD0000">'default value' </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">get </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foo </span><span style="color: #007700">. (</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">modified </span><span style="color: #007700">? </span><span style="color: #DD0000">' (modified)' </span><span style="color: #007700">: </span><span style="color: #DD0000">''</span><span style="color: #007700">);<br />        </span><span style="color: #0000BB">set </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">strtolower</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">);<br />    }<br />}<br /></span><span style="color: #0000BB">?&gt;</span></span></code></div>
+   </div>
+
+  </div>
+  <p class="simpara">
+   此示例与前一个并不完全等价，因为它没有修改 <code class="code">$this-&gt;modified</code>。如果 set 挂钩主体中需要多条语句，请使用大括号版本。
+  </p>
+  <p class="simpara">
+   属性可以根据需要实现零个、一个或两个挂钩。所有简写版本都是相互独立的。也就是说，使用简写 get 搭配完整 set，或者使用简写 set 搭配显式类型，等等都是合法的。
+  </p>
+  <p class="simpara">
+   对于 backed 属性，省略 <code class="literal">get</code> 或 <code class="literal">set</code> 挂钩意味着将使用默认的读取或写入行为。
+  </p>
+  <blockquote class="note"><p><strong class="note">注意</strong>: 
+   <span class="simpara">
+    挂钩可以在使用<a href="language.oop5.decon.html#language.oop5.decon.constructor.promotion" class="link">构造函数属性提升</a>时定义。但是，这样做时，提供给构造函数的值必须与属性关联的类型匹配，无论 <code class="literal">set</code> 挂钩允许什么。
+   </span>
+   <span class="simpara">
+    考虑以下示例：
+   </span>
+   <div class="example-contents">
+<div class="annotation-interactive phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Example<br /></span><span style="color: #007700">{<br />    public function </span><span style="color: #0000BB">__construct</span><span style="color: #007700">(<br />        public private(</span><span style="color: #0000BB">set</span><span style="color: #007700">) </span><span style="color: #0000BB">DateTimeInterface $created </span><span style="color: #007700">{<br />            </span><span style="color: #0000BB">set </span><span style="color: #007700">(</span><span style="color: #0000BB">string</span><span style="color: #007700">|</span><span style="color: #0000BB">DateTimeInterface $value</span><span style="color: #007700">) {<br />                if (</span><span style="color: #0000BB">is_string</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">)) {<br />                    </span><span style="color: #0000BB">$value </span><span style="color: #007700">= new </span><span style="color: #0000BB">DateTimeImmutable</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">);<br />                }<br />                </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">created </span><span style="color: #007700">= </span><span style="color: #0000BB">$value</span><span style="color: #007700">;<br />            }<br />        },<br />    ) {<br />    }<br />}</span></span></code></div>
+   </div>
+
+   <span class="simpara">
+    引擎内部会将其分解为以下形式：
+   </span>
+   <div class="example-contents">
+<div class="annotation-interactive phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Example<br /></span><span style="color: #007700">{<br />    public private(</span><span style="color: #0000BB">set</span><span style="color: #007700">) </span><span style="color: #0000BB">DateTimeInterface $created </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">set </span><span style="color: #007700">(</span><span style="color: #0000BB">string</span><span style="color: #007700">|</span><span style="color: #0000BB">DateTimeInterface $value</span><span style="color: #007700">) {<br />            if (</span><span style="color: #0000BB">is_string</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">)) {<br />                </span><span style="color: #0000BB">$value </span><span style="color: #007700">= new </span><span style="color: #0000BB">DateTimeImmutable</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">);<br />            }<br />            </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">created </span><span style="color: #007700">= </span><span style="color: #0000BB">$value</span><span style="color: #007700">;<br />        }<br />    }<br /><br />    public function </span><span style="color: #0000BB">__construct</span><span style="color: #007700">(<br />        </span><span style="color: #0000BB">DateTimeInterface $created</span><span style="color: #007700">,<br />    ) {<br />        </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">created </span><span style="color: #007700">= </span><span style="color: #0000BB">$created</span><span style="color: #007700">;<br />    }<br />}</span></span></code></div>
+   </div>
+
+   <span class="simpara">
+    在构造函数之外设置属性时，将允许 <span class="type"><a href="language.types.string.html" class="type string">string</a></span> 或 <span class="interfacename"><a href="class.datetimeinterface.html" class="interfacename">DateTimeInterface</a></span> 值，但构造函数只接受 <span class="interfacename"><a href="class.datetimeinterface.html" class="interfacename">DateTimeInterface</a></span>。这是因为属性定义的类型（<span class="interfacename"><a href="class.datetimeinterface.html" class="interfacename">DateTimeInterface</a></span>）被用作构造函数签名中的参数类型，无论 <code class="literal">set</code> 挂钩允许什么。
+   </span>
+   <span class="simpara">
+    如果需要在构造函数中实现这种行为，则不能使用构造函数属性提升。
+   </span>
+  </p></blockquote>
+ </div>
+ <div class="sect2" id="language.oop5.property-hooks.virtual">
+  <h3 class="title">虚拟属性</h3>
+  <p class="simpara">
+   虚拟属性是没有后备值的属性。如果属性的 <code class="literal">get</code> 和 <code class="literal">set</code> 挂钩都没有使用精确语法引用属性本身，则该属性就是虚拟的。也就是说，名为 <code class="code">$foo</code> 的属性如果其挂钩中包含 <code class="code">$this-&gt;foo</code>，则是 backed 属性。但以下不是 backed 属性，将会报错：
+  </p>
+  <div class="example" id="example-5">
+   <p><strong>示例 #5 无效的虚拟属性</strong></p>
+   <div class="example-contents">
+<div class="annotation-interactive phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Example<br /></span><span style="color: #007700">{<br />    public </span><span style="color: #0000BB">string $foo </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">get </span><span style="color: #007700">{<br />            </span><span style="color: #0000BB">$temp </span><span style="color: #007700">= </span><span style="color: #0000BB">__PROPERTY__</span><span style="color: #007700">;<br />            return </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">$temp</span><span style="color: #007700">; </span><span style="color: #FF8000">// Doesn't refer to $this-&gt;foo, so it doesn't count.<br />        </span><span style="color: #007700">}<br />    }<br />}<br /></span><span style="color: #0000BB">?&gt;</span></span></code></div>
+   </div>
+
+  </div>
+  <p class="simpara">
+   对于虚拟属性，如果省略了某个挂钩，那么该操作就不存在，尝试使用它将产生错误。虚拟属性不占用对象中的内存空间。虚拟属性适用于&quot;派生&quot;属性，例如由其他两个属性组合而成的属性。
+  </p>
+  <div class="example" id="example-6">
+   <p><strong>示例 #6 虚拟属性</strong></p>
+   <div class="example-contents">
+<div class="annotation-interactive phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Rectangle<br /></span><span style="color: #007700">{<br />    </span><span style="color: #FF8000">// A virtual property.<br />    </span><span style="color: #007700">public </span><span style="color: #0000BB">int $area </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">get </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">h </span><span style="color: #007700">* </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">w</span><span style="color: #007700">;<br />    }<br /><br />    public function </span><span style="color: #0000BB">__construct</span><span style="color: #007700">(public </span><span style="color: #0000BB">int $h</span><span style="color: #007700">, public </span><span style="color: #0000BB">int $w</span><span style="color: #007700">) {}<br />}<br /><br /></span><span style="color: #0000BB">$s </span><span style="color: #007700">= new </span><span style="color: #0000BB">Rectangle</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">, </span><span style="color: #0000BB">5</span><span style="color: #007700">);<br />print </span><span style="color: #0000BB">$s</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">area</span><span style="color: #007700">; </span><span style="color: #FF8000">// prints 20<br /></span><span style="color: #0000BB">$s</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">area </span><span style="color: #007700">= </span><span style="color: #0000BB">30</span><span style="color: #007700">; </span><span style="color: #FF8000">// Error, as there is no set operation defined.<br /></span><span style="color: #0000BB">?&gt;</span></span></code></div>
+   </div>
+
+  </div>
+  <p class="simpara">
+   在虚拟属性上同时定义 <code class="literal">get</code> 和 <code class="literal">set</code> 挂钩也是允许的。
+  </p>
+ </div>
+ <div class="sect2">
+  <h3 class="title">作用域</h3>
+  <p class="simpara">
+   所有挂钩都在被修改对象的作用域内运行。这意味着它们可以访问对象的所有 public、private 或 protected 方法，以及所有 public、private 或 protected 属性，包括可能有自己属性挂钩的属性。从挂钩中访问另一个属性不会绕过该属性上定义的挂钩。
+  </p>
+  <p class="simpara">
+   最值得注意的含义是，非简单的挂钩可以根据需要调用任意复杂的方法。
+  </p>
+  <div class="example" id="example-7">
+   <p><strong>示例 #7 从挂钩中调用方法</strong></p>
+   <div class="example-contents">
+<div class="annotation-interactive phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Person </span><span style="color: #007700">{<br />    public </span><span style="color: #0000BB">string $phone </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">set </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">sanitizePhone</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">);<br />    }<br /><br />    private function </span><span style="color: #0000BB">sanitizePhone</span><span style="color: #007700">(</span><span style="color: #0000BB">string $value</span><span style="color: #007700">): </span><span style="color: #0000BB">string </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">$value </span><span style="color: #007700">= </span><span style="color: #0000BB">ltrim</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">, </span><span style="color: #DD0000">'+'</span><span style="color: #007700">);<br />        </span><span style="color: #0000BB">$value </span><span style="color: #007700">= </span><span style="color: #0000BB">ltrim</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">, </span><span style="color: #DD0000">'1'</span><span style="color: #007700">);<br /><br />        if (!</span><span style="color: #0000BB">preg_match</span><span style="color: #007700">(</span><span style="color: #DD0000">'/\d\d\d\-\d\d\d\-\d\d\d\d/'</span><span style="color: #007700">, </span><span style="color: #0000BB">$value</span><span style="color: #007700">)) {<br />            throw new </span><span style="color: #0000BB">\InvalidArgumentException</span><span style="color: #007700">();<br />        }<br />        return </span><span style="color: #0000BB">$value</span><span style="color: #007700">;<br />    }<br />}<br /></span><span style="color: #0000BB">?&gt;</span></span></code></div>
+   </div>
+
+  </div>
+ </div>
+ <div class="sect2">
+  <h3 class="title">引用</h3>
+  <p class="simpara">
+   由于挂钩的存在会拦截属性的读写过程，因此在获取属性的引用或进行间接修改（如 <code class="code">$this-&gt;arrayProp[&#039;key&#039;] = &#039;value&#039;;</code>）时会产生问题。这是因为任何通过引用修改值的尝试都会绕过 set 挂钩（如果定义了的话）。
+  </p>
+  <p class="simpara">
+   在极少数需要获取定义了挂钩的属性的引用的情况下，可以在 <code class="literal">get</code> 挂钩前加上 <code class="literal">&amp;</code> 前缀，使其按引用返回。在同一属性上同时定义 <code class="literal">get</code> 和 <code class="literal">&amp;get</code> 是语法错误。
+  </p>
+  <p class="simpara">
+   不允许在 backed 属性上同时定义 <code class="literal">&amp;get</code> 和 <code class="literal">set</code> 挂钩。如上所述，通过引用写入返回的值会绕过 <code class="literal">set</code> 挂钩。在虚拟属性上，两个挂钩之间没有必然共享的值，因此允许同时定义两者。
+  </p>
+  <p class="simpara">
+   写入数组属性的索引也涉及隐式引用。因此，只有在仅定义了 <code class="literal">&amp;get</code> 挂钩的情况下，才允许写入带有挂钩的 backed 数组属性。在虚拟属性上，写入从 <code class="literal">get</code> 或 <code class="literal">&amp;get</code> 返回的数组是合法的，但这是否对对象产生影响取决于挂钩的实现。
+  </p>
+  <p class="simpara">
+   覆盖整个数组属性是可以的，行为与其他任何属性相同。只有操作数组元素时需要特别注意。
+  </p>
+ </div>
+ <div class="sect2">
+  <h3 class="title">继承</h3>
+  <div class="sect3">
+   <h4 class="title">Final 挂钩</h4>
+   <p class="simpara">
+    挂钩也可以声明为 <a href="language.oop5.final.html" class="link">final</a>，在这种情况下不能被覆盖。
+   </p>
+   <div class="example" id="example-8">
+    <p><strong>示例 #8 Final 挂钩</strong></p>
+    <div class="example-contents">
+<div class="annotation-interactive phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">User<br /></span><span style="color: #007700">{<br />    public </span><span style="color: #0000BB">string $username </span><span style="color: #007700">{<br />        final </span><span style="color: #0000BB">set </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">strtolower</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">);<br />    }<br />}<br /><br />class </span><span style="color: #0000BB">Manager </span><span style="color: #007700">extends </span><span style="color: #0000BB">User<br /></span><span style="color: #007700">{<br />    public </span><span style="color: #0000BB">string $username </span><span style="color: #007700">{<br />        </span><span style="color: #FF8000">// This is allowed<br />        </span><span style="color: #0000BB">get </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">strtoupper</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">username</span><span style="color: #007700">);<br /><br />        </span><span style="color: #FF8000">// But this is NOT allowed, because set is final in the parent.<br />        </span><span style="color: #0000BB">set </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">strtoupper</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">);<br />    }<br />}<br /></span><span style="color: #0000BB">?&gt;</span></span></code></div>
+    </div>
+
+   </div>
+   <p class="simpara">
+    属性也可以声明为 <a href="language.oop5.final.html" class="link">final</a>。final 属性不能被子类以任何方式重新声明，这包括修改挂钩或扩大其访问权限。
+   </p>
+   <p class="simpara">
+    在声明为 final 的属性上将挂钩声明为 final 是多余的，会被静默忽略。这与 final 方法的行为一致。
+   </p>
+   <p class="simpara">
+    子类可以通过重新声明属性并只定义要覆盖的挂钩来定义或重新定义各个挂钩。子类也可以向之前没有挂钩的属性添加挂钩。这本质上与挂钩是方法时的行为相同。
+   </p>
+   <div class="example" id="example-9">
+    <p><strong>示例 #9 挂钩继承</strong></p>
+    <div class="example-contents">
+<div class="annotation-interactive phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Point<br /></span><span style="color: #007700">{<br />    public </span><span style="color: #0000BB">int $x</span><span style="color: #007700">;<br />    public </span><span style="color: #0000BB">int $y</span><span style="color: #007700">;<br />}<br /><br />class </span><span style="color: #0000BB">PositivePoint </span><span style="color: #007700">extends </span><span style="color: #0000BB">Point<br /></span><span style="color: #007700">{<br />    public </span><span style="color: #0000BB">int $x </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">set </span><span style="color: #007700">{<br />            if (</span><span style="color: #0000BB">$value </span><span style="color: #007700">&lt; </span><span style="color: #0000BB">0</span><span style="color: #007700">) {<br />                throw new </span><span style="color: #0000BB">\InvalidArgumentException</span><span style="color: #007700">(</span><span style="color: #DD0000">'Too small'</span><span style="color: #007700">);<br />            }<br />            </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">x </span><span style="color: #007700">= </span><span style="color: #0000BB">$value</span><span style="color: #007700">;<br />        }<br />    }<br />}<br /></span><span style="color: #0000BB">?&gt;</span></span></code></div>
+    </div>
+
+   </div>
+   <p class="simpara">
+    每个挂钩独立于其他挂钩覆盖父类的实现。如果子类添加了挂钩，属性上设置的任何默认值都会被移除，必须重新声明。这与无挂钩属性的继承方式一致。
+   </p>
+  </div>
+  <div class="sect3">
+   <h4 class="title">访问父类挂钩</h4>
+   <p class="simpara">
+    子类中的挂钩可以使用 <code class="code">parent::$prop</code> 关键字后跟所需的挂钩来访问父类的属性。例如，<code class="code">parent::$propName::get()</code>。可以理解为&quot;访问父类中定义的 <var class="varname">prop</var>，然后运行其 get 操作&quot;（或 set 操作，视情况而定）。
+   </p>
+   <p class="simpara">
+    如果不以这种方式访问，父类的挂钩将被忽略。这一行为与所有方法的工作方式一致。这也提供了一种访问父类存储（如果有的话）的方式。如果父属性上没有挂钩，则会使用其默认的 get/set 行为。挂钩不能访问除自身属性上的父挂钩之外的任何其他挂钩。
+   </p>
+   <p class="simpara">
+    上面的示例可以重写如下，这将允许 <code class="literal">Point</code> 类在未来添加自己的 <code class="literal">set</code> 挂钩而不会产生问题（在前面的示例中，添加到父类的挂钩会在子类中被忽略）。
+   </p>
+   <div class="example" id="example-10">
+    <p><strong>示例 #10 访问父类挂钩（set）</strong></p>
+    <div class="example-contents">
+<div class="annotation-interactive phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Point<br /></span><span style="color: #007700">{<br />    public </span><span style="color: #0000BB">int $x</span><span style="color: #007700">;<br />    public </span><span style="color: #0000BB">int $y</span><span style="color: #007700">;<br />}<br /><br />class </span><span style="color: #0000BB">PositivePoint </span><span style="color: #007700">extends </span><span style="color: #0000BB">Point<br /></span><span style="color: #007700">{<br />    public </span><span style="color: #0000BB">int $x </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">set </span><span style="color: #007700">{<br />            if (</span><span style="color: #0000BB">$value </span><span style="color: #007700">&lt; </span><span style="color: #0000BB">0</span><span style="color: #007700">) {<br />                throw new </span><span style="color: #0000BB">\InvalidArgumentException</span><span style="color: #007700">(</span><span style="color: #DD0000">'Too small'</span><span style="color: #007700">);<br />            }<br />            </span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">$x</span><span style="color: #007700">::</span><span style="color: #0000BB">set</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">);<br />        }<br />    }<br />}<br /></span><span style="color: #0000BB">?&gt;</span></span></code></div>
+    </div>
+
+   </div>
+   <p class="simpara">
+    仅覆盖 get 挂钩的示例如下：
+   </p>
+   <div class="example" id="example-11">
+    <p><strong>示例 #11 访问父类挂钩（get）</strong></p>
+    <div class="example-contents">
+<div class="annotation-interactive phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Strings<br /></span><span style="color: #007700">{<br />    public </span><span style="color: #0000BB">string $val</span><span style="color: #007700">;<br />}<br /><br />class </span><span style="color: #0000BB">CaseFoldingStrings </span><span style="color: #007700">extends </span><span style="color: #0000BB">Strings<br /></span><span style="color: #007700">{<br />    public </span><span style="color: #0000BB">bool $uppercase </span><span style="color: #007700">= </span><span style="color: #0000BB">true</span><span style="color: #007700">;<br /><br />    public </span><span style="color: #0000BB">string $val </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">get </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">uppercase<br />            </span><span style="color: #007700">? </span><span style="color: #0000BB">strtoupper</span><span style="color: #007700">(</span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">$val</span><span style="color: #007700">::</span><span style="color: #0000BB">get</span><span style="color: #007700">())<br />            : </span><span style="color: #0000BB">strtolower</span><span style="color: #007700">(</span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">$val</span><span style="color: #007700">::</span><span style="color: #0000BB">get</span><span style="color: #007700">());<br />    }<br />}<br /></span><span style="color: #0000BB">?&gt;</span></span></code></div>
+    </div>
+
+   </div>
+  </div>
+ </div>
+ <div class="sect2">
+  <h3 class="title">序列化</h3>
+  <p class="simpara">
+   PHP 有多种不同的方式可以序列化对象，用于公共使用或调试目的。挂钩的行为因使用场景而异。在某些情况下，会使用属性的原始后备值，绕过所有挂钩。在其他情况下，属性将&quot;通过&quot;挂钩进行读取或写入，就像任何其他正常的读写操作一样。
+  </p>
+  <ul class="simplelist">
+   <li><span class="function"><a href="function.var-dump.html" class="function">var_dump()</a></span>：使用原始值</li>
+   <li><span class="function"><a href="function.serialize.html" class="function">serialize()</a></span>：使用原始值</li>
+   <li><span class="function"><a href="function.unserialize.html" class="function">unserialize()</a></span>：使用原始值</li>
+   <li><a href="language.oop5.magic.html#object.serialize" class="link">__serialize()</a>/<a href="language.oop5.magic.html#object.unserialize" class="link">__unserialize()</a>：自定义逻辑，使用 get/set 挂钩</li>
+   <li>数组转换：使用原始值</li>
+   <li><span class="function"><a href="function.var-export.html" class="function">var_export()</a></span>：使用 get 挂钩</li>
+   <li><span class="function"><a href="function.json-encode.html" class="function">json_encode()</a></span>：使用 get 挂钩</li>
+   <li><span class="interfacename"><a href="class.jsonserializable.html" class="interfacename">JsonSerializable</a></span>：自定义逻辑，使用 get 挂钩</li>
+   <li><span class="function"><a href="function.get-object-vars.html" class="function">get_object_vars()</a></span>：使用 get 挂钩</li>
+   <li><span class="function"><a href="function.get-mangled-object-vars.html" class="function">get_mangled_object_vars()</a></span>：使用原始值</li>
+  </ul>
+ </div>
+</div></div></div><script type="text/javascript" src="search-combined.js"></script><script type="text/javascript" src="js/67ae199ee27cc87120cab9ba49d1b776-FuzzySearch.min.js"></script><script type="text/javascript" src="js/f5555778cd757f2cb49676062898832b-search.js"></script>    <div id="search-modal__backdrop" class="search-modal__backdrop">
+      <div
+        role="dialog"
+        aria-label="Search modal"
+        id="search-modal"
+        class="search-modal"
+      >
+        <div class="search-modal__header">
+          <div class="search-modal__form">
+            <div class="search-modal__input-icon">
+              <!-- https://feathericons.com search -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                width="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input
+              type="search"
+              id="search-modal__input"
+              class="search-modal__input"
+              placeholder="Search docs"
+              aria-label="Search docs"
+            />
+          </div>
+    
+          <button aria-label="Close" class="search-modal__close">
+            <!-- https://pictogrammers.com/library/mdi/icon/close/ -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+        <div
+          role="listbox"
+          aria-label="Search results"
+          id="search-modal__results"
+          class="search-modal__results"
+        ></div>
+        <div class="search-modal__helper-text">
+          <div>
+            <kbd>↑</kbd> and <kbd>↓</kbd> to navigate •
+            <kbd>Enter</kbd> to select •
+            <kbd>Esc</kbd> to close • <kbd>/</kbd> to open
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            /*{{{Search Modal*/
+            const language = 'local';
+            initSearchModal();
+            initPHPSearch(language).then((searchCallback) => {
+                initSearchUI({language, searchCallback, limit: 30});
+            });
+            /*}}}*/
+        });
+    </script></body></html>

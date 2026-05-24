@@ -1,0 +1,585 @@
+    <!DOCTYPE HTML>
+    <html>
+     <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <style>
+        .navbar__local {
+          flex-grow: 1;
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr min-content 1fr;
+          margin: 0;
+          height: 100%;
+          
+          .navbar__item {
+            align-content: center;
+          }
+          .navbar__link {
+            display: inline;
+          }
+          .search {
+            text-align: center;
+          }
+          .next {
+            text-align: right;
+          }
+        }
+      </style>
+      <title>弃用功能</title>
+      <link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-base.css" />
+<link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-medium.css" />
+
+     </head>
+     <body class="docs">    <div class="navbar navbar-fixed-top">
+      <div class="navbar__inner clearfix">
+          <ul class="navbar__local">
+            <li class="navbar__item prev"><a href="migration85.incompatible.html" class="navbar__link">« 不向后兼容的变更</a></li>
+            <li class="navbar__item search">
+              <!-- Desktop encanced search -->
+              <button
+                id="navbar__search-button"
+                class="navbar__search-button"
+                hidden
+              >
+                    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        width="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+                Search
+              </button>
+            </li>
+            <li class="navbar__item next"><a href="migration85.other-changes.html" class="navbar__link">其它变更 »</a></li>
+          </ul>
+      </div>
+    </div>    <div id="breadcrumbs" class="clearfix">
+      <ul class="breadcrumbs-container">
+        <li><a href="index.html">PHP Manual</a></li>
+        <li><a href="migration85.html">从 PHP 8.4.x 移植到 PHP 8.5.x</a></li>
+        <li>弃用功能</li>
+      </ul>
+    </div>    <div id="layout">
+      <div id="layout-content"><div id="migration85.deprecated" class="sect1">
+ <h2 class="title">弃用功能</h2>
+
+ <div class="sect2" id="migration85.deprecated.core">
+  <h3 class="title">PHP 核心</h3>
+
+  <div class="sect3" id="migration85.deprecated.core.changes-to-user-output-handler">
+   <h4 class="title">用户输出处理程序变更</h4>
+   
+
+   <p class="simpara">
+    已弃用在用户输出处理程序中尝试生成输出（例如使用 <span class="function"><a href="function.echo.html" class="function">echo</a></span>）。该弃用警告会绕过当前处理程序直接输出，以确保警告可见；若存在嵌套的输出处理程序，则会继续使用下一个处理程序。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.deprecated.core.non-canonical-cast-names">
+   <h4 class="title">非标准的类型转换名称</h4>
+   
+
+   <p class="simpara">
+    已弃用非标准的类型转换名称 <code class="literal">(boolean)</code>、<code class="literal">(integer)</code>、<code class="literal">(double)</code>
+    和 <code class="literal">(binary)</code>，应分别改用 <code class="literal">(bool)</code>、<code class="literal">(int)</code>、<code class="literal">(float)</code>
+    和 <code class="literal">(string)</code>。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.deprecated.core.case-statements-with-semicolon">
+   <h4 class="title">使用分号终止 case 语句</h4>
+   
+
+   <p class="simpara">
+    已弃用在 case 语句末尾使用分号而非冒号作为终止符的做法。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.deprecated.core.the-backtick-operator">
+   <h4 class="title">反引号运算符</h4>
+   
+
+   <p class="simpara">
+    已弃用将<a href="language.operators.execution.html" class="link">反引号运算符</a>作为 <span class="function"><a href="function.shell-exec.html" class="function">shell_exec()</a></span> 的别名。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.deprecated.core.return-null-from-debuginfo">
+   <h4 class="title">从 __debugInfo() 返回 null</h4>
+   
+
+   <p class="simpara">
+    已弃用从 <a href="language.oop5.magic.html#language.oop5.magic.debuginfo" class="link">__debugInfo()</a> 返回 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong>，应改用返回空数组。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.deprecated.core.return-memleaks-ini-directive">
+   <h4 class="title">report_memleaks INI 指令</h4>
+   
+
+   <p class="simpara">
+    已弃用 <a href="errorfunc.configuration.html#ini.report-memleaks" class="link">report_memleaks</a> INI 指令。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.deprecated.core.constant-redeclaration">
+   <h4 class="title">常量重复声明</h4>
+   
+
+   <p class="simpara">
+    已弃用常量的重复声明。需要注意的是，此操作此前已会触发警告，今后仍将继续如此。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.deprecated.core.closure-binding-issues">
+   <h4 class="title">闭包绑定问题</h4>
+   
+
+   <p class="para">
+    以下闭包绑定问题此前已触发 <strong><code><a href="errorfunc.constants.html#constant.e-warning">E_WARNING</a></code></strong>，现已标记为废弃：
+
+    <ul class="simplelist">
+     <li>将实例绑定到静态闭包。</li>
+     <li>将方法绑定到不是该方法所属类（或其子类）的实例对象上。</li>
+     <li>从方法中解绑 $this。</li>
+     <li>从使用了 `$this` 的闭包中解绑 $this。</li>
+     <li>将闭包绑定到内部类的作用域。</li>
+     <li>重新绑定从函数或方法创建的闭包的作用域。</li>
+    </ul>
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.deprecated.core.sleep-and-wakeup-magic-methods">
+   <h4 class="title">__sleep() 和 __wakeup() 魔术方法</h4>
+   
+   
+
+   <p class="simpara">
+    已软废弃 <a href="language.oop5.magic.html#object.sleep" class="link">__sleep()</a> 和 <a href="language.oop5.magic.html#object.wakeup" class="link">__wakeup()</a>
+    魔术方法，建议改用 <a href="language.oop5.magic.html#object.serialize" class="link">__serialize()</a> 和
+    <a href="language.oop5.magic.html#object.unserialize" class="link">__unserialize()</a> 魔术方法；若需兼容 PHP 7，可同时使用这两组方法。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.deprecated.core.using-null-as-an-array-offset">
+   <h4 class="title">使用 null 作为数组偏移量</h4>
+   
+
+   <p class="simpara">
+    将 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong> 用作数组偏移量或在调用 <span class="function"><a href="function.array-key-exists.html" class="function">array_key_exists()</a></span> 时使用 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong> 现已废弃，应改用空字符串。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.deprecated.core.incrementing-non-numeric-strings">
+   <h4 class="title">递增非数字字符串</h4>
+   
+
+   <p class="simpara">
+    对非数字字符串进行递增操作现已废弃，应改用 <span class="function"><a href="function.str-increment.html" class="function">str_increment()</a></span> 函数。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.deprecated.core.register-argc-argv-directive">
+   <h4 class="title">register_argc_argv INI directive</h4>
+   
+
+   <p class="simpara">
+    对于非 CLI SAPI，从查询字符串中推导 <code class="code">$_SERVER[&#039;argc&#039;]</code> 和 <code class="code">$_SERVER[&#039;argv&#039;]</code> 的做法现已废弃。应配置
+    <code class="literal">register_argc_argv=0</code>，并在确认使用安全的前提下，改用 <var class="varname"><a href="reserved.variables.get.html" class="classname">$_GET</a></var> 或
+    <code class="code">$_SERVER[&#039;QUERY_STRING&#039;]</code> 来获取相关信息。
+   </p>
+
+  </div>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.curl">
+  <h3 class="title">cURL</h3>
+
+  <p class="simpara">
+   已废弃 <span class="function"><a href="function.curl-close.html" class="function">curl_close()</a></span> 函数，因为 <span class="classname"><a href="class.curlhandle.html" class="classname">CurlHandle</a></span> 对象会自动释放。
+   
+  </p>
+
+  <p class="simpara">
+   已废弃 <span class="function"><a href="function.curl-share-close.html" class="function">curl_share_close()</a></span> 函数，因为 <span class="classname"><a href="class.curlsharehandle.html" class="classname">CurlShareHandle</a></span> 对象会自动释放。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.date">
+  <h3 class="title">Date</h3>
+
+  <p class="simpara">
+   已废弃 <strong><code><a href="datetime.constants.html#constant.date-rfc7231">DATE_RFC7231</a></code></strong> 和 <strong><code><a href="class.datetimeinterface.html#datetimeinterface.constants.rfc7231">DateTimeInterface::RFC7231</a></code></strong>
+   常量，因为会忽略其关联的时区，始终使用 GMT。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.fileinfo">
+  <h3 class="title">FileInfo</h3>
+
+  <p class="simpara">
+   已废弃 <span class="function"><a href="function.finfo-close.html" class="function">finfo_close()</a></span> 函数，因为 <span class="classname"><a href="class.finfo.html" class="classname">finfo</a></span> 对象会自动释放。
+   
+  </p>
+
+  <p class="simpara">
+   已废弃 <span class="function"><a href="function.finfo-buffer.html" class="function">finfo_buffer()</a></span> 函数的 <code class="parameter">$context</code> 参数，因为会忽略其参数。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.gd">
+  <h3 class="title">GD</h3>
+
+  <p class="simpara">
+   已废弃 <span class="function"><a href="function.imagedestroy.html" class="function">imagedestroy()</a></span> 函数，因为 <span class="classname"><a href="class.gdimage.html" class="classname">GdImage</a></span> 对象会自动释放。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.hash">
+  <h3 class="title">Hash</h3>
+
+  <p class="simpara">
+   已废弃 <strong><code><a href="mhash.constants.html#constant.mhash-adler32">MHASH_<span class="replaceable">*</span></a></code></strong> 常量。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.intl">
+  <h3 class="title">Intl</h3>
+
+  <p class="simpara">
+   已废弃 <a href="intl.configuration.html#ini.intl.error-level" class="link">intl.error_level</a> INI 配置项。应手动检查错误，或通过启用
+   <a href="intl.configuration.html#ini.intl.use-exceptions" class="link">intl.use_exceptions</a> INI 配置项来使用异常处理。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.ldap">
+  <h3 class="title">LDAP</h3>
+
+  <p class="para">
+   已废弃部分 Oracle Instant Client 调用和常量。受影响的调用列表：
+
+   受影响的调用列表：
+   <ul class="simplelist">
+    <li><span class="function"><a href="function.ldap-connect.html" class="function">ldap_connect()</a></span> with wallet support</li>
+    <li><span class="function"><a href="function.ldap-connect-wallet.html" class="function">ldap_connect_wallet()</a></span></li>
+   </ul>
+
+   受影响的常量列表：
+   <ul class="simplelist">
+    <li><strong><code>GSLC_SSL_NO_UATH</code></strong></li>
+    <li><strong><code>GSLC_SSL_ONEWAY_UATH</code></strong></li>
+    <li><strong><code>GSLC_SSL_TWOWAY_UATH</code></strong></li>
+   </ul>
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.mysqli">
+  <h3 class="title">MySQLi</h3>
+
+  <p class="simpara">
+   已废弃 <span class="function"><a href="function.mysqli-execute.html" class="function">mysqli_execute()</a></span> 别名函数，应改用 <span class="function"><a href="mysqli-stmt.execute.html" class="function">mysqli_stmt_execute()</a></span>。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.openssl">
+  <h3 class="title">OpenSSL</h3>
+
+  <p class="simpara">
+   已废弃 <span class="function"><a href="function.openssl-pkey-derive.html" class="function">openssl_pkey_derive()</a></span> 的 <code class="parameter">$key_length</code> 参数，因为要么忽略该参数，要么会截断密钥，可能引发安全漏洞。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.pdo">
+  <h3 class="title">PDO</h3>
+
+  <p class="simpara">
+   由于来自远程 URI 的 DSN 存在安全风险，已废弃 <code class="literal">&quot;uri:&quot;</code> DSN 方案。
+   
+  </p>
+
+  <p class="para">
+   已废弃 PDO 类中的驱动专属常量。受影响的常量及其替代项如下：
+
+   <ul class="simplelist">
+    <li><strong><code>PDO::DBLIB_ATTR_CONNECTION_TIMEOUT</code></strong> => <strong><code><a href="class.pdo-dblib.html#pdo-dblib.constants.attr-connection-timeout">Pdo\Dblib::ATTR_CONNECTION_TIMEOUT</a></code></strong></li>
+    <li><strong><code>PDO::DBLIB_ATTR_QUERY_TIMEOUT</code></strong> => <strong><code><a href="class.pdo-dblib.html#pdo-dblib.constants.attr-query-timeout">Pdo\Dblib::ATTR_QUERY_TIMEOUT</a></code></strong></li>
+    <li><strong><code>PDO::DBLIB_ATTR_STRINGIFY_UNIQUEIDENTIFIER</code></strong> => <strong><code><a href="class.pdo-dblib.html#pdo-dblib.constants.attr-stringify-uniqueidentifier">Pdo\Dblib::ATTR_STRINGIFY_UNIQUEIDENTIFIER</a></code></strong></li>
+    <li><strong><code>PDO::DBLIB_ATTR_VERSION</code></strong> => <strong><code><a href="class.pdo-dblib.html#pdo-dblib.constants.attr-version">Pdo\Dblib::ATTR_VERSION</a></code></strong></li>
+    <li><strong><code>PDO::DBLIB_ATTR_TDS_VERSION</code></strong> => <strong><code><a href="class.pdo-dblib.html#pdo-dblib.constants.attr-tds-version">Pdo\Dblib::ATTR_TDS_VERSION</a></code></strong></li>
+    <li><strong><code>PDO::DBLIB_ATTR_SKIP_EMPTY_ROWSETS</code></strong> => <strong><code><a href="class.pdo-dblib.html#pdo-dblib.constants.attr-skip-empty-rowsets">Pdo\Dblib::ATTR_SKIP_EMPTY_ROWSETS</a></code></strong></li>
+    <li><strong><code>PDO::DBLIB_ATTR_DATETIME_CONVERT</code></strong> => <strong><code><a href="class.pdo-dblib.html#pdo-dblib.constants.attr-datetime-convert">Pdo\Dblib::ATTR_DATETIME_CONVERT</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-firebird.html#pdo.constants.fb-attr-date-format">PDO::FB_ATTR_DATE_FORMAT</a></code></strong> => <strong><code><a href="class.pdo-firebird.html#pdo-firebird.constants.attr-date-format">Pdo\Firebird::ATTR_DATE_FORMAT</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-firebird.html#pdo.constants.fb-attr-time-format">PDO::FB_ATTR_TIME_FORMAT</a></code></strong> => <strong><code><a href="class.pdo-firebird.html#pdo-firebird.constants.attr-time-format">Pdo\Firebird::ATTR_TIME_FORMAT</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-firebird.html#pdo.constants.fb-attr-timestamp-format">PDO::FB_ATTR_TIMESTAMP_FORMAT</a></code></strong> => <strong><code><a href="class.pdo-firebird.html#pdo-firebird.constants.attr-timestamp-format">Pdo\Firebird::ATTR_TIMESTAMP_FORMAT</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-use-buffered-query">PDO::MYSQL_ATTR_USE_BUFFERED_QUERY</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-use-buffered-query">Pdo\Mysql::ATTR_USE_BUFFERED_QUERY</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-local-infile">PDO::MYSQL_ATTR_LOCAL_INFILE</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-local-infile">Pdo\Mysql::ATTR_LOCAL_INFILE</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-local-infile-directory">PDO::MYSQL_ATTR_LOCAL_INFILE_DIRECTORY</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-local-infile-directory">Pdo\Mysql::ATTR_LOCAL_INFILE_DIRECTORY</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-init-command">PDO::MYSQL_ATTR_INIT_COMMAND</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-init-command">Pdo\Mysql::ATTR_INIT_COMMAND</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-max-buffer-size">PDO::MYSQL_ATTR_MAX_BUFFER_SIZE</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-max-buffer-size">Pdo\Mysql::ATTR_MAX_BUFFER_SIZE</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-read-default-file">PDO::MYSQL_ATTR_READ_DEFAULT_FILE</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-read-default-file">Pdo\Mysql::ATTR_READ_DEFAULT_FILE</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-read-default-group">PDO::MYSQL_ATTR_READ_DEFAULT_GROUP</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-read-default-group">Pdo\Mysql::ATTR_READ_DEFAULT_GROUP</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-compress">PDO::MYSQL_ATTR_COMPRESS</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-compress">Pdo\Mysql::ATTR_COMPRESS</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-direct-query">PDO::MYSQL_ATTR_DIRECT_QUERY</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-direct-query">Pdo\Mysql::ATTR_DIRECT_QUERY</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-found-rows">PDO::MYSQL_ATTR_FOUND_ROWS</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-found-rows">Pdo\Mysql::ATTR_FOUND_ROWS</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-ignore-space">PDO::MYSQL_ATTR_IGNORE_SPACE</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-ignore-space">Pdo\Mysql::ATTR_IGNORE_SPACE</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-ssl-key">PDO::MYSQL_ATTR_SSL_KEY</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-ssl-key">Pdo\Mysql::ATTR_SSL_KEY</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-ssl-cert">PDO::MYSQL_ATTR_SSL_CERT</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-ssl-cert">Pdo\Mysql::ATTR_SSL_CERT</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-ssl-ca">PDO::MYSQL_ATTR_SSL_CA</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-ssl-ca">Pdo\Mysql::ATTR_SSL_CA</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-ssl-capath">PDO::MYSQL_ATTR_SSL_CAPATH</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-ssl-capath">Pdo\Mysql::ATTR_SSL_CAPATH</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-ssl-cipher">PDO::MYSQL_ATTR_SSL_CIPHER</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-ssl-cipher">Pdo\Mysql::ATTR_SSL_CIPHER</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-ssl-verify-server-cert">PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-ssl-verify-server-cert">Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-server-public-key">PDO::MYSQL_ATTR_SERVER_PUBLIC_KEY</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-server-public-key">Pdo\Mysql::ATTR_SERVER_PUBLIC_KEY</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-multi-statements">PDO::MYSQL_ATTR_MULTI_STATEMENTS</a></code></strong> => <strong><code><a href="class.pdo-mysql.html#pdo-mysql.constants.attr-multi-statements">Pdo\Mysql::ATTR_MULTI_STATEMENTS</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-odbc.html#pdo.constants.odbc-attr-use-cursor-library">PDO::ODBC_ATTR_USE_CURSOR_LIBRARY</a></code></strong> => <strong><code><a href="class.pdo-odbc.html#pdo-odbc.constants.attr-use-cursor-library">Pdo\Odbc::ATTR_USE_CURSOR_LIBRARY</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-odbc.html#pdo.constants.odbc-attr-assume-utf8">PDO::ODBC_ATTR_ASSUME_UTF8</a></code></strong> => <strong><code><a href="class.pdo-odbc.html#pdo-odbc.constants.attr-assume-utf8">Pdo\Odbc::ATTR_ASSUME_UTF8</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-odbc.html#pdo.constants.odbc-sql-use-if-needed">PDO::ODBC_SQL_USE_IF_NEEDED</a></code></strong> => <strong><code><a href="class.pdo-odbc.html#pdo-odbc.constants.sql-use-if-needed">Pdo\Odbc::SQL_USE_IF_NEEDED</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-odbc.html#pdo.constants.odbc-sql-use-driver">PDO::ODBC_SQL_USE_DRIVER</a></code></strong> => <strong><code><a href="class.pdo-odbc.html#pdo-odbc.constants.sql-use-driver">Pdo\Odbc::SQL_USE_DRIVER</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-odbc.html#pdo.constants.odbc-sql-use-odbc">PDO::ODBC_SQL_USE_ODBC</a></code></strong> => <strong><code><a href="class.pdo-odbc.html#pdo-odbc.constants.sql-use-odbc">Pdo\Odbc::SQL_USE_ODBC</a></code></strong></li>
+    <li><strong><code><a href="ref.pdo-pgsql.html#pdo.constants.pgsql-attr-disable-prepares">PDO::PGSQL_ATTR_DISABLE_PREPARES</a></code></strong> => <strong><code><a href="class.pdo-pgsql.html#pdo-pgsql.constants.attr-disable-prepares">Pdo\Pgsql::ATTR_DISABLE_PREPARES</a></code></strong></li>
+    <li><strong><code>PDO::SQLITE_ATTR_EXTENDED_RESULT_CODES</code></strong> => <strong><code><a href="class.pdo-sqlite.html#pdo-sqlite.constants.attr-extended-result-codes">Pdo\Sqlite::ATTR_EXTENDED_RESULT_CODES</a></code></strong></li>
+    <li><strong><code>PDO::SQLITE_ATTR_OPEN_FLAGS</code></strong> => <strong><code>Pdo\Sqlite::OPEN_FLAGS</code></strong></li>
+    <li><strong><code>PDO::SQLITE_ATTR_READONLY_STATEMENT</code></strong> => <strong><code><a href="class.pdo-sqlite.html#pdo-sqlite.constants.attr-readonly-statement">Pdo\Sqlite::ATTR_READONLY_STATEMENT</a></code></strong></li>
+    <li><strong><code><a href="pdo.constants.html#pdo.constants.sqlite-deterministic">PDO::SQLITE_DETERMINISTIC</a></code></strong> => <strong><code><a href="class.pdo-sqlite.html#pdo-sqlite.constants.deterministic">Pdo\Sqlite::DETERMINISTIC</a></code></strong></li>
+    <li><strong><code>PDO::SQLITE_OPEN_READONLY</code></strong> => <strong><code><a href="class.pdo-sqlite.html#pdo-sqlite.constants.open-readonly">Pdo\Sqlite::OPEN_READONLY</a></code></strong></li>
+    <li><strong><code>PDO::SQLITE_OPEN_READWRITE</code></strong> => <strong><code><a href="class.pdo-sqlite.html#pdo-sqlite.constants.open-readwrite">Pdo\Sqlite::OPEN_READWRITE</a></code></strong></li>
+    <li><strong><code>PDO::SQLITE_OPEN_CREATE</code></strong> => <strong><code><a href="class.pdo-sqlite.html#pdo-sqlite.constants.open-create">Pdo\Sqlite::OPEN_CREATE</a></code></strong></li>
+   </ul>
+   
+  </p>
+
+  <p class="para">
+   已废弃 PDO 类中的驱动专属方法。受影响的方法及其替代项如下：
+
+   <ul class="simplelist">
+    <li><span class="methodname"><a href="pdo.pgsqlcopyfromarray.html" class="methodname">PDO::pgsqlCopyFromArray()</a></span> => <span class="methodname"><a href="pdo-pgsql.copyfromarray.html" class="methodname">Pdo\Pgsql::copyFromArray()</a></span></li>
+    <li><span class="methodname"><a href="pdo.pgsqlcopyfromfile.html" class="methodname">PDO::pgsqlCopyFromFile()</a></span> => <span class="methodname"><a href="pdo-pgsql.copyfromfile.html" class="methodname">Pdo\Pgsql::copyFromFile()</a></span></li>
+    <li><span class="methodname"><a href="pdo.pgsqlcopytoarray.html" class="methodname">PDO::pgsqlCopyToArray()</a></span> => <span class="methodname"><a href="pdo-pgsql.copytoarray.html" class="methodname">Pdo\Pgsql::copyToArray()</a></span></li>
+    <li><span class="methodname"><a href="pdo.pgsqlcopytofile.html" class="methodname">PDO::pgsqlCopyToFile()</a></span> => <span class="methodname"><a href="pdo-pgsql.copytofile.html" class="methodname">Pdo\Pgsql::copyToFile()</a></span></li>
+    <li><span class="methodname"><a href="pdo.pgsqlgetnotify.html" class="methodname">PDO::pgsqlGetNotify()</a></span> => <span class="methodname"><a href="pdo-pgsql.getnotify.html" class="methodname">Pdo\Pgsql::getNotify()</a></span></li>
+    <li><span class="methodname"><a href="pdo.pgsqlgetpid.html" class="methodname">PDO::pgsqlGetPid()</a></span> => <span class="methodname"><a href="pdo-pgsql.getpid.html" class="methodname">Pdo\Pgsql::getPid()</a></span></li>
+    <li><span class="methodname"><a href="pdo.pgsqllobcreate.html" class="methodname">PDO::pgsqlLOBCreate()</a></span> => <span class="methodname"><a href="pdo-pgsql.lobcreate.html" class="methodname">Pdo\Pgsql::lobCreate()</a></span></li>
+    <li><span class="methodname"><a href="pdo.pgsqllobopen.html" class="methodname">PDO::pgsqlLOBOpen()</a></span> => <span class="methodname"><a href="pdo-pgsql.lobopen.html" class="methodname">Pdo\Pgsql::lobOpen()</a></span></li>
+    <li><span class="methodname"><a href="pdo.pgsqllobunlink.html" class="methodname">PDO::pgsqlLOBUnlink()</a></span> => <span class="methodname"><a href="pdo-pgsql.lobunlink.html" class="methodname">Pdo\Pgsql::lobUnlink()</a></span></li>
+    <li><span class="methodname"><a href="pdo.sqlitecreateaggregate.html" class="methodname">PDO::sqliteCreateAggregate()</a></span> => <span class="methodname"><a href="pdo-sqlite.createaggregate.html" class="methodname">Pdo\Sqlite::createAggregate()</a></span></li>
+    <li><span class="methodname"><a href="pdo.sqlitecreatecollation.html" class="methodname">PDO::sqliteCreateCollation()</a></span> => <span class="methodname"><a href="pdo-sqlite.createcollation.html" class="methodname">Pdo\Sqlite::createCollation()</a></span></li>
+    <li><span class="methodname"><a href="pdo.sqlitecreatefunction.html" class="methodname">PDO::sqliteCreateFunction()</a></span> => <span class="methodname"><a href="pdo-sqlite.createfunction.html" class="methodname">Pdo\Sqlite::createFunction()</a></span></li>
+   </ul>
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.pdo-pgsql">
+  <h3 class="title">PDO_PGSQL</h3>
+
+  <p class="para">
+   已废弃与事务状态相关的常量，因为 PDO 不支持此功能：
+
+   <ul class="simplelist">
+    <li><strong><code>PDO::PGSQL_TRANSACTION_IDLE</code></strong></li>
+    <li><strong><code>PDO::PGSQL_TRANSACTION_ACTIVE</code></strong></li>
+    <li><strong><code>PDO::PGSQL_TRANSACTION_INTRANS</code></strong></li>
+    <li><strong><code>PDO::PGSQL_TRANSACTION_INERROR</code></strong></li>
+    <li><strong><code>PDO::PGSQL_TRANSACTION_UNKNOWN</code></strong></li>
+   </ul>
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.reflection">
+  <h3 class="title">Reflection</h3>
+
+  <p class="simpara">
+    已废弃各类 Reflection 对象的 <code class="code">setAccessible()</code> 方法，因为这些方法已不再生效。
+    
+  </p>
+
+  <p class="simpara">
+   已废弃调用 <span class="methodname"><a href="reflectionclass.getconstant.html" class="methodname">ReflectionClass::getConstant()</a></span> 获取不存在的常量。
+   
+  </p>
+
+  <p class="simpara">
+   已废弃调用 <span class="methodname"><a href="reflectionproperty.getdefaultvalue.html" class="methodname">ReflectionProperty::getDefaultValue()</a></span> 获取无默认值的属性。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.spl">
+  <h3 class="title">SPL</h3>
+
+  <p class="simpara">
+   已废弃将 <span class="function"><a href="function.spl-autoload-call.html" class="function">spl_autoload_call()</a></span> 函数作为回调参数传递给 <span class="function"><a href="function.spl-autoload-unregister.html" class="function">spl_autoload_unregister()</a></span>
+   来注销所有自动加载器的做法。如有需要，应遍历 <span class="function"><a href="function.spl-autoload-functions.html" class="function">spl_autoload_functions()</a></span> 的返回值，并对每个元素调用
+   <span class="function"><a href="function.spl-autoload-unregister.html" class="function">spl_autoload_unregister()</a></span>。
+   
+  </p>
+
+  <p class="simpara">
+   已废弃 <span class="methodname"><a href="splobjectstorage.contains.html" class="methodname">SplObjectStorage::contains()</a></span>、<span class="methodname"><a href="splobjectstorage.attach.html" class="methodname">SplObjectStorage::attach()</a></span> 和
+   <span class="methodname"><a href="splobjectstorage.detach.html" class="methodname">SplObjectStorage::detach()</a></span> 方法，分别推荐使用
+   <span class="methodname"><a href="splobjectstorage.offsetexists.html" class="methodname">SplObjectStorage::offsetExists()</a></span>、<span class="methodname"><a href="splobjectstorage.offsetset.html" class="methodname">SplObjectStorage::offsetSet()</a></span> 和
+   <span class="methodname"><a href="splobjectstorage.offsetunset.html" class="methodname">SplObjectStorage::offsetUnset()</a></span>。
+   
+  </p>
+
+  <p class="simpara">
+   已废弃将 <span class="classname"><a href="class.arrayobject.html" class="classname">ArrayObject</a></span> 和 <span class="classname"><a href="class.arrayiterator.html" class="classname">ArrayIterator</a></span> 与对象一起使用。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.standard">
+  <h3 class="title">标准</h3>
+
+  <p class="simpara">
+   已废弃 <span class="function"><a href="function.socket-set-timeout.html" class="function">socket_set_timeout()</a></span> 别名函数，应改用 <span class="function"><a href="function.stream-set-timeout.html" class="function">stream_set_timeout()</a></span>。
+   
+  </p>
+
+  <p class="simpara">
+   已废弃将 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong> 传递给 <span class="function"><a href="function.readdir.html" class="function">readdir()</a></span>、<span class="function"><a href="function.rewinddir.html" class="function">rewinddir()</a></span> 和 <span class="function"><a href="function.closedir.html" class="function">closedir()</a></span>
+   以使用最近打开的目录，应显式传入最近打开的目录资源。
+   
+  </p>
+
+  <p class="simpara">
+   现已废弃向 <span class="function"><a href="function.chr.html" class="function">chr()</a></span> 传入 <code class="literal">[0, 255]</code> 区间以外的整数，因为一个字节只能容纳该区间内的值。
+   
+  </p>
+
+  <p class="simpara">
+   现已废弃向 <span class="function"><a href="function.ord.html" class="function">ord()</a></span> 传入非单字节的字符串，这通常表明存在错误。
+   
+  </p>
+
+  <p class="simpara">
+   已废弃局部预定义变量 <a href="reserved.variables.httpresponseheader.html" class="link">$http_response_header</a>，应改用调用
+   <span class="function"><a href="function.http-get-last-response-headers.html" class="function">http_get_last_response_headers()</a></span> 函数。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.deprecated.xml">
+  <h3 class="title">XML</h3>
+
+  <p class="simpara">
+   已废弃 <span class="function"><a href="function.xml-parser-free.html" class="function">xml_parser_free()</a></span> 函数，因为 <span class="classname"><a href="class.xmlparser.html" class="classname">XMLParser</a></span> 对象会自动释放。
+   
+  </p>
+
+ </div>
+
+</div></div></div><script type="text/javascript" src="search-combined.js"></script><script type="text/javascript" src="js/67ae199ee27cc87120cab9ba49d1b776-FuzzySearch.min.js"></script><script type="text/javascript" src="js/f5555778cd757f2cb49676062898832b-search.js"></script>    <div id="search-modal__backdrop" class="search-modal__backdrop">
+      <div
+        role="dialog"
+        aria-label="Search modal"
+        id="search-modal"
+        class="search-modal"
+      >
+        <div class="search-modal__header">
+          <div class="search-modal__form">
+            <div class="search-modal__input-icon">
+              <!-- https://feathericons.com search -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                width="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input
+              type="search"
+              id="search-modal__input"
+              class="search-modal__input"
+              placeholder="Search docs"
+              aria-label="Search docs"
+            />
+          </div>
+    
+          <button aria-label="Close" class="search-modal__close">
+            <!-- https://pictogrammers.com/library/mdi/icon/close/ -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+        <div
+          role="listbox"
+          aria-label="Search results"
+          id="search-modal__results"
+          class="search-modal__results"
+        ></div>
+        <div class="search-modal__helper-text">
+          <div>
+            <kbd>↑</kbd> and <kbd>↓</kbd> to navigate •
+            <kbd>Enter</kbd> to select •
+            <kbd>Esc</kbd> to close • <kbd>/</kbd> to open
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            /*{{{Search Modal*/
+            const language = 'local';
+            initSearchModal();
+            initPHPSearch(language).then((searchCallback) => {
+                initSearchUI({language, searchCallback, limit: 30});
+            });
+            /*}}}*/
+        });
+    </script></body></html>

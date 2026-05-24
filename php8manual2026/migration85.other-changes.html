@@ -1,0 +1,665 @@
+    <!DOCTYPE HTML>
+    <html>
+     <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <style>
+        .navbar__local {
+          flex-grow: 1;
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr min-content 1fr;
+          margin: 0;
+          height: 100%;
+          
+          .navbar__item {
+            align-content: center;
+          }
+          .navbar__link {
+            display: inline;
+          }
+          .search {
+            text-align: center;
+          }
+          .next {
+            text-align: right;
+          }
+        }
+      </style>
+      <title>其它变更</title>
+      <link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-base.css" />
+<link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-medium.css" />
+
+     </head>
+     <body class="docs">    <div class="navbar navbar-fixed-top">
+      <div class="navbar__inner clearfix">
+          <ul class="navbar__local">
+            <li class="navbar__item prev"><a href="migration85.deprecated.html" class="navbar__link">« 弃用功能</a></li>
+            <li class="navbar__item search">
+              <!-- Desktop encanced search -->
+              <button
+                id="navbar__search-button"
+                class="navbar__search-button"
+                hidden
+              >
+                    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        width="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+                Search
+              </button>
+            </li>
+            <li class="navbar__item next"><a href="migration85.windows-support.html" class="navbar__link">Windows 支持 »</a></li>
+          </ul>
+      </div>
+    </div>    <div id="breadcrumbs" class="clearfix">
+      <ul class="breadcrumbs-container">
+        <li><a href="index.html">PHP Manual</a></li>
+        <li><a href="migration85.html">从 PHP 8.4.x 移植到 PHP 8.5.x</a></li>
+        <li>其它变更</li>
+      </ul>
+    </div>    <div id="layout">
+      <div id="layout-content"><div id="migration85.other-changes" class="sect1">
+ <h2 class="title">其它变更</h2>
+
+ <div class="sect2" id="migration85.other-changes.core">
+  <h3 class="title">核心变更</h3>
+
+  <div class="sect3" id="migration85.other-changes.core.core">
+   <h4 class="title">核心</h4>
+
+   <p class="simpara">
+    macOS 上的高精度计时器（<span class="function"><a href="function.hrtime.html" class="function">hrtime()</a></span>）现已采用推荐的 <code class="code">clock_gettime_nsec_np(CLOCK_UPTIME_RAW)</code>
+    API，取代原先的 <code class="code">mach_absolute_time()</code>。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.core.cgi-cli">
+   <h4 class="title">CGI/CLI</h4>
+
+   <p class="simpara">
+    已移除 <strong class="option unknown">-z</strong> 或 <strong class="option unknown">--zend-extension</strong>
+    选项，因其不具备实际功能；应改用 <strong class="option unknown">-d zend_extension=[path]</strong>。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.core.pdo-odbc">
+   <h4 class="title">PDO_ODBC</h4>
+
+   <p class="simpara">
+    大列的获取行为已调整。PDO_ODBC 不再以 256
+    字节块为单位获取数据，而是尝试获取更大的块大小；当前该大小为页面大小减去字符串开销。同时，对在
+    SQLGetData 中返回 SQL_NO_TOTAL 的驱动程序也做了更好支持。此举有助于提升兼容性与性能。
+    
+   </p>
+
+  </div>
+
+ </div>
+
+ <div class="sect2" id="migration85.other-changes.sapi">
+  <h3 class="title">SAPI 模块的变更</h3>
+
+  <div class="sect3" id="migration85.other-changes.sapi.cli">
+   <h4 class="title">CLI</h4>
+
+   <p class="simpara">
+    使用 <span class="function"><a href="function.cli-set-process-title.html" class="function">cli_set_process_title()</a></span> 设置过长的进程标题时，现在会失败，而非静默截断指定标题。
+   </p>
+
+   <p class="simpara">
+    新增 <strong class="option unknown">--ini=diff</strong> 选项，用于输出与内置默认值不同的 INI 配置项。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.sapi.fpm">
+   <h4 class="title">FPM</h4>
+
+   <p class="simpara">
+    FPM 在配合 httpd ProxyPass 使用时，可选地对完整脚本路径进行解码。新增
+    fastcgi.script_path_encoded 
+    INI 配置项，用于禁用此新行为。
+   </p>
+
+   <p class="simpara">
+    FPM 访问日志长度限制现已遵循 <a href="install.fpm.configuration.html#log-limit" class="link">log_limit</a> 配置值。
+   </p>
+
+  </div>
+
+ </div>
+
+ <div class="sect2" id="migration85.other-changes.functions">
+  <h3 class="title">函数变更</h3>
+
+  <div class="sect3" id="migration85.other-changes.functions.intl">
+   <h4 class="title">Intl</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.grapheme-extract.html" class="function">grapheme_extract()</a></span> 在跳过无效起始字节时，现已正确设置 <code class="parameter">$next</code>
+    的值。此前在某些情况下，该值会指向字母边界起始位置，而非结束位置。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="transliterator.geterrorcode.html" class="function">transliterator_get_error_code()</a></span>、<span class="function"><a href="transliterator.geterrormessage.html" class="function">transliterator_get_error_message()</a></span>、<span class="methodname"><a href="transliterator.geterrorcode.html" class="methodname">TransLiterator::getErrorCode()</a></span>
+    和 <span class="methodname"><a href="transliterator.geterrormessage.html" class="methodname">TransLiterator::getErrorMessage()</a></span> 已从返回类型联合中移除 <strong><code><a href="reserved.constants.html#constant.false">false</a></code></strong>，因为实际上这些函数可能从未返回 <strong><code><a href="reserved.constants.html#constant.false">false</a></code></strong>。
+   </p>
+
+   <p class="simpara">
+    以下函数现已支持 <code class="parameter">$locale</code>：<span class="function"><a href="function.grapheme-strpos.html" class="function">grapheme_strpos()</a></span>、<span class="function"><a href="function.grapheme-stripos.html" class="function">grapheme_stripos()</a></span>、<span class="function"><a href="function.grapheme-strrpos.html" class="function">grapheme_strrpos()</a></span>、<span class="function"><a href="function.grapheme-strripos.html" class="function">grapheme_strripos()</a></span>、<span class="function"><a href="function.grapheme-substr.html" class="function">grapheme_substr()</a></span>、<span class="function"><a href="function.grapheme-strstr.html" class="function">grapheme_strstr()</a></span>
+    和 <span class="function"><a href="function.grapheme-stristr.html" class="function">grapheme_stristr()</a></span>
+    
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.functions.ldap">
+   <h4 class="title">LDAP</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.ldap-get-option.html" class="function">ldap_get_option()</a></span> 现在支持传入 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong> 连接（与 <span class="function"><a href="function.ldap-set-option.html" class="function">ldap_set_option()</a></span> 一致），以便获取全局选项。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.functions.libxml">
+   <h4 class="title">libxml</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.libxml-set-external-entity-loader.html" class="function">libxml_set_external_entity_loader()</a></span> 现在具有正式的返回类型 <span class="type"><a href="language.types.singleton.html" class="type true">true</a></span>。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.functions.openssl">
+   <h4 class="title">OpenSSL</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.openssl-public-encrypt.html" class="function">openssl_public_encrypt()</a></span> 和 <span class="function"><a href="function.openssl-private-decrypt.html" class="function">openssl_private_decrypt()</a></span> 新增
+    <code class="parameter">$digest_algo</code> 参数，用于指定 OAEP 填充所使用的散列摘要算法。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.openssl-sign.html" class="function">openssl_sign()</a></span> 和 <span class="function"><a href="function.openssl-verify.html" class="function">openssl_verify()</a></span> 新增
+    <code class="parameter">$padding</code> 参数，以支持使用更安全的 RSA PSS 填充方式。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.openssl-cms-encrypt.html" class="function">openssl_cms_encrypt()</a></span> 的 <code class="parameter">$cipher_algo</code>
+    参数现可接受表示加密算法名称的字符串，从而支持更多算法，包括用于认证加密数据的 AES-GCM 系列算法。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.functions.pcntl">
+   <h4 class="title">PCNTL</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.pcntl-exec.html" class="function">pcntl_exec()</a></span> 现在具有正式的返回类型 <span class="type"><a href="language.types.singleton.html" class="type false">false</a></span>。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.pcntl-waitid.html" class="function">pcntl_waitid()</a></span> 新增 resource_usage 参数，用于收集关于子进程的各类平台特定资源使用指标。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.functions.pdo-pgsql">
+   <h4 class="title">PDO_PGSQL</h4>
+
+   <p class="simpara">
+    <span class="methodname"><a href="pdo-pgsql.copyfromarray.html" class="methodname">Pdo\Pgsql::copyFromArray()</a></span> 现在支持 <span class="type"><a href="language.types.iterable.html" class="type iterable">iterable</a></span> 输入。
+   </p>
+
+   <p class="simpara">
+    <span class="methodname"><strong>Pdo\Pgsql::setAttribute()</strong></span> 和 <span class="methodname"><strong>Pdo\Pgsql::prepare()</strong></span>
+    支持将 <strong><code><a href="pdo.constants.html#pdo.constants.attr-prefetch">PDO::ATTR_PREFETCH</a></code></strong> 设为 0，以启用延迟获取模式。在此模式下，语句无法并行执行。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.functions.pgsql">
+   <h4 class="title">PostgreSQL</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.pg-copy-from.html" class="function">pg_copy_from()</a></span> 现在支持 <span class="type"><a href="language.types.iterable.html" class="type iterable">iterable</a></span> 输入。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.pg-connect.html" class="function">pg_connect()</a></span> 会检查 connection_string 参数是否包含 null 字节。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><strong>pg_close_stmt()</strong></span> 会检查 statement_name 参数是否包含 null 字节。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.functions.posix">
+   <h4 class="title">POSIX</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.posix-ttyname.html" class="function">posix_ttyname()</a></span> 在遇到无效文件描述符时，会将 last_error 设置为 EBADF。
+   </p>
+
+   <p class="simpara">
+    当 <span class="function"><a href="function.posix-isatty.html" class="function">posix_isatty()</a></span> 遇到无效文件描述符时，会触发 <strong><code><a href="errorfunc.constants.html#constant.e-warning">E_WARNING</a></code></strong> 消息。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.posix-fpathconf.html" class="function">posix_fpathconf()</a></span> 会检查无效的文件描述符，并将 last_error 设置为
+    EBADF，同时触发 <strong><code><a href="errorfunc.constants.html#constant.e-warning">E_WARNING</a></code></strong> 消息。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.functions.reflection">
+   <h4 class="title">Reflection</h4>
+
+   <p class="simpara">
+    <span class="methodname"><a href="reflectionclass.tostring.html" class="methodname">ReflectionClass::__toString()</a></span>
+    对枚举的输出已调整，以更清晰地表明该类为枚举类型，并说明其中的枚举项属于枚举成员，而非普通类常量。
+   </p>
+
+   <p class="simpara">
+    对于带有挂钩的属性，<span class="methodname"><a href="reflectionproperty.tostring.html" class="methodname">ReflectionProperty::__toString()</a></span>
+    的输出已调整，以标明该属性包含哪些挂钩、这些挂钩是否为 final，以及该属性是否为虚拟属性。当类中包含带挂钩的属性时，<span class="methodname"><a href="reflectionclass.tostring.html" class="methodname">ReflectionClass::__toString()</a></span>
+    的输出也会相应变化。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.functions.sockets">
+   <h4 class="title">Sockets</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.socket-create.html" class="function">socket_create()</a></span>/<span class="function"><a href="function.socket-bind.html" class="function">socket_bind()</a></span> 可创建 <strong><code>AF_PACKET</code></strong> 协议族的套接字。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.socket-getsockname.html" class="function">socket_getsockname()</a></span> 可获取 <strong><code>AF_PACKET</code></strong> 套接字的接口索引及其字符串表示形式。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.functions.zlib">
+   <h4 class="title">Zlib</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.gzfile.html" class="function">gzfile()</a></span>、<span class="function"><a href="function.gzopen.html" class="function">gzopen()</a></span> 和 <span class="function"><a href="function.readgzfile.html" class="function">readgzfile()</a></span>
+    函数的 <code class="parameter">$use_include_path</code> 参数已从 <span class="type"><a href="language.types.integer.html" class="type int">int</a></span> 类型改为 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span> 类型。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.gzfile.html" class="function">gzfile()</a></span>、<span class="function"><a href="function.gzopen.html" class="function">gzopen()</a></span> 和 <span class="function"><a href="function.readgzfile.html" class="function">readgzfile()</a></span> 函数现已遵循默认的 stream 上下文。
+   </p>
+
+  </div>
+
+ </div>
+
+ <div class="sect2" id="migration85.other-changes.extensions">
+  <h3 class="title">扩展的其他变更</h3>
+
+  <div class="sect3" id="migration85.other-changes.extensions.curl">
+   <h4 class="title">cURL</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.curl-setopt.html" class="function">curl_setopt()</a></span> 中 <strong><code><a href="curl.constants.html#constant.curlopt-followlocation">CURLOPT_FOLLOWLOCATION</a></code></strong> 选项的值不再视为
+    bool 类型，而是作为 int 类型处理，以支持 <strong><code>CURLFOLLOW_OBEYCODE</code></strong> 和
+    <strong><code>CURLFOLLOW_FIRSTONLY</code></strong>。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.extensions.fileinfo">
+   <h4 class="title">Fileinfo</h4>
+
+   <p class="simpara">
+    file 已从 5.45 升级至 5.46。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.finfo-close.html" class="function">finfo_close()</a></span> 的返回类型已从 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span> 改为 <span class="type"><a href="language.types.singleton.html" class="type true">true</a></span>。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.extensions.intl">
+   <h4 class="title">Intl</h4>
+
+   <p class="simpara">
+    Intl 的内部错误机制已现代化，能够更准确地指示哪个调用位置引发了何种错误。此外，部分
+    ext/date 抛出的异常现已封装在 <span class="classname"><a href="class.intlexception.html" class="classname">IntlException</a></span> 中。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.extensions.lexbor">
+   <h4 class="title">Lexbor</h4>
+
+   <p class="simpara">
+    新增始终启用的 lexbor 扩展，其中包含从 <a href="book.dom.html" class="link">ext/dom</a>
+    中分离出来的 lexbor 库，以便在其他扩展中复用。该新扩展不直接向用户空间暴露。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.extensions.opcache">
+   <h4 class="title">Opcache</h4>
+
+   <p class="simpara">
+    <a href="book.opcache.html" class="link">Opcache 扩展</a>现已始终内置于 PHP 二进制文件中并自动加载，仍会遵循
+    INI 配置项 <a href="opcache.configuration.html#ini.opcache.enable" class="link">opcache.enable</a> 和 <a href="opcache.configuration.html#ini.opcache.enable-cli" class="link">opcache.enable_cli</a>。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.extensions.pcre">
+   <h4 class="title">PCRE</h4>
+
+   <p class="simpara">
+    pcre2lib 已从 10.44 升级至 10.46。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.extensions.pdo-sqlite">
+   <h4 class="title">PDO_Sqlite</h4>
+
+   <p class="simpara">
+    最低支持的发布版本已从 3.7.7 提升至 3.7.17。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.extensions.readline">
+   <h4 class="title">Readline</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.readline-add-history.html" class="function">readline_add_history()</a></span>、<span class="function"><a href="function.readline-clear-history.html" class="function">readline_clear_history()</a></span>
+    和 <span class="function"><a href="function.readline-callback-handler-install.html" class="function">readline_callback_handler_install()</a></span> 的返回类型已从 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span> 改为 <span class="type"><a href="language.types.singleton.html" class="type true">true</a></span>。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.extensions.reflection">
+   <h4 class="title">Reflection</h4>
+
+   <p class="simpara">
+    <span class="classname"><a href="class.reflectionconstant.html" class="classname">ReflectionConstant</a></span> 不再是 final 类。
+   </p>
+
+  </div>
+
+ </div>
+
+ <div class="sect2" id="migration85.other-changes.ini">
+  <h3 class="title">INI 文件处理的变更</h3>
+
+  <div class="sect3" id="migration85.other-changes.ini.core">
+   <h4 class="title">Core</h4>
+
+   <p class="simpara">
+    新增 fatal_error_backtraces 配置项，用于控制致命错误是否包含回溯信息。
+    
+   </p>
+
+   <p class="simpara">
+    新增仅在启动时生效的 max_memory_limit INI 配置项，用于限制 memory_limit
+    在启动或运行时可设置的最大值。若超过该值（除非设为 -1），将发出警告，并将
+    memory_limit 设为当前的 max_memory_limit 值。
+    
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.ini.opcache">
+   <h4 class="title">Opcache</h4>
+
+   <p class="simpara">
+    新增 opcache.file_cache_read_only 配置项，用于支持只读的 <a href="opcache.configuration.html#ini.opcache.file-cache" class="link">opcache.file_cache</a>
+    目录，适用于只读文件系统（例如只读 Docker 容器）。建议配合
+    <code class="literal">opcache.validate_timestamps=0</code>、<code class="literal">opcache.enable_file_override=1</code>
+    和 <code class="literal">opcache.file_cache_consistency_checks=0</code> 使用。
+   </p>
+
+   <blockquote class="note"><p><strong class="note">注意</strong>: 
+    <span class="simpara">
+     由不同版本的 PHP 构建、不同文件路径或不同配置（包括加载的扩展）生成的缓存可能不会使用。
+    </span>
+   </p></blockquote>
+
+   <p class="simpara">
+    <a href="opcache.configuration.html#ini.opcache.jit-hot-loop" class="link">opcache.jit_hot_loop</a>
+    的默认值现为 61（质数），以避免其成为循环迭代次数的倍数。建议将此参数设为质数。
+   </p>
+
+   <p class="simpara">
+    当 OPcache SHM 已设置好后修改 <a href="opcache.configuration.html#ini.opcache.memory-consumption" class="link">opcache.memory_consumption</a>
+    将正确报告失败，而非静默无操作并在 phpinfo() 中显示误导性的值。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.ini.openssl">
+   <h4 class="title">OpenSSL</h4>
+
+   <p class="simpara">
+    新增 openssl.libctx，用于选择
+    OpenSSL 库上下文类型。可为每个线程使用独立的自定义 libctx，或使用单一的全局 libctx（默认）。
+   </p>
+
+  </div>
+
+ </div>
+
+ <div class="sect2" id="migration85.other-changes.performance">
+  <h3 class="title">性能</h3>
+
+  <div class="sect3" id="migration85.other-changes.performance.core">
+   <h4 class="title">核心</h4>
+
+   <p class="simpara">
+    移除了针对布尔值的恒等比较操作码，尤其是用于 <code class="code">match(true)</code> 模式的操作码。
+   </p>
+
+   <p class="simpara">
+    为 <code class="code">=== []</code> 和 <code class="code">!== []</code> 比较操作新增了 OPcode 专用优化。
+   </p>
+
+   <p class="simpara">
+    创建异常对象的速度现已显著提升。
+   </p>
+
+   <p class="simpara">
+    代码中使用 SSE2 的部分现已适配，同时支持 ARM NEON 的 SIMD 指令。
+   </p>
+
+   <p class="simpara">
+    引入了 TAILCALL VM，在使用 Clang&gt;=19 上编译 x86_64 或 aarch64 架构时默认启用。TAILCALL VM
+    的性能与使用 GCC 编译时采用的 HYBRID VM 相当，使得 Clang&gt;=19 构建的 PHP 二进制文件性能达到
+    GCC 构建版本的水平。此外，其他编译器所使用的 CALL VM 性能也显著提升。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.performance.intl">
+   <h4 class="title">Intl</h4>
+
+   <p class="simpara">
+    现在在将字符串转换为整理器使用时，避免了创建额外的字符串副本。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.performance.mbstring">
+   <h4 class="title">MBString</h4>
+
+   <p class="simpara">
+    代码中使用 SSE2 的部分现已适配，同时支持 ARM NEON 的 SIMD 指令。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.performance.opcache">
+   <h4 class="title">Opcache</h4>
+
+   <p class="simpara">
+    在非 Glibc 构建中，JIT 编译代码获取 TLS 变量的性能得到提升。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.performance.reflection">
+   <h4 class="title">Reflection</h4>
+
+   <p class="para">
+    以下方法的性能得到提升：
+    <ul class="simplelist">
+     <li><span class="methodname"><a href="reflectionproperty.getvalue.html" class="methodname">ReflectionProperty::getValue()</a></span></li>
+     <li><span class="methodname"><a href="reflectionproperty.getrawvalue.html" class="methodname">ReflectionProperty::getRawValue()</a></span></li>
+     <li><span class="methodname"><a href="reflectionproperty.isinitialized.html" class="methodname">ReflectionProperty::isInitialized()</a></span></li>
+     <li><span class="methodname"><a href="reflectionproperty.isinitialized.html" class="methodname">ReflectionProperty::isInitialized()</a></span></li>
+     <li><span class="methodname"><a href="reflectionproperty.setvalue.html" class="methodname">ReflectionProperty::setValue()</a></span></li>
+     <li><span class="methodname"><a href="reflectionproperty.setrawvalue.html" class="methodname">ReflectionProperty::setRawValue()</a></span></li>
+    </ul>
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.performance.spl">
+   <h4 class="title">SPL</h4>
+
+   <p class="simpara">
+    <span class="classname"><a href="class.splfixedarray.html" class="classname">SplFixedArray</a></span> 的维度访问器和方法性能得到提升。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.performance.standard">
+   <h4 class="title">标准</h4>
+
+   <p class="simpara">
+    带有回调函数的数组操作函数（如
+    <span class="function"><a href="function.array-find.html" class="function">array_find()</a></span>、<span class="function"><a href="function.array-filter.html" class="function">array_filter()</a></span>、<span class="function"><a href="function.array-map.html" class="function">array_map()</a></span>、<span class="function"><a href="function.usort.html" class="function">usort()</a></span>
+    等）性能得到提升。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.urlencode.html" class="function">urlencode()</a></span> 和 <span class="function"><a href="function.rawurlencode.html" class="function">rawurlencode()</a></span> 的性能得到提升。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.unpack.html" class="function">unpack()</a></span> 在处理无名称重复项时性能得到提升，通过避免创建临时字符串并重复解析。
+   </p>
+
+   <p class="simpara">
+    提升 <span class="function"><a href="function.pack.html" class="function">pack()</a></span> 性能。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.array-chunk.html" class="function">array_chunk()</a></span> 的性能有小幅提升。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.other-changes.performance.xml">
+   <h4 class="title">XML</h4>
+
+   <p class="simpara">
+    提升 <span class="classname"><a href="class.xmlreader.html" class="classname">XMLReader</a></span> 属性访问性能。
+   </p>
+
+   <p class="simpara">
+    提升 <span class="classname"><a href="class.xmlwriter.html" class="classname">XMLWriter</a></span> 的性能，内存占用有所降低。
+   </p>
+
+  </div>
+
+ </div>
+
+</div></div></div><script type="text/javascript" src="search-combined.js"></script><script type="text/javascript" src="js/67ae199ee27cc87120cab9ba49d1b776-FuzzySearch.min.js"></script><script type="text/javascript" src="js/f5555778cd757f2cb49676062898832b-search.js"></script>    <div id="search-modal__backdrop" class="search-modal__backdrop">
+      <div
+        role="dialog"
+        aria-label="Search modal"
+        id="search-modal"
+        class="search-modal"
+      >
+        <div class="search-modal__header">
+          <div class="search-modal__form">
+            <div class="search-modal__input-icon">
+              <!-- https://feathericons.com search -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                width="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input
+              type="search"
+              id="search-modal__input"
+              class="search-modal__input"
+              placeholder="Search docs"
+              aria-label="Search docs"
+            />
+          </div>
+    
+          <button aria-label="Close" class="search-modal__close">
+            <!-- https://pictogrammers.com/library/mdi/icon/close/ -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+        <div
+          role="listbox"
+          aria-label="Search results"
+          id="search-modal__results"
+          class="search-modal__results"
+        ></div>
+        <div class="search-modal__helper-text">
+          <div>
+            <kbd>↑</kbd> and <kbd>↓</kbd> to navigate •
+            <kbd>Enter</kbd> to select •
+            <kbd>Esc</kbd> to close • <kbd>/</kbd> to open
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            /*{{{Search Modal*/
+            const language = 'local';
+            initSearchModal();
+            initPHPSearch(language).then((searchCallback) => {
+                initSearchUI({language, searchCallback, limit: 30});
+            });
+            /*}}}*/
+        });
+    </script></body></html>

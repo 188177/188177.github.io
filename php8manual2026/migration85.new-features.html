@@ -1,0 +1,524 @@
+    <!DOCTYPE HTML>
+    <html>
+     <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <style>
+        .navbar__local {
+          flex-grow: 1;
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr min-content 1fr;
+          margin: 0;
+          height: 100%;
+          
+          .navbar__item {
+            align-content: center;
+          }
+          .navbar__link {
+            display: inline;
+          }
+          .search {
+            text-align: center;
+          }
+          .next {
+            text-align: right;
+          }
+        }
+      </style>
+      <title>新功能</title>
+      <link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-base.css" />
+<link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-medium.css" />
+
+     </head>
+     <body class="docs">    <div class="navbar navbar-fixed-top">
+      <div class="navbar__inner clearfix">
+          <ul class="navbar__local">
+            <li class="navbar__item prev"><a href="migration85.html" class="navbar__link">« 从 PHP 8.4.x 移植到 PHP 8.5.x</a></li>
+            <li class="navbar__item search">
+              <!-- Desktop encanced search -->
+              <button
+                id="navbar__search-button"
+                class="navbar__search-button"
+                hidden
+              >
+                    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        width="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+                Search
+              </button>
+            </li>
+            <li class="navbar__item next"><a href="migration85.new-classes.html" class="navbar__link">新的类和接口 »</a></li>
+          </ul>
+      </div>
+    </div>    <div id="breadcrumbs" class="clearfix">
+      <ul class="breadcrumbs-container">
+        <li><a href="index.html">PHP Manual</a></li>
+        <li><a href="migration85.html">从 PHP 8.4.x 移植到 PHP 8.5.x</a></li>
+        <li>新功能</li>
+      </ul>
+    </div>    <div id="layout">
+      <div id="layout-content"><div id="migration85.new-features" class="sect1">
+ <h2 class="title">新功能</h2>
+
+ <div class="sect2" id="migration85.new-features.core">
+  <h3 class="title">PHP 核心</h3>
+
+  <div class="sect3" id="migration85.new-features.core.pipe-operator">
+   <h4 class="title">管道运算符</h4>
+
+   <p class="simpara">
+    新增<a href="language.operators.functional.html" class="link">管道（<code class="literal">|&gt;</code>）运算符</a>。
+    
+   </p>
+
+   <div class="informalexample">
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br />$result </span><span style="color: #007700">= </span><span style="color: #DD0000">"Hello World" </span><span style="color: #007700">|&gt; </span><span style="color: #0000BB">strlen</span><span style="color: #007700">(...);<br />print </span><span style="color: #0000BB">$result </span><span style="color: #007700">. </span><span style="color: #0000BB">PHP_EOL</span><span style="color: #007700">;  </span><span style="color: #FF8000">// Prints "11"</span></span></code></div>
+    </div>
+
+   </div>
+  </div>
+
+  <div class="sect3" id="migration85.new-features.core.closures-in-constexpr">
+   <h4 class="title">常量表达式中的闭包</h4>
+
+   <p class="para">
+    在常量表达式中新增对<a href="class.closure.html" class="link">闭包</a>和<a href="functions.first_class_callable_syntax.html" class="link">一级可调用对象</a>的支持，包括：
+
+    <ul class="simplelist">
+     <li>注解参数。</li>
+     <li>属性和参数的默认值。</li>
+     <li>常量和类常量。</li>
+    </ul>
+
+    
+    
+   </p>
+  </div>
+
+  <div class="sect3" id="migration85.new-features.core.nodiscard-attribute">
+   <h4 class="title">#[\NoDiscard] 注解</h4>
+
+   <p class="simpara">
+    新增了 <span class="classname"><strong class="classname">NoDiscard</strong></span> 注解，用于表示函数的返回值是重要的，应当使用它。
+    
+   </p>
+
+   <p class="simpara">
+    同时，新增 <code class="literal">(void)</code> 转换以表明不使用某个值是故意的。<code class="literal">(void)</code>
+    转换本身对程序执行没有任何影响，但可以用来抑制 <code class="code">#[\NoDiscard]</code> 发出的警告，也可能用于消除外部
+    IDE 或静态分析工具发出的诊断信息。
+    
+   </p>
+
+   <div class="informalexample">
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">#[</span><span style="color: #0000BB">\NoDiscard</span><span style="color: #007700">]<br />function </span><span style="color: #0000BB">concat</span><span style="color: #007700">(</span><span style="color: #0000BB">string $a</span><span style="color: #007700">, </span><span style="color: #0000BB">string $b</span><span style="color: #007700">): </span><span style="color: #0000BB">string </span><span style="color: #007700">{<br />     return </span><span style="color: #0000BB">a </span><span style="color: #007700">. </span><span style="color: #0000BB">b</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #FF8000">// concat() 的返回值应要么被使用，要么通过在 xxx.php 中将其强制转换为 (void) 来有意忽略。<br /></span><span style="color: #0000BB">concat</span><span style="color: #007700">(</span><span style="color: #DD0000">"a"</span><span style="color: #007700">, </span><span style="color: #DD0000">"b"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">// 不会发出警告，因为返回值已被赋值操作使用。<br /></span><span style="color: #0000BB">$results </span><span style="color: #007700">= </span><span style="color: #0000BB">concat</span><span style="color: #007700">(</span><span style="color: #DD0000">"a"</span><span style="color: #007700">, </span><span style="color: #DD0000">"b"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">// 不会发出警告，因为使用了 (void) 转换。<br /></span><span style="color: #007700">(</span><span style="color: #0000BB">void</span><span style="color: #007700">)</span><span style="color: #0000BB">concat</span><span style="color: #007700">(</span><span style="color: #DD0000">"a"</span><span style="color: #007700">, </span><span style="color: #DD0000">"b"</span><span style="color: #007700">);</span></span></code></div>
+    </div>
+
+   </div>
+
+  </div>
+
+  <div class="sect3" id="migration85.new-features.core.attributes-on-constants">
+   <h4 class="title">常量上的注解</h4>
+
+   <p class="simpara">
+    新增对编译时非类常量的注解支持（例如，<code class="code">const MY_CONST = 1;</code> 而非 <code class="code">define(&#039;MY_CONST&#039;, 1);</code>）。
+    
+   </p>
+
+   <p class="simpara">
+    <span class="classname"><a href="class.deprecated.html" class="classname">Deprecated</a></span> 注解现在可以用于常量。
+    
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.new-features.core.delayedtargetvalidation-attribute">
+   <h4 class="title"><code class="code">#[\DelayedTargetValidation]</code> 注解</h4>
+
+   <p class="simpara">
+    新增的 <span class="classname"><strong class="classname">DelayedTargetValidation</strong></span>
+    注解可用于抑制在无效目标上使用核心（或扩展）注解时产生的编译时错误。这些错误会在调用
+    <span class="methodname"><a href="reflectionattribute.newinstance.html" class="methodname">ReflectionAttribute::newInstance()</a></span> 时于运行时报告（如果需要）。
+    
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.new-features.core.override-for-properties">
+   <h4 class="title">用于属性的 <code class="code">#[\Override]</code></h4>
+
+   <p class="simpara">
+    <span class="classname"><a href="class.override.html" class="classname">Override</a></span> 注解现在可应用于属性。
+    
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.new-features.core.static-aviz">
+   <h4 class="title">静态非对称可见性</h4>
+
+   <p class="simpara">
+    新增对静态属性的<a href="language.oop5.visibility.html#language.oop5.visibility-members-aviz" class="link">非对称可见性支持</a>。
+    
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.new-features.core.backtraces-for-fatal-errors">
+   <h4 class="title">Fatal Error 的 Backtraces</h4>
+
+   <p class="simpara">
+    Fatal Error（例如超出最大执行时间）现在包含回溯信息。
+    
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.new-features.core.final-property-promotion">
+   <h4 class="title">final 属性的构造方法提升</h4>
+
+   <p class="simpara">
+    <a href="language.oop5.decon.html#language.oop5.decon.constructor.promotion" class="link">构造方法属性提升</a>现在可以用于最终属性。
+    
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.new-features.core.casts-in-constexpr">
+   <h4 class="title">常量表达式中的类型转换</h4>
+
+   <p class="simpara">
+    新增对常量表达式中类型转换的支持。
+   </p>
+
+   <div class="informalexample">
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">const </span><span style="color: #0000BB">T1 </span><span style="color: #007700">= (int) </span><span style="color: #0000BB">0.3</span><span style="color: #007700">; </span><span style="color: #FF8000">// 之前：“Fatal error: Constant expression contains invalid operations”<br /></span><span style="color: #007700">print </span><span style="color: #0000BB">T1 </span><span style="color: #007700">. </span><span style="color: #0000BB">PHP_EOL</span><span style="color: #007700">;   </span><span style="color: #FF8000">// 打印“0”</span></span></code></div>
+    </div>
+
+   </div>
+
+  </div>
+
+  <div class="sect3" id="migration85.new-features.core.clone-function">
+   <h4 class="title">Clone 函数</h4>
+
+   <p class="simpara">
+    <a href="language.oop5.cloning.html" class="link">clone 语言结构</a>现在是函数，并通过新的
+    <span class="property">$withProperties</span> 参数支持在克隆期间重新分配（只读）属性。
+    
+   </p>
+
+  </div>
+
+ </div>
+
+ <div class="sect2" id="migration85.new-features.curl">
+  <h3 class="title">cURL</h3>
+
+  <p class="simpara">
+   新增对多个 PHP 请求之间持久化的<a href="class.curlsharepersistenthandle.html" class="link">共享句柄</a>的支持，从而安全地实现更高效的连接复用。
+   
+  </p>
+
+  <p class="simpara">
+   <span class="function"><a href="function.curl-getinfo.html" class="function">curl_getinfo()</a></span> 函数新增对 <strong><code>CURLINFO_USED_PROXY</code></strong>（libcurl
+   &gt;= 8.7.0）、<strong><code>CURLINFO_HTTPAUTH_USED</code></strong> 和 <strong><code>CURLINFO_PROXYAUTH_USED</code></strong>（libcurl
+   &gt;= 8.12.0）的支持。当 <span class="function"><a href="function.curl-getinfo.html" class="function">curl_getinfo()</a></span> 返回数组时，相同的信息可通过
+   <code class="literal">&quot;used_proxy&quot;</code>、<code class="literal">&quot;httpauth_used&quot;</code> 和 <code class="literal">&quot;proxyauth_used&quot;</code> key
+   获取。如果上一次传输未使用代理，将设置 <strong><code>CURLINFO_USED_PROXY</code></strong>
+   为零；如果使用了代理，则为非零值。<strong><code>CURLINFO_HTTPAUTH_USED</code></strong> 和 <strong><code>CURLINFO_PROXYAUTH_USED</code></strong>
+   将返回位掩码，表示上一次请求中使用的 HTTP 和代理认证方法。有关可能的值，请参阅
+   <strong><code><a href="curl.constants.html#constant.curlauth-any">CURLAUTH_<span class="replaceable">*</span></a></code></strong> 常量。
+  </p>
+
+  <p class="simpara">
+   新增 <strong><code>CURLOPT_INFILESIZE_LARGE</code></strong> Curl 选项，作为 <strong><code><a href="curl.constants.html#constant.curlopt-infilesize">CURLOPT_INFILESIZE</a></code></strong>
+   的安全替代。在某些系统上，即使是在 64 位系统中，<strong><code><a href="curl.constants.html#constant.curlopt-infilesize">CURLOPT_INFILESIZE</a></code></strong> 也仅接受 32
+   位有符号整数作为文件大小（2.0 GiB）。而 <strong><code>CURLOPT_INFILESIZE_LARGE</code></strong> 可接受系统能够处理的最大整数值。
+  </p>
+
+  <p class="simpara">
+   为 <span class="function"><a href="function.curl-setopt.html" class="function">curl_setopt()</a></span> 的 <strong><code><a href="curl.constants.html#constant.curlopt-followlocation">CURLOPT_FOLLOWLOCATION</a></code></strong> 选项新增了
+   <strong><code>CURLFOLLOW_OBEYCODE</code></strong>、<strong><code>CURLFOLLOW_FIRSTONLY</code></strong> 和 <strong><code>CURLFOLLOW_ALL</code></strong>
+   值。<strong><code>CURLFOLLOW_OBEYCODE</code></strong> 在允许重定向的情况下，会更严格地遵循重定向规则。<strong><code>CURLFOLLOW_FIRSTONLY</code></strong>
+   仅跟随第一次重定向，因此如果有后续的重定向，则不会继续跟进。<strong><code>CURLFOLLOW_ALL</code></strong> 等同于将
+   <strong><code><a href="curl.constants.html#constant.curlopt-followlocation">CURLOPT_FOLLOWLOCATION</a></code></strong> 设置为 true。
+  </p>
+
+  <p class="simpara">
+   <span class="function"><a href="function.curl-getinfo.html" class="function">curl_getinfo()</a></span> 函数新增对 <strong><code>CURLINFO_CONN_ID</code></strong>（libcurl &gt;= 8.2.0）的支持。该常量可用于获取 cURL
+   传输的连接唯一 ID。当需要在 PHP 层面实现连接复用或连接池逻辑时，该功能尤其有用。当 <span class="function"><a href="function.curl-getinfo.html" class="function">curl_getinfo()</a></span> 返回数组时，该值可通过
+   <code class="literal">&quot;conn_id&quot;</code> key 获取。
+  </p>
+
+  <p class="simpara">
+   <span class="function"><a href="function.curl-getinfo.html" class="function">curl_getinfo()</a></span> 函数新增对 <strong><code>CURLINFO_QUEUE_TIME_T</code></strong>（libcurl &gt;=
+   8.6.0）的支持。该常量可用于获取请求发送之前在 libcurl 的连接队列中等待的时间（以微秒为单位）。通过将
+   <strong><code>CURLINFO_QUEUE_TIME_T</code></strong> 传递给 <span class="function"><a href="function.curl-getinfo.html" class="function">curl_getinfo()</a></span> 的
+   <code class="parameter">option</code> 参数，也可以获取该值。
+  </p>
+
+  <p class="simpara">
+   新增对 <strong><code>CURLOPT_SSL_SIGNATURE_ALGORITHMS</code></strong> 的支持，用于指定 TLS 的签名算法。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.new-features.dom">
+  <h3 class="title">DOM</h3>
+
+  <p class="simpara">
+   新增 <span class="property">Dom\Element::$outerHTML</span>。
+  </p>
+
+  <p class="simpara">
+   在 <span class="interfacename"><a href="class.dom-parentnode.html" class="interfacename">Dom\ParentNode</a></span> 实现中新增了 <span class="property">$children</span> 属性。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.new-features.exif">
+  <h3 class="title">EXIF</h3>
+
+  <p class="simpara">
+   新增对 <code class="literal">OffsetTime*</code> Exif 标签的支持。
+  </p>
+
+  <p class="simpara">
+   新增对 HEIF/HEIC 的支持。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.new-features.filter">
+  <h3 class="title">Filter</h3>
+
+  <p class="simpara">
+   新增 <strong><code>FILTER_THROW_ON_FAILURE</code></strong> flag，可传递给过滤函数，并在验证失败时强制触发异常。此
+   flag 无法与 <strong><code><a href="filter.constants.html#constant.filter-null-on-failure">FILTER_NULL_ON_FAILURE</a></code></strong> 结合使用，尝试这样做将导致抛出
+   <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.new-features.intl">
+  <h3 class="title">Intl</h3>
+
+  <p class="simpara">
+   新增与多种货币相关数字格式对应的类常量：<strong><code><a href="class.numberformatter.html#numberformatter.constants.currency-iso">NumberFormatter::CURRENCY_ISO</a></code></strong>、<strong><code><a href="class.numberformatter.html#numberformatter.constants.currency-plural">NumberFormatter::CURRENCY_PLURAL</a></code></strong>、<strong><code><a href="class.numberformatter.html#numberformatter.constants.cash-currency">NumberFormatter::CASH_CURRENCY</a></code></strong>,
+   和 <strong><code><a href="class.numberformatter.html#numberformatter.constants.currency-standard">NumberFormatter::CURRENCY_STANDARD</a></code></strong>。
+  </p>
+
+  <p class="simpara">
+   新增 <span class="methodname"><strong>Locale::addLikelySubtags()</strong></span> 和 <span class="methodname"><strong>Locale::minimizeSubtags()</strong></span>
+   方法，用于处理指定 locale 的可能标签。
+  </p>
+
+  <p class="simpara">
+   新增 <span class="classname"><strong class="classname">IntlListFormatter</strong></span> 类，用于根据指定 locale 对项目列表进行格式化、排序和标点处理，支持
+   <strong><code>IntlListFormatter::TYPE_AND</code></strong>、<strong><code>IntlListFormatter::TYPE_OR</code></strong>、<strong><code>IntlListFormatter::TYPE_UNITS</code></strong>
+   操作数，以及 <strong><code>IntlListFormatter::WIDTH_WIDE</code></strong>、<strong><code>IntlListFormatter::WIDTH_SHORT</code></strong> 和
+   <strong><code>IntlListFormatter::WIDTH_NARROW</code></strong> 宽度。该功能从 icu 67 版本开始支持。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.new-features.pdo-sqlite">
+  <h3 class="title">PDO_Sqlite</h3>
+
+  <p class="simpara">
+   新增类常量 <strong><code>Pdo\Sqlite::ATTR_BUSY_STATEMENT</code></strong>。
+  </p>
+
+  <p class="simpara">
+   新增类常量 <strong><code>Pdo\Sqlite::ATTR_EXPLAIN_STATEMENT</code></strong>、<strong><code>Pdo\Sqlite::EXPLAIN_MODE_PREPARED</code></strong>、<strong><code>Pdo\Sqlite::EXPLAIN_MODE_EXPLAIN</code></strong>
+   和 <strong><code>Pdo\Sqlite::EXPLAIN_MODE_EXPLAIN_QUERY_PLAN</code></strong>。
+  </p>
+
+  <p class="simpara">
+   新增 <strong><code>Pdo\Sqlite::ATTR_TRANSACTION_MODE</code></strong> 连接注解，可选值包括
+   <strong><code>Pdo\Sqlite::TRANSACTION_MODE_DEFERRED</code></strong>、<strong><code>Pdo\Sqlite::TRANSACTION_MODE_IMMEDIATE</code></strong>
+   和 <strong><code>Pdo\Sqlite::TRANSACTION_MODE_EXCLUSIVE</code></strong>，用于配置调用 beginTransaction() 时使用的事务模式。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.new-features.session">
+  <h3 class="title">Session</h3>
+
+  <p class="simpara">
+   <span class="function"><a href="function.session-set-cookie-params.html" class="function">session_set_cookie_params()</a></span>、<span class="function"><a href="function.session-get-cookie-params.html" class="function">session_get_cookie_params()</a></span>
+   和 <span class="function"><a href="function.session-start.html" class="function">session_start()</a></span> 现在通过 <code class="literal">&quot;partitioned&quot;</code> key 支持分区 cookie。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.new-features.soap">
+  <h3 class="title">SOAP</h3>
+
+  <p class="simpara">
+   枚举项现在会在 <span class="methodname"><a href="soapclient.gettypes.html" class="methodname">SoapClient::__getTypes()</a></span> 中输出。
+  </p>
+
+  <p class="simpara">
+   新增对 SOAP 1.2 Reason Text 的 xml:lang 属性的支持。
+  </p>
+
+  <p class="simpara">
+   因此，<span class="methodname"><a href="soapfault.construct.html" class="methodname">SoapFault::__construct()</a></span> 和 <span class="methodname"><a href="soapserver.fault.html" class="methodname">SoapServer::fault()</a></span>
+   的签名现在包含可选的 <code class="parameter">$lang</code> 参数。该支持解决了与 .NET SOAP 客户端的兼容性问题。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.new-features.standard">
+  <h3 class="title">标准</h3>
+
+  <p class="simpara">
+   <span class="function"><a href="function.mail.html" class="function">mail()</a></span> 函数现在会返回实际的 sendmail 错误，并能检测 sendmail
+   进程是否意外终止。若发生此类情况，将发出警告并返回 false。此前会静默忽略这些错误。此变更仅影响 sendmail 的传输。
+  </p>
+
+  <p class="simpara">
+   <span class="function"><a href="function.getimagesize.html" class="function">getimagesize()</a></span> 现在支持 HEIF/HEIC 图像。
+  </p>
+
+  <p class="simpara">
+   当加载 ext-libxml 扩展时，<span class="function"><a href="function.getimagesize.html" class="function">getimagesize()</a></span> 现已支持 SVG
+   图像。同样，<span class="function"><a href="function.image-type-to-extension.html" class="function">image_type_to_extension()</a></span> 和 <span class="function"><a href="function.image-type-to-mime-type.html" class="function">image_type_to_mime_type()</a></span> 现也处理 IMAGETYPE_SVG。
+  </p>
+
+  <p class="simpara">
+   <span class="function"><a href="function.getimagesize.html" class="function">getimagesize()</a></span> 返回的数组现在包含两个额外的条目：<code class="literal">&quot;width_unit&quot;</code> 和
+   <code class="literal">&quot;height_unit&quot;</code>，用于表示尺寸所使用的单位。这些单位默认为 px。这两个单位不一定相同（例如，一个可能是
+   cm，另一个可能是 px）。
+  </p>
+
+  <p class="simpara">
+   <span class="function"><a href="function.setcookie.html" class="function">setcookie()</a></span> 和 <span class="function"><a href="function.setrawcookie.html" class="function">setrawcookie()</a></span> 现在支持
+   <code class="literal">&quot;partitioned&quot;</code> key。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.new-features.uri">
+  <h3 class="title">URI</h3>
+
+  <p class="simpara">
+   新增始终启用的 URI 扩展，可用于根据 RFC 3986 和 WHATWG URL 规范处理 URI 和 URL。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.new-features.xsl">
+  <h3 class="title">XSL</h3>
+
+  <p class="simpara">
+   <span class="methodname"><a href="xsltprocessor.getparameter.html" class="methodname">XSLTProcessor::getParameter()</a></span>、<span class="methodname"><a href="xsltprocessor.setparameter.html" class="methodname">XSLTProcessor::setParameter()</a></span> 和
+   <span class="methodname"><a href="xsltprocessor.removeparameter.html" class="methodname">XSLTProcessor::removeParameter()</a></span> 的 <code class="parameter">$namespace</code>
+   参数现已生效，不再视为空值。此功能仅在 <code class="parameter">$name</code> 参数未使用 Clark 表示法且不是 QName
+   时有效，因为在这些情况下，命名空间分别取自命名空间的 href 或前缀。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.new-features.zlib">
+  <h3 class="title">Zlib</h3>
+
+  <p class="simpara">
+   <span class="function"><a href="function.flock.html" class="function">flock()</a></span> 现已支持 zlib 流。此前，该函数始终无法执行任何锁定操作。
+  </p>
+
+ </div>
+
+</div></div></div><script type="text/javascript" src="search-combined.js"></script><script type="text/javascript" src="js/67ae199ee27cc87120cab9ba49d1b776-FuzzySearch.min.js"></script><script type="text/javascript" src="js/f5555778cd757f2cb49676062898832b-search.js"></script>    <div id="search-modal__backdrop" class="search-modal__backdrop">
+      <div
+        role="dialog"
+        aria-label="Search modal"
+        id="search-modal"
+        class="search-modal"
+      >
+        <div class="search-modal__header">
+          <div class="search-modal__form">
+            <div class="search-modal__input-icon">
+              <!-- https://feathericons.com search -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                width="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input
+              type="search"
+              id="search-modal__input"
+              class="search-modal__input"
+              placeholder="Search docs"
+              aria-label="Search docs"
+            />
+          </div>
+    
+          <button aria-label="Close" class="search-modal__close">
+            <!-- https://pictogrammers.com/library/mdi/icon/close/ -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+        <div
+          role="listbox"
+          aria-label="Search results"
+          id="search-modal__results"
+          class="search-modal__results"
+        ></div>
+        <div class="search-modal__helper-text">
+          <div>
+            <kbd>↑</kbd> and <kbd>↓</kbd> to navigate •
+            <kbd>Enter</kbd> to select •
+            <kbd>Esc</kbd> to close • <kbd>/</kbd> to open
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            /*{{{Search Modal*/
+            const language = 'local';
+            initSearchModal();
+            initPHPSearch(language).then((searchCallback) => {
+                initSearchUI({language, searchCallback, limit: 30});
+            });
+            /*}}}*/
+        });
+    </script></body></html>

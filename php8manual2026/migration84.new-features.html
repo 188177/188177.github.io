@@ -1,0 +1,601 @@
+    <!DOCTYPE HTML>
+    <html>
+     <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <style>
+        .navbar__local {
+          flex-grow: 1;
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr min-content 1fr;
+          margin: 0;
+          height: 100%;
+          
+          .navbar__item {
+            align-content: center;
+          }
+          .navbar__link {
+            display: inline;
+          }
+          .search {
+            text-align: center;
+          }
+          .next {
+            text-align: right;
+          }
+        }
+      </style>
+      <title>新功能</title>
+      <link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-base.css" />
+<link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-medium.css" />
+
+     </head>
+     <body class="docs">    <div class="navbar navbar-fixed-top">
+      <div class="navbar__inner clearfix">
+          <ul class="navbar__local">
+            <li class="navbar__item prev"><a href="migration84.html" class="navbar__link">« 从 PHP 8.3.x 移植到 PHP 8.4.x</a></li>
+            <li class="navbar__item search">
+              <!-- Desktop encanced search -->
+              <button
+                id="navbar__search-button"
+                class="navbar__search-button"
+                hidden
+              >
+                    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        width="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+                Search
+              </button>
+            </li>
+            <li class="navbar__item next"><a href="migration84.new-classes.html" class="navbar__link">新的类、注解和 interface »</a></li>
+          </ul>
+      </div>
+    </div>    <div id="breadcrumbs" class="clearfix">
+      <ul class="breadcrumbs-container">
+        <li><a href="index.html">PHP Manual</a></li>
+        <li><a href="migration84.html">从 PHP 8.3.x 移植到 PHP 8.4.x</a></li>
+        <li>新功能</li>
+      </ul>
+    </div>    <div id="layout">
+      <div id="layout-content"><div id="migration84.new-features" class="sect1">
+ <h2 class="title">新功能</h2>
+
+ 
+ <div class="sect2" id="migration84.new-features.core">
+  <h3 class="title">PHP 核心</h3>
+
+  
+  <div class="sect3" id="migration84.new-features.core.property-hooks">
+   <h4 class="title">属性挂钩</h4>
+
+   <p class="simpara">
+    对象属性现在可以其 <code class="literal">get</code> 和 <code class="literal">set</code>
+    操作中关联相关的附加逻辑。根据用法，这可能会也可能不会使属性变为虚拟属性，即该属性根本没有实际的存储值。
+   </p>
+
+   <div class="informalexample">
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Person<br /></span><span style="color: #007700">{<br />    </span><span style="color: #FF8000">// “虚拟”属性，可能无法明确设置。<br />    </span><span style="color: #007700">public </span><span style="color: #0000BB">string $fullName </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">get </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">firstName </span><span style="color: #007700">. </span><span style="color: #DD0000">' ' </span><span style="color: #007700">. </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">lastName</span><span style="color: #007700">;<br />    }<br /><br />    </span><span style="color: #FF8000">// 所有的写入操作都会经过这个挂钩，结果就是写入的内容。<br />    // 读取访问正常。<br />    </span><span style="color: #007700">public </span><span style="color: #0000BB">string $firstName </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">set </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">ucfirst</span><span style="color: #007700">(</span><span style="color: #0000BB">strtolower</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">));<br />    }<br /><br />    </span><span style="color: #FF8000">// 所有的写入操作都会经过这个挂钩，它必须写入支持值本身。<br />    // 读取访问正常。<br />    </span><span style="color: #007700">public </span><span style="color: #0000BB">string $lastName </span><span style="color: #007700">{<br />        </span><span style="color: #0000BB">set </span><span style="color: #007700">{<br />            if (</span><span style="color: #0000BB">strlen</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">) &lt; </span><span style="color: #0000BB">2</span><span style="color: #007700">) {<br />                throw new </span><span style="color: #0000BB">\InvalidArgumentException</span><span style="color: #007700">(</span><span style="color: #DD0000">'Too short'</span><span style="color: #007700">);<br />            }<br />            </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">lastName </span><span style="color: #007700">= </span><span style="color: #0000BB">$value</span><span style="color: #007700">;<br />        }<br />    }<br />}<br /><br /></span><span style="color: #0000BB">$p </span><span style="color: #007700">= new </span><span style="color: #0000BB">Person</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$p</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">firstName </span><span style="color: #007700">= </span><span style="color: #DD0000">'peter'</span><span style="color: #007700">;<br />print </span><span style="color: #0000BB">$p</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">firstName</span><span style="color: #007700">; </span><span style="color: #FF8000">// 打印“Peter”<br /></span><span style="color: #0000BB">$p</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">lastName </span><span style="color: #007700">= </span><span style="color: #DD0000">'Peterson'</span><span style="color: #007700">;<br />print </span><span style="color: #0000BB">$p</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fullName</span><span style="color: #007700">; </span><span style="color: #FF8000">// 打印“Peter Peterson”</span></span></code></div>
+    </div>
+
+   </div>
+  </div>
+
+  
+  <div class="sect3" id="migration84.new-features.core.asymmetric-property-visibility">
+   <h4 class="title">不对称属性可见性</h4>
+
+   <p class="simpara">
+    现在可以将对象属性的 <code class="literal">set</code> 可见性和 <code class="literal">get</code>
+    可见性分开控制。 
+   </p>
+   <div class="informalexample">
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Example<br /></span><span style="color: #007700">{<br />    </span><span style="color: #FF8000">// 第一个可见性修饰符控制 get 可见性，第二个修饰符控制 set 可见性。<br />    // get 可见性不能比 set 可见性更窄。<br />    </span><span style="color: #007700">public protected(</span><span style="color: #0000BB">set</span><span style="color: #007700">) </span><span style="color: #0000BB">string $name</span><span style="color: #007700">;<br /><br />    public function </span><span style="color: #0000BB">__construct</span><span style="color: #007700">(</span><span style="color: #0000BB">string $name</span><span style="color: #007700">)<br />    {<br />        </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name </span><span style="color: #007700">= </span><span style="color: #0000BB">$name</span><span style="color: #007700">;<br />    }<br />}</span></span></code></div>
+    </div>
+
+   </div>
+  </div>
+
+  
+  <div class="sect3" id="migration84.new-features.core.lazy-objects">
+   <h4 class="title">惰性对象</h4>
+   <p class="simpara">
+    现在可以创建对象，将初始化延迟到访问时。库和框架可以利用这些惰性对象来延迟获取初始化所需的数据或依赖项。
+   </p>
+   <div class="informalexample">
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">Example<br /></span><span style="color: #007700">{<br />    public function </span><span style="color: #0000BB">__construct</span><span style="color: #007700">(private </span><span style="color: #0000BB">int $data</span><span style="color: #007700">)<br />    {<br />    }<br /><br />    </span><span style="color: #FF8000">// ...<br /></span><span style="color: #007700">}<br /><br /></span><span style="color: #0000BB">$initializer </span><span style="color: #007700">= static function (</span><span style="color: #0000BB">Example $ghost</span><span style="color: #007700">): </span><span style="color: #0000BB">void </span><span style="color: #007700">{<br />    </span><span style="color: #FF8000">// 获取数据或者依赖项<br />    </span><span style="color: #0000BB">$data </span><span style="color: #007700">= </span><span style="color: #0000BB">getData</span><span style="color: #007700">();<br />    </span><span style="color: #FF8000">// 初始化<br />    </span><span style="color: #0000BB">$ghost</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">__construct</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br />};<br /><br /></span><span style="color: #0000BB">$reflector </span><span style="color: #007700">= new </span><span style="color: #0000BB">ReflectionClass</span><span style="color: #007700">(</span><span style="color: #0000BB">Example</span><span style="color: #007700">::class);<br /></span><span style="color: #0000BB">$object </span><span style="color: #007700">= </span><span style="color: #0000BB">$reflector</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">newLazyGhost</span><span style="color: #007700">(</span><span style="color: #0000BB">$initializer</span><span style="color: #007700">);</span></span></code></div>
+    </div>
+
+   </div>
+  </div>
+
+  
+  <div class="sect3" id="migration84.new-features.core.deprecated-attribute">
+   <h4 class="title"><code class="code">#[\Deprecated]</code> 注解</h4>
+
+   <p class="simpara">
+    新的 <span class="classname"><a href="class.deprecated.html" class="classname">Deprecated</a></span> 属性可用于将函数、方法和类常量标记为已弃用。此弃用属性的行为与 PHP
+    本身提供的现有弃用机制的行为一致。唯一的例外是发出的错误代码是 <strong><code><a href="errorfunc.constants.html#constant.e-user-deprecated">E_USER_DEPRECATED</a></code></strong>，而不是
+    <strong><code><a href="errorfunc.constants.html#constant.e-deprecated">E_DEPRECATED</a></code></strong>。
+   </p>
+
+   <p class="simpara">
+    PHP 本身提供的现有弃用已更新为使用该属性，通过包含简短的解释来改进发出的错误消息。
+   </p>
+  </div>
+
+  
+  <div class="sect3" id="migration84.new-features.core.rfc1867">
+   <h4 class="title">在非 POST HTTP 请求中解析 RFC1867（multipart）请求</h4>
+
+   
+   <p class="simpara">
+    添加 <span class="function"><a href="function.request-parse-body.html" class="function">request_parse_body()</a></span> 函数允许在非 POST HTTP 请求中解析 RFC1867（multipart）请求。
+   </p>
+  </div>
+
+  
+  <div class="sect3" id="migration84.new-features.core.new-chaining">
+   <h4 class="title">链接 <a href="language.oop5.basic.html#language.oop5.basic.new" class="link"><code class="literal">new</code></a> 表达式不再需要括号</h4>
+
+   
+   <p class="simpara">
+    具有构造函数参数的新表达式现在可解除引用（dereferencable），这意味着无需将表达式括在括号中，可以直接链接方法调用、属性访问等。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.new-features.core.debug-weakref">
+   <h4 class="title">改进了 <span class="classname"><a href="class.weakreference.html" class="classname">WeakReference</a></span> 的调试信息</h4>
+
+   
+   <p class="simpara">
+    获取 <span class="classname"><a href="class.weakreference.html" class="classname">WeakReference</a></span> 的调试信息现在还会输出其引用的对象，如果引用不再有效，则输出 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.new-features.core.debug-closure">
+   <h4 class="title">改进了 <span class="classname"><a href="class.closure.html" class="classname">Closure</a></span> 的调试信息</h4>
+
+   
+   <p class="simpara">
+    <span class="methodname"><strong>Closure::__debugInfo()</strong></span> 的输出现在包含
+    <span class="classname"><a href="class.closure.html" class="classname">Closure</a></span> 的名称、文件名、和行数。
+   </p>
+  </div>
+
+  
+  <div class="sect3" id="migration84.new-features.core.multiple-namespaces-symbols">
+   <h4 class="title">在不同命名空间块中定义相同的符号</h4>
+
+   
+   <p class="simpara">
+    退出命名空间现在会清除已见的符号。
+    这允许在命名空间块中使用某个符号，即使之前的命名空间块声明了同名的符号。
+    
+   </p>
+  </div>
+
+ </div>
+
+ <div class="sect2" id="migration84.new-features.curl">
+  <h3 class="title">cURL</h3>
+
+  <p class="simpara">
+   <span class="function"><a href="function.curl-version.html" class="function">curl_version()</a></span> 返回额外的 <code class="literal">feature_list</code>
+   值，是所有已知 CURL 功能的关联数组，值是支持（<strong><code><a href="reserved.constants.html#constant.true">true</a></code></strong>）或者不支持（<strong><code><a href="reserved.constants.html#constant.false">false</a></code></strong>）。 
+  </p>
+
+  <p class="simpara">
+   新增 <strong><code><a href="curl.constants.html#constant.curl-http-version-3">CURL_HTTP_VERSION_3</a></code></strong> 和 <strong><code><a href="curl.constants.html#constant.curl-http-version-3only">CURL_HTTP_VERSION_3ONLY</a></code></strong>
+   常量（自 libcurl 7.66 和 7.88 起可用）作为 <strong><code><a href="curl.constants.html#constant.curlopt-http-version">CURLOPT_HTTP_VERSION</a></code></strong> 的可用选项。
+  </p>
+
+  <p class="simpara">
+   新增 <strong><code><a href="curl.constants.html#constant.curlopt-prereqfunction">CURLOPT_PREREQFUNCTION</a></code></strong> 作为 cURL 选项，该选项接受在建立连接后但在发送请求之前调用的
+   <span class="type"><a href="language.types.callable.html" class="type callable">callable</a></span>。此 callable 必须返回 <strong><code><a href="curl.constants.html#constant.curl-prereqfunc-ok">CURL_PREREQFUNC_OK</a></code></strong> 或
+   <strong><code><a href="curl.constants.html#constant.curl-prereqfunc-abort">CURL_PREREQFUNC_ABORT</a></code></strong> 以允许或中止请求。
+  </p>
+
+  <p class="simpara">
+   新增 CURLOPT_SERVER_RESPONSE_TIMEOUT，以前称为 <strong><code><a href="curl.constants.html#constant.curlopt-ftp-response-timeout">CURLOPT_FTP_RESPONSE_TIMEOUT</a></code></strong>。两个常量都具有相同的值。
+  </p>
+
+  <p class="para">
+   新增 <strong><code><a href="curl.constants.html#constant.curlopt-debugfunction">CURLOPT_DEBUGFUNCTION</a></code></strong> 作为 cURL 选项，该选项接受在请求生命周期内使用
+   <span class="classname"><a href="class.curlhandle.html" class="classname">CurlHandle</a></span> 对象调用的 <span class="type"><a href="language.types.callable.html" class="type callable">callable</a></span>、包含调试消息类型的整数以及包含调试消息的字符串。调试消息类型是以下常量之一：
+   <ul class="simplelist">
+    <li><strong><code><a href="curl.constants.html#constant.curlinfo-text">CURLINFO_TEXT</a></code></strong></li>
+    <li><strong><code><a href="curl.constants.html#constant.curlinfo-header-in">CURLINFO_HEADER_IN</a></code></strong></li>
+    <li><strong><code><a href="curl.constants.html#constant.curlinfo-header-out">CURLINFO_HEADER_OUT</a></code></strong></li>
+    <li><strong><code><a href="curl.constants.html#constant.curlinfo-data-in">CURLINFO_DATA_IN</a></code></strong></li>
+    <li><strong><code><a href="curl.constants.html#constant.curlinfo-data-out">CURLINFO_DATA_OUT</a></code></strong></li>
+    <li><strong><code><a href="curl.constants.html#constant.curlinfo-ssl-data-in">CURLINFO_SSL_DATA_IN</a></code></strong></li>
+    <li><strong><code><a href="curl.constants.html#constant.curlinfo-ssl-data-out">CURLINFO_SSL_DATA_OUT</a></code></strong></li>
+   </ul>
+   一旦设置了此选项，就不能设置 <strong><code><a href="curl.constants.html#constant.curlinfo-header-out">CURLINFO_HEADER_OUT</a></code></strong>，因为它使用相同的 libcurl 功能。
+  </p>
+
+  <p class="simpara">
+   <span class="function"><a href="function.curl-getinfo.html" class="function">curl_getinfo()</a></span> 现在返回一个额外的 <code class="literal">posttransfer_time_us</code>
+   key，其中包含从开始到发送最后一个字节的微秒数。当重定向之后，每个请求的时间都会加在一起。也可以通过将
+   <strong><code><a href="curl.constants.html#constant.curlinfo-posttransfer-time-t">CURLINFO_POSTTRANSFER_TIME_T</a></code></strong> 传递给 <span class="function"><a href="function.curl-getinfo.html" class="function">curl_getinfo()</a></span>
+   <code class="parameter">option</code> 参数来检索此值。这需要 libcurl 8.10.0 或更高版本。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.dom">
+  <h3 class="title">DOM</h3>
+
+  
+  
+  <p class="simpara">
+   添加了 <span class="package">Dom</span> 命名空间，其中包含与现有 DOM 类对应的新类（例如，<span class="classname"><a href="class.dom-node.html" class="classname">Dom\Node</a></span> 是新的
+   <span class="classname"><a href="class.domnode.html" class="classname">DOMNode</a></span>）。这些类与 HTML 5 兼容，并且符合 WHATWG 规范；解决了 DOM 扩展中长期存在的错误。旧的 DOM
+   类仍然可用，以实现向后兼容。
+  </p>
+
+  <p class="para">
+   新增 <span class="methodname"><a href="domnode.comparedocumentposition.html" class="methodname">DOMNode::compareDocumentPosition()</a></span> 及其相关常量：
+   <ul class="simplelist">
+    <li><strong><code><a href="class.domnode.html#domnode.constants.document-position-disconnected">DOMNode::DOCUMENT_POSITION_DISCONNECTED</a></code></strong></li>
+    <li><strong><code><a href="class.domnode.html#domnode.constants.document-position-preceding">DOMNode::DOCUMENT_POSITION_PRECEDING</a></code></strong></li>
+    <li><strong><code><a href="class.domnode.html#domnode.constants.document-position-following">DOMNode::DOCUMENT_POSITION_FOLLOWING</a></code></strong></li>
+    <li><strong><code><a href="class.domnode.html#domnode.constants.document-position-contains">DOMNode::DOCUMENT_POSITION_CONTAINS</a></code></strong></li>
+    <li><strong><code><a href="class.domnode.html#domnode.constants.document-position-contained-by">DOMNode::DOCUMENT_POSITION_CONTAINED_BY</a></code></strong></li>
+    <li><strong><code><a href="class.domnode.html#domnode.constants.document-position-implementation-specific">DOMNode::DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC</a></code></strong></li>
+   </ul>
+  </p>
+
+  
+  <p class="simpara">
+   现在可以将任何 callable 传递给
+   <span class="methodname"><a href="domxpath.registerphpfunctions.html" class="methodname">DOMXPath::registerPhpFunctions()</a></span>。
+
+   此外，现在使用 <span class="methodname"><a href="domxpath.registerphpfunctionns.html" class="methodname">DOMXPath::registerPhpFunctionNs()</a></span> 可以注册使用原生函数调用语法，而不是使用
+   <code class="code">php:function(&#039;name&#039;)</code>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.intl">
+  <h3 class="title">Intl</h3>
+
+  <p class="simpara">
+   新增 <strong><code><a href="class.numberformatter.html#numberformatter.constants.round-halfodd">NumberFormatter::ROUND_HALFODD</a></code></strong> 来补充现有的 <strong><code><a href="class.numberformatter.html#numberformatter.constants.round-halfeven">NumberFormatter::ROUND_HALFEVEN</a></code></strong> 功能。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.openssl">
+  <h3 class="title">OpenSSL</h3>
+
+  <p class="simpara">
+   添加了对基于 Curve25519 + Curve448 密钥的支持。具体来说
+   <span class="function"><a href="function.openssl-pkey-new.html" class="function">openssl_pkey_new()</a></span>、<span class="function"><a href="function.openssl-pkey-get-details.html" class="function">openssl_pkey_get_details()</a></span>、<span class="function"><a href="function.openssl-sign.html" class="function">openssl_sign()</a></span> 和
+   <span class="function"><a href="function.openssl-verify.html" class="function">openssl_verify()</a></span> 中支持 x25519、ed25519、x448 和 ed448 字段，并进行了扩展以支持这些密钥。
+  </p>
+
+  <p class="simpara">
+   实现 PASSWORD_ARGON2 密码哈希处理。需要 OpenSSL 3.2 和 NTS 版本。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.pcre">
+  <h3 class="title">PCRE</h3>
+
+  <p class="simpara">
+   捆绑的 pcre2lib 已更新至 10.44 版本。因此，添加了 LoongArch JIT 支持，现在允许在与 Perl 兼容项目中的花括号之间使用空格，并且现在支持可变长度的后向断言。
+  </p>
+
+  <p class="simpara">
+   随着 pcre2lib 版本 10.44 的推出，命名捕获组的最大长度已从 <code class="literal">32</code> 更改为 <code class="literal">128</code>。
+  </p>
+
+  <p class="simpara">
+   添加了对 <code class="literal">r</code>（PCRE2_EXTRA_CASELESS_RESTRICT）修饰符以及 <code class="literal">(?r)</code>
+   模式修饰符的支持。当与不区分大小写的修饰符 (<code class="literal">i</code>) 一起启用时，表达式会阻止 ASCII 和非 ASCII 字符的混合。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.pdo">
+  <h3 class="title">PDO</h3>
+
+  
+  <p class="simpara">
+   新增对特定驱动程序子类的支持，以便更好地支持特定于数据库的功能。新的类可通过调用 <span class="methodname"><a href="pdo.connect.html" class="methodname">PDO::connect()</a></span>
+   方法或直接实例化特定驱动程序子类来实例化。
+  </p>
+
+  
+  <p class="para">
+   新增对特定驱动程序的 SQL 解析器的支持。当特定驱动程序解析器不可用时，使用默认解析器。默认解析器支持：
+   <ul class="simplelist">
+    <li>
+     单引号和双引号文字，使用双引号作为转义机制
+    </li>
+    <li>
+     双破折号和非嵌套的 C 风格注释
+    </li>
+   </ul>
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.pdo-mysql">
+  <h3 class="title">PDO_MYSQL</h3>
+
+  
+  <p class="para">
+   新增自定义解析器支持：
+   <ul class="simplelist">
+    <li>
+     单引号和双引号文字，使用双引号作为转义机制
+    </li>
+    <li>
+     反引号文字标识符并且双写反引号作为转义机制
+    </li>
+    <li>
+     两个破折号后跟至少 1 个空格、非嵌套的 C 风格注释和哈希注释（以 # 开头的注释）
+    </li>
+   </ul>
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.pdo-pgsql">
+  <h3 class="title">PDO_PGSQL</h3>
+
+  
+  <p class="para">
+   新增自定义解析器支持：
+   <ul class="simplelist">
+    <li>
+     单引号和双引号文字，使用双引号作为转义机制
+    </li>
+    <li>
+     C 风格“转义”字符串文字（<code class="literal">E&#039;string&#039;</code>）
+    </li>
+    <li>
+     美元符号引用字符串文字
+    </li>
+    <li>
+     双破折号和 C 风格注释（非嵌套）
+    </li>
+    <li>
+     支持 <code class="literal">??</code> 作为 <code class="literal">?</code> 运算符的转义序列
+    </li>
+   </ul>
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.pdo-sqlite">
+  <h3 class="title">PDO_SQLITE</h3>
+
+  
+  <p class="para">
+   新增自定义解析器支持：
+   <ul class="simplelist">
+    <li>
+     单引号、双引号和反引号文字，并带有转义机制
+    </li>
+    <li>
+     方括号引用标识符
+    </li>
+    <li>
+     双破折号和 C 风格注释（非嵌套）
+    </li>
+   </ul>
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.phar">
+  <h3 class="title">Phar</h3>
+
+  <p class="simpara">
+   Zip 档案新增对 Unix 时间戳扩展的支持。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.readline">
+  <h3 class="title">Readline</h3>
+
+  <p class="simpara">
+   新增通过 <var class="envar">PHP_HISTFILE</var> 环境变量更改 <code class="literal">.php_history</code> 路径的功能。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.reflection">
+  <h3 class="title">Reflection</h3>
+
+  <p class="simpara">
+   <span class="classname"><a href="class.reflectionattribute.html" class="classname">ReflectionAttribute</a></span> 现在包含 <span class="property">name</span> 属性，以改善调试体验。
+  </p>
+
+  <p class="simpara">
+   <span class="methodname"><a href="reflectionclassconstant.tostring.html" class="methodname">ReflectionClassConstant::__toString()</a></span> 和
+   <span class="methodname"><a href="reflectionproperty.tostring.html" class="methodname">ReflectionProperty::__toString()</a></span> 现在返回附加的文档注释。
+  </p>
+
+  
+  <p class="para">
+   添加了与惰性对象功能相关的多个新方法和常量：
+   <ul class="simplelist">
+    <li>
+     <span class="methodname"><a href="reflectionclass.newlazyghost.html" class="methodname">ReflectionClass::newLazyGhost()</a></span>
+    </li>
+    <li>
+     <span class="methodname"><a href="reflectionclass.newlazyproxy.html" class="methodname">ReflectionClass::newLazyProxy()</a></span>
+    </li>
+    <li>
+     <span class="methodname"><a href="reflectionclass.resetaslazyghost.html" class="methodname">ReflectionClass::resetAsLazyGhost()</a></span>
+    </li>
+    <li>
+     <span class="methodname"><a href="reflectionclass.resetaslazyproxy.html" class="methodname">ReflectionClass::resetAsLazyProxy()</a></span>
+    </li>
+    <li>
+     <span class="methodname"><a href="reflectionclass.isuninitializedlazyobject.html" class="methodname">ReflectionClass::isUninitializedLazyObject()</a></span>
+    </li>
+    <li>
+     <span class="methodname"><a href="reflectionclass.initializelazyobject.html" class="methodname">ReflectionClass::initializeLazyObject()</a></span>
+    </li>
+    <li>
+     <span class="methodname"><a href="reflectionclass.marklazyobjectasinitialized.html" class="methodname">ReflectionClass::markLazyObjectAsInitialized()</a></span>
+    </li>
+    <li>
+     <span class="methodname"><a href="reflectionclass.getlazyinitializer.html" class="methodname">ReflectionClass::getLazyInitializer()</a></span>
+    </li>
+    <li>
+     <span class="methodname"><a href="reflectionproperty.skiplazyinitialization.html" class="methodname">ReflectionProperty::skipLazyInitialization()</a></span>
+    </li>
+    <li>
+     <span class="methodname"><a href="reflectionproperty.setrawvaluewithoutlazyinitialization.html" class="methodname">ReflectionProperty::setRawValueWithoutLazyInitialization()</a></span>
+    </li>
+    <li>
+     <strong><code><a href="class.reflectionclass.html#reflectionclass.constants.skip-initialization-on-serialize">ReflectionClass::SKIP_INITIALIZATION_ON_SERIALIZE</a></code></strong>
+    </li>
+    <li>
+     <strong><code><a href="class.reflectionclass.html#reflectionclass.constants.skip-destructor">ReflectionClass::SKIP_DESTRUCTOR</a></code></strong>
+    </li>
+   </ul>
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.soap">
+  <h3 class="title">SOAP</h3>
+
+  <p class="simpara">
+   新增在类映射中使用 clark 表示法命名空间的支持。
+   现在可以在类映射中使用 clark 表示法指定条目，将具有特定命名空间的类型解析为特定的类。
+   例如：<code class="code">&#039;{http://example.com}foo&#039; =&gt; &#039;FooClass&#039;</code>。
+  </p>
+
+  <p class="simpara">
+   传递给 <code class="literal">xsd:datetime</code> 或类似元素的
+   <span class="interfacename"><a href="class.datetimeinterface.html" class="interfacename">DateTimeInterface</a></span> 实例现在会按原样序列化，
+   而不是被序列化为空字符串。
+  </p>
+
+  <p class="simpara">
+   持久会话现在可与共享会话模块一起使用。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.standard">
+  <h3 class="title">标准</h3>
+
+  
+  <p class="simpara">
+   
+   新增 <span class="classname"><a href="enum.roundingmode.html" class="classname">RoundingMode</a></span> 枚举，与 <strong><code><a href="math.constants.html#constant.php-round-half-up">PHP_ROUND_<span class="replaceable">*</span></a></code></strong>
+   常量相比，其命名更清晰，可发现性更高。此外，还添加了四种新的舍入模式，这些模式仅可通过新的 <span class="classname"><a href="enum.roundingmode.html" class="classname">RoundingMode</a></span> 枚举使用。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.xsl">
+  <h3 class="title">XSL</h3>
+
+  <p class="simpara">
+   现在可以使用包含单引号和双引号的参数。
+  </p>
+
+  
+  <p class="simpara">
+   现在可以将任何 callable 传递给 <span class="methodname"><a href="xsltprocessor.registerphpfunctions.html" class="methodname">XSLTProcessor::registerPhpFunctions()</a></span>。
+   
+  </p>
+
+  <p class="simpara">
+   添加了 <span class="property"><a href="class.xsltprocessor.html#xsltprocessor.props.maxtemplatedepth">XSLTProcessor::$maxTemplateDepth</a></span> 和 <span class="property"><a href="class.xsltprocessor.html#xsltprocessor.props.maxtemplatevars">XSLTProcessor::$maxTemplateVars</a></span>
+   来控制 XSL 模板计算的递归深度。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.new-features.zip">
+  <h3 class="title">Zip</h3>
+
+  <p class="simpara">
+   新增 <strong><code><a href="zip.constants.html#ziparchive.constants.er-truncated-zip">ZipArchive::ER_TRUNCATED_ZIP</a></code></strong> 常量，libzip 1.11 中添加。
+  </p>
+ </div>
+
+</div></div></div><script type="text/javascript" src="search-combined.js"></script><script type="text/javascript" src="js/67ae199ee27cc87120cab9ba49d1b776-FuzzySearch.min.js"></script><script type="text/javascript" src="js/f5555778cd757f2cb49676062898832b-search.js"></script>    <div id="search-modal__backdrop" class="search-modal__backdrop">
+      <div
+        role="dialog"
+        aria-label="Search modal"
+        id="search-modal"
+        class="search-modal"
+      >
+        <div class="search-modal__header">
+          <div class="search-modal__form">
+            <div class="search-modal__input-icon">
+              <!-- https://feathericons.com search -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                width="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input
+              type="search"
+              id="search-modal__input"
+              class="search-modal__input"
+              placeholder="Search docs"
+              aria-label="Search docs"
+            />
+          </div>
+    
+          <button aria-label="Close" class="search-modal__close">
+            <!-- https://pictogrammers.com/library/mdi/icon/close/ -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+        <div
+          role="listbox"
+          aria-label="Search results"
+          id="search-modal__results"
+          class="search-modal__results"
+        ></div>
+        <div class="search-modal__helper-text">
+          <div>
+            <kbd>↑</kbd> and <kbd>↓</kbd> to navigate •
+            <kbd>Enter</kbd> to select •
+            <kbd>Esc</kbd> to close • <kbd>/</kbd> to open
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            /*{{{Search Modal*/
+            const language = 'local';
+            initSearchModal();
+            initPHPSearch(language).then((searchCallback) => {
+                initSearchUI({language, searchCallback, limit: 30});
+            });
+            /*}}}*/
+        });
+    </script></body></html>

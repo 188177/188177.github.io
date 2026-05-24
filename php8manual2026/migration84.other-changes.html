@@ -1,0 +1,834 @@
+    <!DOCTYPE HTML>
+    <html>
+     <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <style>
+        .navbar__local {
+          flex-grow: 1;
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr min-content 1fr;
+          margin: 0;
+          height: 100%;
+          
+          .navbar__item {
+            align-content: center;
+          }
+          .navbar__link {
+            display: inline;
+          }
+          .search {
+            text-align: center;
+          }
+          .next {
+            text-align: right;
+          }
+        }
+      </style>
+      <title>其他变更</title>
+      <link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-base.css" />
+<link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-medium.css" />
+
+     </head>
+     <body class="docs">    <div class="navbar navbar-fixed-top">
+      <div class="navbar__inner clearfix">
+          <ul class="navbar__local">
+            <li class="navbar__item prev"><a href="migration84.removed-extensions.html" class="navbar__link">« 移除的扩展</a></li>
+            <li class="navbar__item search">
+              <!-- Desktop encanced search -->
+              <button
+                id="navbar__search-button"
+                class="navbar__search-button"
+                hidden
+              >
+                    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        width="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+                Search
+              </button>
+            </li>
+            <li class="navbar__item next"><a href="migration84.windows-support.html" class="navbar__link">Windows 支持 »</a></li>
+          </ul>
+      </div>
+    </div>    <div id="breadcrumbs" class="clearfix">
+      <ul class="breadcrumbs-container">
+        <li><a href="index.html">PHP Manual</a></li>
+        <li><a href="migration84.html">从 PHP 8.3.x 移植到 PHP 8.4.x</a></li>
+        <li>其他变更</li>
+      </ul>
+    </div>    <div id="layout">
+      <div id="layout-content"><div id="migration84.other-changes" class="sect1">
+ <h2 class="title">其他变更</h2>
+
+ <div class="sect2" id="migration84.other-changes.core">
+  <h3 class="title">核心变更</h3>
+
+  <div class="sect3" id="migration84.other-changes.core.closures">
+   <h4 class="title">闭包</h4>
+
+   <p class="simpara">
+    闭包名称已调整为包含父函数的名称和定义所在的行号，以便于区分，例如在堆栈跟踪中。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.core.fibers">
+   <h4 class="title">Fiber</h4>
+
+   <p class="simpara">
+    现在允许在析构函数执行期间进行 Fiber 切换。此前由于与垃圾回收冲突而被阻止。
+   </p>
+
+   <p class="simpara">
+    析构函数现在可以在单独的 Fiber 中执行：
+   </p>
+
+   <p class="simpara">
+    当在 Fiber 中触发垃圾回收时，GC 调用的析构函数将在单独的 Fiber 中执行：即
+    gc_destructor_fiber。如果该 Fiber 挂起，将创建一个新的 Fiber
+    来执行剩余的析构函数。之前的 gc_destructor_fiber 不再被 GC
+    引用，如果没有在其他地方被引用，则可能被回收。析构函数被挂起的对象在析构函数返回或
+    <span class="classname"><a href="class.fiber.html" class="classname">Fiber</a></span> 被回收之前不会被回收。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.core.output">
+   <h4 class="title">输出处理器</h4>
+
+   <p class="simpara">
+    传递给 <span class="function"><a href="function.ob-start.html" class="function">ob_start()</a></span> 的 <code class="parameter">flags</code>
+    参数的输出处理器状态标志现在会被清除。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.output-add-rewrite-var.html" class="function">output_add_rewrite_var()</a></span> 现在使用
+    <a href="outcontrol.configuration.html#ini.url-rewriter.hosts" class="link"><code class="literal">url_rewriter.hosts</code></a>
+    代替
+    <a href="session.configuration.html#ini.session.trans-sid-hosts" class="link"><code class="literal">session.trans_sid_hosts</code></a>
+    来选择将要被重写的主机。
+   </p>
+  </div>
+ </div>
+
+ <div class="sect2" id="migration84.other-changes.sapi">
+  <h3 class="title">SAPI 模块变更</h3>
+
+  <div class="sect3" id="migration84.other-changes.sapi.apache">
+   <h4 class="title">apache2handler</h4>
+
+   <p class="simpara">
+    已移除对已停止支持的 Apache 2.0 和 2.2 的支持。最低要求的 Apache 版本现在是 2.4。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.sapi.cli">
+   <h4 class="title">CLI</h4>
+
+   <p class="simpara">
+    内置服务器在指定文件无法找到时，会通过遍历父目录递归查找索引文件。此前，如果路径看起来像是指向一个文件（即最后一个路径部分包含句点），则会跳过此过程，并返回
+    404 错误。现在的行为已变更为在所有情况下都查找索引文件。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.sapi.fpm">
+   <h4 class="title">FPM</h4>
+
+   <p class="simpara">
+    刷新不带正文的头信息现在将成功。
+    
+   </p>
+
+   <p class="simpara">
+    状态页面新增了一个字段来显示内存峰值。
+   </p>
+
+   <p class="simpara">
+    
+    用于 Solaris/Illumos 的 <var class="filename">/dev/poll</var>
+    <code class="literal">events.mechanism</code> 设置已被废弃。
+   </p>
+  </div>
+ </div>
+
+ <div class="sect2" id="migration84.other-changes.functions">
+  <h3 class="title">变更的函数</h3>
+
+  <div class="sect3" id="migration84.other-changes.functions.core">
+   <h4 class="title">核心</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.trigger-error.html" class="function">trigger_error()</a></span> 和 <span class="function"><a href="function.user-error.html" class="function">user_error()</a></span>
+    的返回类型现在是 <span class="type"><a href="language.types.singleton.html" class="type true">true</a></span> 而不是 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.dom">
+   <h4 class="title">DOM</h4>
+
+   <p class="simpara">
+    <span class="methodname"><a href="domdocument.registernodeclass.html" class="methodname">DOMDocument::registerNodeClass()</a></span>
+    现在的暂定返回类型为 <span class="type"><a href="language.types.singleton.html" class="type true">true</a></span> 而不是 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span>。
+    实际上它只可能返回 <strong><code><a href="reserved.constants.html#constant.true">true</a></code></strong>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.hash">
+   <h4 class="title">Hash</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.hash-update.html" class="function">hash_update()</a></span>
+    现在的暂定返回类型为 <span class="type"><a href="language.types.singleton.html" class="type true">true</a></span> 而不是 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span>。
+    实际上它只可能返回 <strong><code><a href="reserved.constants.html#constant.true">true</a></code></strong>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.intl">
+   <h4 class="title">Intl</h4>
+
+   <p class="simpara">
+    <strong><code><a href="class.numberformatter.html#numberformatter.constants.round-toward-zero">NumberFormatter::ROUND_TOWARD_ZERO</a></code></strong> 和
+    <strong><code><a href="class.numberformatter.html#numberformatter.constants.round-away-from-zero">NumberFormatter::ROUND_AWAY_FROM_ZERO</a></code></strong>
+    已作为 <strong><code><a href="class.numberformatter.html#numberformatter.constants.round-down">NumberFormatter::ROUND_DOWN</a></code></strong> 和
+    <strong><code><a href="class.numberformatter.html#numberformatter.constants.round-up">NumberFormatter::ROUND_UP</a></code></strong>
+    的别名添加，以与新的
+    <strong><code><a href="math.constants.html#constant.php-round-half-up">PHP_ROUND_<span class="replaceable">*</span></a></code></strong> 模式保持一致。
+   </p>
+
+   <p class="simpara">
+    <span class="methodname"><a href="resourcebundle.get.html" class="methodname">ResourceBundle::get()</a></span>
+    
+    现在的暂定返回类型为 <code class="literal">ResourceBundle|array|string|int|null</code>。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.idn-to-ascii.html" class="function">idn_to_ascii()</a></span> 和 <span class="function"><a href="function.idn-to-utf8.html" class="function">idn_to_utf8()</a></span>
+    函数在 <code class="parameter">domain</code> 名称为空或过长时，现在始终抛出
+    <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.idn-to-ascii.html" class="function">idn_to_ascii()</a></span> 和 <span class="function"><a href="function.idn-to-utf8.html" class="function">idn_to_utf8()</a></span>
+    函数在 <code class="parameter">variant</code> 参数不是
+    <strong><code><a href="intl.constants.html#constant.intl-idna-variant-uts46">INTL_IDNA_VARIANT_UTS46</a></code></strong> 时，现在始终抛出
+    <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.libxml">
+   <h4 class="title">LibXML</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.libxml-set-streams-context.html" class="function">libxml_set_streams_context()</a></span> 现在在将非流上下文资源传递给函数时立即抛出
+    <span class="exceptionname"><a href="class.typeerror.html" class="exceptionname">TypeError</a></span>，而不是在使用流上下文时才抛出。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.mbstring">
+   <h4 class="title">MBString</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.mb-strcut.html" class="function">mb_strcut()</a></span> 在处理无效的 UTF-8 和 UTF-16
+    字符串时的行为现在更加一致。对于有效的 UTF-8 和 UTF-16 字符串没有行为变化。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.odbc">
+   <h4 class="title">ODBC</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.odbc-fetch-object.html" class="function">odbc_fetch_object()</a></span>、<span class="function"><a href="function.odbc-fetch-array.html" class="function">odbc_fetch_array()</a></span>
+    和 <span class="function"><a href="function.odbc-fetch-into.html" class="function">odbc_fetch_into()</a></span> 的 <code class="parameter">row</code>
+    参数现在的默认值为 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong>，与 <span class="function"><a href="function.odbc-fetch-row.html" class="function">odbc_fetch_row()</a></span>
+    保持一致。此前默认值分别为
+    <code class="literal">-1</code>、<code class="literal">-1</code> 和 <code class="literal">0</code>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.openssl">
+   <h4 class="title">OpenSSL</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.openssl-csr-new.html" class="function">openssl_csr_new()</a></span> 中的
+    <code class="parameter">extra_attributes</code> 现在设置 <abbr title="Certificate Signing Request">CSR</abbr>
+    属性而非主题 DN，修正了之前的错误行为。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.openssl-csr-new.html" class="function">openssl_csr_new()</a></span> 中的 <code class="parameter">dn</code>
+    现在允许为单个条目设置 <span class="type"><a href="language.types.array.html" class="type array">array</a></span> 类型的值。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.openssl-csr-sign.html" class="function">openssl_csr_sign()</a></span> 新增了
+    <code class="parameter">serial_hex</code> 参数，允许以十六进制格式设置序列号。
+   </p>
+
+   <p class="simpara">
+    在 OpenSSL 3.2 以下版本中，使用 <span class="function"><a href="function.openssl-x509-parse.html" class="function">openssl_x509_parse()</a></span>
+    解析省略秒数的 ASN.1 UTCTime 时会失败（相关字段返回
+    <code class="literal">-1</code>）。OpenSSL 3.3 及以上版本已无法加载此类证书。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.pdo">
+   <h4 class="title">PDO</h4>
+
+   <p class="simpara">
+    现在可以通过 <span class="methodname"><a href="pdo.getattribute.html" class="methodname">PDO::getAttribute()</a></span> 获取
+    <strong><code><a href="pdo.constants.html#pdo.constants.attr-stringify-fetches">PDO::ATTR_STRINGIFY_FETCHES</a></code></strong> 属性的值。
+   </p>
+
+   <p class="simpara">
+    新增了 <strong><code>PDO::PGSQL_ATTR_RESULT_MEMORY_SIZE</code></strong>
+    常量，用于通过 <span class="methodname"><a href="pdo.getattribute.html" class="methodname">PDO::getAttribute()</a></span>
+    获取支持该功能的驱动程序的查询结果内存使用量。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.pdo-firebird">
+   <h4 class="title">PDO_FIREBIRD</h4>
+
+   <p class="simpara">
+    现在可以通过
+    
+    <span class="methodname"><a href="pdo.getattribute.html" class="methodname">PDO::getAttribute()</a></span> 获取
+    <strong><code>FB_ATTR_DATE_FORMAT</code></strong>、<strong><code>FB_ATTR_TIME_FORMAT</code></strong>、<strong><code>FB_ATTR_TIMESTAMP_FORMAT</code></strong>
+    
+    属性的值。
+   </p>
+
+   <p class="para">
+    新增了用于指定事务隔离级别和访问模式的属性。与此功能相关的五个常量已被添加：
+
+    <ul class="simplelist">
+     <li><strong><code><a href="class.pdo-firebird.html#pdo-firebird.constants.transaction-isolation-level">Pdo\Firebird::TRANSACTION_ISOLATION_LEVEL</a></code></strong></li>
+     <li><strong><code><a href="class.pdo-firebird.html#pdo-firebird.constants.read-committed">Pdo\Firebird::READ_COMMITTED</a></code></strong></li>
+     <li><strong><code><a href="class.pdo-firebird.html#pdo-firebird.constants.repeatable-read">Pdo\Firebird::REPEATABLE_READ</a></code></strong></li>
+     <li><strong><code><a href="class.pdo-firebird.html#pdo-firebird.constants.serializable">Pdo\Firebird::SERIALIZABLE</a></code></strong></li>
+     <li><strong><code><a href="class.pdo-firebird.html#pdo-firebird.constants.writable-transaction">Pdo\Firebird::WRITABLE_TRANSACTION</a></code></strong></li>
+    </ul>
+   </p>
+
+   <p class="simpara">
+    使用持久连接时，构造函数中现在会进行活跃性检查。
+   </p>
+
+   <p class="simpara">
+    构建的内容会根据 <var class="filename">ibase.h</var> 中
+    <strong><code>FB_API_VER</code></strong> 的值而变化。可以使用新的静态方法
+    <span class="methodname"><a href="pdo-firebird.getapiversion.html" class="methodname">Pdo\Firebird::getApiVersion()</a></span> 来获取此信息。此信息现在也在
+    <span class="function"><a href="function.phpinfo.html" class="function">phpinfo()</a></span> 中显示。
+   </p>
+
+   <p class="para">
+    五种新数据类型现已可用：
+    <span class="simplelist"><code class="literal">INT128</code>, <code class="literal">DEC16</code>, <code class="literal">DEC34</code>, <code class="literal">TIMESTAMP_TZ</code>, <code class="literal">TIME_TZ</code></span>
+    。
+    这些类型从 Firebird 4.0 开始可用。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.pdo-mysql">
+   <h4 class="title">PDO_MYSQL</h4>
+
+   <p class="simpara">
+    现在可以通过
+    
+    <span class="methodname"><a href="pdo.getattribute.html" class="methodname">PDO::getAttribute()</a></span> 获取
+    <strong><code><a href="pdo.constants.html#pdo.constants.attr-fetch-table-names">PDO::ATTR_FETCH_TABLE_NAMES</a></code></strong> 属性的值。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.pdo-pgsql">
+   <h4 class="title">PDO_PGSQL</h4>
+
+   <p class="simpara">
+    支持通过 <strong><code>PDO::PGSQL_ATTR_RESULT_MEMORY_SIZE</code></strong>
+    获取查询的内存使用量。
+   </p>
+
+   <p class="simpara">
+    如果列的类型为 <code class="literal">FLOAT4OID</code> 或
+    <code class="literal">FLOAT8OID</code>，其值现在将作为 <span class="type"><a href="language.types.float.html" class="type float">float</a></span>
+    而不是 <span class="type"><a href="language.types.string.html" class="type string">string</a></span> 返回。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.pgsql">
+   <h4 class="title">PGSQL</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.pg-select.html" class="function">pg_select()</a></span> 的 <code class="parameter">conditions</code>
+    参数现在是可选的，并接受空数组。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.phar">
+   <h4 class="title">Phar</h4>
+
+   <p class="para">
+    <span class="simplelist"><span class="methodname"><a href="phar.setalias.html" class="methodname">Phar::setAlias()</a></span>, <span class="methodname"><a href="phar.setdefaultstub.html" class="methodname">Phar::setDefaultStub()</a></span></span>
+    方法现在的暂定返回类型为 <span class="type"><a href="language.types.singleton.html" class="type true">true</a></span> 而不是 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.posix">
+   <h4 class="title">POSIX</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.posix-isatty.html" class="function">posix_isatty()</a></span>
+    现在在文件描述符/流参数无效时会设置错误号。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.reflection">
+   <h4 class="title">Reflection</h4>
+
+   <p class="simpara">
+    <span class="methodname"><a href="reflectiongenerator.getfunction.html" class="methodname">ReflectionGenerator::getFunction()</a></span>
+    现在可以在生成器执行完毕后调用。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.sockets">
+   <h4 class="title">Sockets</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.socket-create-listen.html" class="function">socket_create_listen()</a></span> 的
+    <code class="parameter">backlog</code> 参数的默认值现在为
+    <strong><code><a href="sockets.constants.html#constant.somaxconn">SOMAXCONN</a></code></strong>。此前为 <code class="literal">128</code>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.sodium">
+   <h4 class="title">Sodium</h4>
+
+   <p class="simpara">
+    <span class="function">sodium_crypto_aead_aes256gcm_<span class="replaceable">*</span></span>
+    函数现在可在具有 ARM 加密扩展的 aarch64 CPU 上使用。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.spl">
+   <h4 class="title">SPL</h4>
+
+   <p class="para">
+    <span class="simplelist"><span class="methodname"><a href="splpriorityqueue.insert.html" class="methodname">SplPriorityQueue::insert()</a></span>, <span class="methodname"><a href="splpriorityqueue.recoverfromcorruption.html" class="methodname">SplPriorityQueue::recoverFromCorruption()</a></span>, <span class="methodname"><a href="splheap.insert.html" class="methodname">SplHeap::insert()</a></span>, <span class="methodname"><a href="splheap.recoverfromcorruption.html" class="methodname">SplHeap::recoverFromCorruption()</a></span></span>
+    方法现在的暂定返回类型为 <span class="type"><a href="language.types.singleton.html" class="type true">true</a></span> 而不是 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span>。
+   </p>
+
+   <p class="simpara">
+    <span class="classname"><a href="class.splobjectstorage.html" class="classname">SplObjectStorage</a></span> 现在实现了
+    <span class="interfacename"><a href="class.seekableiterator.html" class="interfacename">SeekableIterator</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.functions.standard">
+   <h4 class="title">Standard</h4>
+
+   <p class="simpara">
+
+    <span class="function"><a href="function.password-hash.html" class="function">password_hash()</a></span> 中 <strong><code><a href="password.constants.html#constant.password-bcrypt">PASSWORD_BCRYPT</a></code></strong>
+    散列算法的默认 <code class="literal">&#039;cost&#039;</code> 值已从 <code class="literal">10</code>
+    增加到 <code class="literal">12</code>。
+    
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.debug-zval-dump.html" class="function">debug_zval_dump()</a></span> 现在会指示数组是否为紧凑（packed）数组。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.long2ip.html" class="function">long2ip()</a></span> 的返回类型现在为 <span class="type"><a href="language.types.string.html" class="type string">string</a></span>，
+    
+    而不是 <code class="literal">string|false</code>。
+   </p>
+
+   <p class="simpara">
+    
+    <span class="function"><a href="function.highlight-string.html" class="function">highlight_string()</a></span> 的返回类型现在为
+    <span class="type">string|true</span>，而不是 <code class="literal">string|bool</code>。
+   </p>
+
+   <p class="simpara">
+    
+    <span class="function"><a href="function.print-r.html" class="function">print_r()</a></span> 的返回类型现在为
+    <span class="type">string|true</span>，而不是 <code class="literal">string|bool</code>。
+   </p>
+
+   
+   <div class="sect4">
+    <h5 class="title">使用 <span class="function"><a href="function.round.html" class="function">round()</a></span> 进行四舍五入</h5>
+
+    <p class="simpara">
+     <span class="function"><a href="function.round.html" class="function">round()</a></span> 函数的 <code class="parameter">mode</code>
+     参数已扩展为
+     
+     <code class="literal">RoundingMode|int</code>，
+     
+     接受新的 <span class="classname"><a href="enum.roundingmode.html" class="classname">RoundingMode</a></span> 枚举实例。
+     
+    </p>
+
+    <p class="para">
+     <span class="function"><a href="function.round.html" class="function">round()</a></span> 函数新增了四种模式：
+     <span class="simplelist">RoundingMode::PositiveInfinity, RoundingMode::NegativeInfinity, RoundingMode::TowardsZero, RoundingMode::AwayFromZero</span>
+     
+    </p>
+
+    <p class="simpara">
+     整数舍入的内部实现已被重写，使其更易于验证正确性和维护。作为重写的结果，一些舍入错误已被修复。例如，此前将
+     <code class="literal">0.49999999999999994</code> 舍入到最近的整数会得到
+     <code class="literal">1.0</code>，而不是正确的结果
+     <code class="literal">0.0</code>。其他输入也可能受到影响，与早期 PHP
+     版本相比可能产生不同的输出。
+    </p>
+
+    <p class="simpara">
+     修复了 <span class="function"><a href="function.round.html" class="function">round()</a></span>
+     函数的&quot;预舍入&quot;导致的错误。此前，使用&quot;预舍入&quot;将诸如
+     <code class="literal">0.285</code>（实际为
+     <code class="literal">0.28499999999999998</code>）的值视为十进制数并舍入为
+     <code class="literal">0.29</code>。然而，&quot;预舍入&quot;会错误地舍入某些数字，因此此修复移除了&quot;预舍入&quot;并更改了数字的比较方式，使值能作为十进制数正确舍入。
+    </p>
+
+    <p class="simpara">
+     <span class="function"><a href="function.round.html" class="function">round()</a></span> 能够处理的最大精度已扩展了一位数字。例如，<code class="code">round(4503599627370495.5)</code>
+     此前返回 <code class="literal">4503599627370495.5</code>，现在返回
+     <code class="literal">4503599627370496</code>。
+    </p>
+
+   </div>
+  </div>
+
+ </div>
+
+ <div class="sect2" id="migration84.other-changes.extensions">
+  <h3 class="title">对扩展的其他变更</h3>
+
+  <div class="sect3" id="migration84.other-changes.extensions.curl">
+   <h4 class="title">cURL</h4>
+
+   <p class="simpara">
+    要求的最低 libcurl 版本现在为 7.61.0。
+   </p>
+
+   <p class="simpara">
+    <strong><code><a href="curl.constants.html#constant.curlopt-dns-use-global-cache">CURLOPT_DNS_USE_GLOBAL_CACHE</a></code></strong>
+    选项不再有任何效果，会被静默忽略。该底层功能在 libcurl 7.11.1
+    中被弃用，在 libcurl 7.62.0 中被移除。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.extensions.gmp">
+   <h4 class="title">GMP</h4>
+
+   
+   <p class="simpara">
+    现在可以将 <span class="classname"><a href="class.gmp.html" class="classname">GMP</a></span> 对象转换为 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span>，而不是发出
+    <strong><code><a href="errorfunc.constants.html#constant.e-recoverable-error">E_RECOVERABLE_ERROR</a></code></strong>。转换行为已重载，使得表示值
+    <code class="literal">0</code> 的 <span class="classname"><a href="class.gmp.html" class="classname">GMP</a></span> 对象被转换为 <strong><code><a href="reserved.constants.html#constant.false">false</a></code></strong>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.extensions.libxml">
+   <h4 class="title">LibXML</h4>
+
+   <p class="simpara">
+    要求的最低 libxml2 版本现在为 2.9.4。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.extensions.intl">
+   <h4 class="title">Intl</h4>
+
+   <p class="simpara">
+    Intl 类的行为已规范化，在尝试使用未初始化的对象或克隆失败时，始终抛出
+    <span class="exceptionname"><a href="class.error.html" class="exceptionname">Error</a></span> 异常。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.extensions.mbstring">
+   <h4 class="title">MBString</h4>
+
+   <p class="simpara">
+    Unicode 数据表已更新至 Unicode 16.0。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.extensions.mysqlnd">
+   <h4 class="title">MySQLnd</h4>
+
+   <p class="simpara">
+    支持来自 MySQL 9 的新 VECTOR 数据类型。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.extensions.openssl">
+   <h4 class="title">OpenSSL</h4>
+
+   <p class="simpara">
+    要求的最低 OpenSSL 版本现在为 1.1.1。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.extensions.pdo-pgsql">
+   <h4 class="title">PDO_PGSQL</h4>
+
+   <p class="simpara">
+    要求的最低 libpq 版本现在为 10.0。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.extensions.pgsql">
+   <h4 class="title">PGSQL</h4>
+
+   <p class="simpara">
+    要求的最低 libpq 版本现在为 10.0。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.extensions.spl">
+   <h4 class="title">SPL</h4>
+
+   <p class="simpara">
+    <span class="classname"><a href="class.splfixedarray.html" class="classname">SplFixedArray</a></span> 中的越界访问现在抛出
+    <span class="exceptionname"><a href="class.outofboundsexception.html" class="exceptionname">OutOfBoundsException</a></span> 类型的异常，而不是
+    <span class="exceptionname"><a href="class.runtimeexception.html" class="exceptionname">RuntimeException</a></span>。由于
+    <span class="exceptionname"><a href="class.outofboundsexception.html" class="exceptionname">OutOfBoundsException</a></span> 是
+    <span class="exceptionname"><a href="class.runtimeexception.html" class="exceptionname">RuntimeException</a></span>
+    的子类，在尝试捕获这些异常时不会产生行为变化。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.extensions.xsl">
+   <h4 class="title">XSL</h4>
+
+   <p class="simpara">
+    类型化属性 <span class="property"><a href="class.xsltprocessor.html#xsltprocessor.props.clonedocument">XSLTProcessor::$cloneDocument</a></span> 和
+    <span class="property"><a href="class.xsltprocessor.html#xsltprocessor.props.doxinclude">XSLTProcessor::$doXInclude</a></span> 现在已声明。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.extensions.zlib">
+   <h4 class="title">Zlib</h4>
+
+   <p class="simpara">
+    要求的最低 zlib 版本现在为 1.2.11。
+   </p>
+  </div>
+ </div>
+
+ <div class="sect2" id="migration84.other-changes.performance">
+  <h3 class="title">性能</h3>
+
+  <div class="sect3" id="migration84.other-changes.performance.core">
+   <h4 class="title">核心</h4>
+
+   <p class="simpara">
+    改进了在高并发负载下 ZTS 构建中浮点数解析和格式化的性能。这影响了
+    <span class="function"><a href="function.printf.html" class="function">printf()</a></span> 系列函数以及序列化函数，如
+    <span class="function"><a href="function.json-encode.html" class="function">json_encode()</a></span> 或 <span class="function"><a href="function.serialize.html" class="function">serialize()</a></span>。
+   </p>
+
+   <p class="simpara">
+    仅使用 <code class="literal">%s</code> 和 <code class="literal">%d</code> 格式说明符的
+    <span class="function"><a href="function.sprintf.html" class="function">sprintf()</a></span>
+    将被编译为等效的字符串插值，避免了函数调用和重复解析格式字符串的开销。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.performance.bcmath">
+   <h4 class="title">BCMath</h4>
+
+   <p class="simpara">
+    改进了数字转换和运算的性能。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.performance.dom">
+   <h4 class="title">DOM</h4>
+
+   <p class="simpara">
+    <span class="methodname"><a href="domnode.c14n.html" class="methodname">DOMNode::C14N()</a></span>
+    在不使用 xpath 查询的情况下性能大幅提升。对于有数万个节点的文档，时间性能可以轻松提升两个数量级。
+   </p>
+
+   <p class="simpara">
+    改进了 XML 序列化的性能并减少了内存消耗。
+   </p>
+
+   <p class="simpara">
+    减少了节点类的内存使用。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.performance.ftp">
+   <h4 class="title">FTP</h4>
+
+   <p class="simpara">
+    改进了 FTP 上传的性能，大文件上传速度最高可提升 10 倍。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.performance.hash">
+   <h4 class="title">Hash</h4>
+
+   <p class="simpara">
+    新增了 SHA-256 的 SSE2 和 SHA-NI 实现。在支持的 CPU
+    上性能提升约 1.3 倍（SSE2）和 3 至 5 倍（SHA-NI）。感谢 Colin Percival /
+    Tarsnap 提供了此优化。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.performance.mbstring">
+   <h4 class="title">MBString</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.mb-strcut.html" class="function">mb_strcut()</a></span> 在处理 UTF-8 和 UTF-16 字符串时速度大幅提升。
+   </p>
+
+   <p class="simpara">
+    查找 mbstring 编码名称的速度大幅提升。
+   </p>
+
+   <p class="simpara">
+    SJIS-win 到 Unicode 的转换性能大幅提升。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.performance.mysqlnd">
+   <h4 class="title">MySQLnd</h4>
+
+   <p class="simpara">
+    改进了 MySQLnd 转义的性能。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.performance.pcre">
+   <h4 class="title">PCRE</h4>
+
+   <p class="simpara">
+    改进了命名捕获组的性能。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.performance.random">
+   <h4 class="title">Random</h4>
+
+   <p class="simpara">
+    改进了 <span class="classname"><a href="class.random-randomizer.html" class="classname">Random\Randomizer</a></span> 的性能，特别针对
+    <span class="methodname"><a href="random-randomizer.getbytes.html" class="methodname">Random\Randomizer::getBytes()</a></span> 和
+    <span class="methodname"><a href="random-randomizer.getbytesfromstring.html" class="methodname">Random\Randomizer::getBytesFromString()</a></span> 方法。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.performance.simplexml">
+   <h4 class="title">SimpleXML</h4>
+
+   <p class="simpara">
+    改进了 XML 序列化的性能并减少了内存消耗。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.other-changes.performance.standard">
+   <h4 class="title">Standard</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.strspn.html" class="function">strspn()</a></span> 和 <span class="function"><a href="function.strcspn.html" class="function">strcspn()</a></span>
+    的性能大幅提升。它们现在以线性时间运行，而不是受二次时间限制。
+   </p>
+
+   <p class="simpara">
+    改进了 <span class="function"><a href="function.strpbrk.html" class="function">strpbrk()</a></span> 的性能。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.get-browser.html" class="function">get_browser()</a></span>
+    的速度大幅提升，在某些测试用例中最高可提升 1.5 至 2.5 倍。
+   </p>
+  </div>
+ </div>
+
+</div></div></div><script type="text/javascript" src="search-combined.js"></script><script type="text/javascript" src="js/67ae199ee27cc87120cab9ba49d1b776-FuzzySearch.min.js"></script><script type="text/javascript" src="js/f5555778cd757f2cb49676062898832b-search.js"></script>    <div id="search-modal__backdrop" class="search-modal__backdrop">
+      <div
+        role="dialog"
+        aria-label="Search modal"
+        id="search-modal"
+        class="search-modal"
+      >
+        <div class="search-modal__header">
+          <div class="search-modal__form">
+            <div class="search-modal__input-icon">
+              <!-- https://feathericons.com search -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                width="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input
+              type="search"
+              id="search-modal__input"
+              class="search-modal__input"
+              placeholder="Search docs"
+              aria-label="Search docs"
+            />
+          </div>
+    
+          <button aria-label="Close" class="search-modal__close">
+            <!-- https://pictogrammers.com/library/mdi/icon/close/ -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+        <div
+          role="listbox"
+          aria-label="Search results"
+          id="search-modal__results"
+          class="search-modal__results"
+        ></div>
+        <div class="search-modal__helper-text">
+          <div>
+            <kbd>↑</kbd> and <kbd>↓</kbd> to navigate •
+            <kbd>Enter</kbd> to select •
+            <kbd>Esc</kbd> to close • <kbd>/</kbd> to open
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            /*{{{Search Modal*/
+            const language = 'local';
+            initSearchModal();
+            initPHPSearch(language).then((searchCallback) => {
+                initSearchUI({language, searchCallback, limit: 30});
+            });
+            /*}}}*/
+        });
+    </script></body></html>

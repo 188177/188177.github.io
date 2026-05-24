@@ -1,0 +1,621 @@
+    <!DOCTYPE HTML>
+    <html>
+     <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <style>
+        .navbar__local {
+          flex-grow: 1;
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr min-content 1fr;
+          margin: 0;
+          height: 100%;
+          
+          .navbar__item {
+            align-content: center;
+          }
+          .navbar__link {
+            display: inline;
+          }
+          .search {
+            text-align: center;
+          }
+          .next {
+            text-align: right;
+          }
+        }
+      </style>
+      <title>其他变更</title>
+      <link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-base.css" />
+<link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-medium.css" />
+
+     </head>
+     <body class="docs">    <div class="navbar navbar-fixed-top">
+      <div class="navbar__inner clearfix">
+          <ul class="navbar__local">
+            <li class="navbar__item prev"><a href="migration74.removed-extensions.html" class="navbar__link">« 移除的扩展</a></li>
+            <li class="navbar__item search">
+              <!-- Desktop encanced search -->
+              <button
+                id="navbar__search-button"
+                class="navbar__search-button"
+                hidden
+              >
+                    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        width="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+                Search
+              </button>
+            </li>
+            <li class="navbar__item next"><a href="migration74.windows-support.html" class="navbar__link">Windows 支持 »</a></li>
+          </ul>
+      </div>
+    </div>    <div id="breadcrumbs" class="clearfix">
+      <ul class="breadcrumbs-container">
+        <li><a href="index.html">PHP Manual</a></li>
+        <li><a href="migration74.html">从 PHP 7.3.x 移植到 PHP 7.4.x</a></li>
+        <li>其他变更</li>
+      </ul>
+    </div>    <div id="layout">
+      <div id="layout-content"><div id="migration74.other-changes" class="sect1">
+ <h2 class="title">其他变更</h2>
+
+ <div class="sect2" id="migration74.other-changes.performance">
+  <h3 class="title">性能提升</h3>
+
+  <div class="sect3" id="migration74.other-changes.performance.core">
+   <h4 class="title">PHP 核心</h4>
+   <p class="para">
+    为 <span class="function"><a href="function.array-key-exists.html" class="function">array_key_exists()</a></span> 函数添加了一个专门的 VM opcache
+    优化，如果该函数可以被静态解析，则可以提高该函数的性能。如果你在项目中使用了命名空间，可能会需要使用
+    <code class="literal">\array_key_exists()</code> 来显性的导入该函数。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration74.other-changes.performance.pcre">
+   <h4 class="title">正则表达式 (Perl-Compatible)</h4>
+   <p class="para">
+    当对同一字符串（但可能有不同的偏移量）在 UTF-8 模式（<code class="literal">&quot;u&quot;</code> 修饰符）下重复调用 <span class="function"><a href="function.preg-match.html" class="function">preg_match()</a></span> 时，只会检查一次 UTF-8 有效性。
+   </p>
+  </div>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.ini">
+  <h3 class="title">INI 配置文件处理的变化</h3>
+  <p class="para">
+   <a href="ini.core.html#ini.zend.exception-ignore-args" class="link">zend.exception_ignore_args</a> 是新的
+   INI 指令，用于包含或排除异常生成的栈跟踪中的参数。
+  </p>
+  <p class="para">
+   <a href="opcache.configuration.html#ini.opcache.preload-user" class="link">opcache.preload_user</a> 是新的 INI
+   指令，用于指定当以 root（出于安全原因不允许这样做）执行时，执行预加载代码的用户帐户。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.pkg-config">
+  <h3 class="title">迁移到 pkg-config</h3>
+  <p class="para">
+   一些扩展已经迁移到只使用 pkg-config 来检测库的依赖性。一般来说，这意味着不再用
+   <strong class="option configure">--with-foo-dir=DIR</strong> 或类似的参数，而是使用
+   <strong class="option configure">--with-foo</strong>。自定义库的路径可以通过向 <code class="literal">PKG_CONFIG_PATH</code>
+   添加额外的目录，或通过 <code class="literal">FOO_CFLAGS</code> 和 <code class="literal">FOO_LIBS</code>
+   来明确指定。
+  </p>
+  <p class="para">
+    以下扩展和 SAPI 会受到影响：
+  </p>
+
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <span class="simpara">CURL:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-curl</strong> 选项不再接受一个目录。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">Enchant:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-enchant</strong> 选项不再接受一个目录。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">FPM:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-fpm-systemd</strong> 现在仅使用 pkg-config 进行 libsystem 检查。libsystemd 所需的最低版本是 209。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">GD:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-gd</strong> 改变为
+       <strong class="option configure">--enable-gd</strong>（是否启用扩展）和
+       <strong class="option configure">--with-external-gd</strong>（选择使用外部 libgd，而不是捆绑 libgd）。
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-png-dir</strong> 参数被移除。需要 libpng 支持。
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-zlib-dir</strong> 参数被移除。需要 zlib 支持。
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-freetype-dir</strong>
+       改变为 <strong class="option configure">--with-freetype</strong>
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-jpeg-dir</strong> 改变为
+       <strong class="option configure">--with-jpeg</strong>
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-webp-dir</strong> 改变为
+       <strong class="option configure">--with-webp</strong>
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-xpm-dir</strong> 改变为
+       <strong class="option configure">--with-xpm</strong>
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">IMAP:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-kerberos-systemd</strong> 选项不再接受一个目录。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">Intl:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-icu-dir</strong>
+       被移除。如果使用了 <strong class="option configure">--enable-intl</strong>
+       参数，需要 libicu 支持。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">LDAP:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-ldap-sasl</strong> 选项不再接受一个目录。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">Libxml:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-libxml-dir</strong> 被移除。
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--enable-libxml</strong> 改变为
+       <strong class="option configure">--with-libxml</strong>。
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-libexpat-dir</strong> 被重命名为
+       <strong class="option configure">--with-expat</strong> 并且该选项不再接受一个目录。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">Litespeed:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-litespeed</strong> 改变为
+       <strong class="option configure">--enable-litespeed</strong>。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">Mbstring:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-onig</strong> 被移除。如果指定了
+       <strong class="option configure">--disable-mbregex</strong> 参数，则需要 libonig 支持。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">ODBC:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-iodbc</strong> 选项不再接受一个目录。
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-unixODBC</strong> 现在没有目录时使用
+       pkg-config（首选）。对于没有 libodbc.pc 的旧版本，仍然接受目录。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">OpenSSL:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-openssl</strong> 选项不再接受一个目录。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">PCRE:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-pcre-regex</strong>
+       已移除。而是提供了 <strong class="option configure">--with-external-pcre</strong>
+       来选择使用外部 PCRE 库，而不是捆绑的那个。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">PDO_SQLite:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-pdo-sqlite</strong> 选项不再接受一个目录。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">Readline:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-libedit</strong> 选项不再接受一个目录。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">Sodium:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-sodium</strong> 选项不再接受一个目录。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">SQLite3:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-sqlite3</strong> 选项不再接受一个目录。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">XSL:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-xsl</strong> 选项不再接受一个目录。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+   <li class="listitem">
+    <span class="simpara">Zip:</span>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--with-libzip</strong> 已移除。
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+       <strong class="option configure">--enable-zip</strong> 改变为
+       <strong class="option configure">--with-zip</strong>。
+      </span>
+     </li>
+    </ul>
+   </li>
+
+  </ul>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.csv">
+  <h3 class="title">CSV 转义</h3>
+  <p class="para">
+   现在 <span class="function"><a href="function.fputcsv.html" class="function">fputcsv()</a></span>、<span class="function"><a href="function.fgetcsv.html" class="function">fgetcsv()</a></span>、<span class="methodname"><a href="splfileobject.fputcsv.html" class="methodname">SplFileObject::fputcsv()</a></span>、<span class="methodname"><a href="splfileobject.fgetcsv.html" class="methodname">SplFileObject::fgetcsv()</a></span>
+   和 <span class="methodname"><a href="splfileobject.setcsvcontrol.html" class="methodname">SplFileObject::setCsvControl()</a></span> 的 <code class="literal">$escape</code> 参数 接受空字符，这会禁用 PHP 专有的转义机制。
+  </p>
+  <p class="para">
+   <span class="function"><a href="function.str-getcsv.html" class="function">str_getcsv()</a></span> 的行为已相应调整（之前空字符串与使用默认值相同）。
+  </p>
+  <p class="para">
+   <span class="methodname"><a href="splfileobject.getcsvcontrol.html" class="methodname">SplFileObject::getCsvControl()</a></span> 也可以相应的为第三个数组元素返回空字符串。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.filter">
+  <h3 class="title">数据过滤</h3>
+  <p class="para">
+   <a href="book.filter.html" class="link">filter</a> 扩展不再展示用于 Unix 构建的 <strong class="option configure">--with-pcre-dir</strong>，并且现在可以在使用
+   <strong class="command">./configure</strong> 时可靠地编译为共享。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.gd">
+  <h3 class="title">GD</h3>
+  <p class="para">
+   捆绑 libgd 中 <span class="function"><a href="function.imagecropauto.html" class="function">imagecropauto()</a></span> 的行为已与系统 libgd 的行为同步：
+  </p>
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <span class="simpara">
+     <strong><code><a href="image.constants.html#constant.img-crop-default">IMG_CROP_DEFAULT</a></code></strong> 不再回退到 <strong><code><a href="image.constants.html#constant.img-crop-sides">IMG_CROP_SIDES</a></code></strong>
+    </span>
+   </li>
+   <li class="listitem">
+    <span class="simpara">
+     阈值裁剪（threshold-cropping）现在使用系统 libgd 算法
+    </span>
+   </li>
+  </ul>
+  <p class="para">
+   <span class="function"><a href="function.imagecropauto.html" class="function">imagecropauto()</a></span> 的默认 <code class="literal">$mode</code> 参数已更改为
+   <strong><code><a href="image.constants.html#constant.img-crop-default">IMG_CROP_DEFAULT</a></code></strong>；现已弃用传递 <code class="literal">-1</code>。
+  </p>
+  <p class="para">
+   <span class="function"><a href="function.imagescale.html" class="function">imagescale()</a></span> 现在支持将 <code class="literal">-1</code> 传递给
+   <code class="literal">$new_width</code>，从而保留宽高比以缩放到固定的高度。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.hash">
+  <h3 class="title">HASH 消息摘要框架</h3>
+  <p class="para">
+   不能再禁用 <a href="book.hash.html" class="link">hash</a> 扩展，并且始终是编译 PHP 的组成部分，类似于 <a href="book.datetime.html" class="link">date</a> 扩展。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.intl">
+  <h3 class="title">Intl</h3>
+  <p class="para">
+   <a href="book.intl.html" class="link">intl</a> 扩展现在至少需要 ICU 50.1。
+  </p>
+  <p class="para">
+   <span class="classname"><a href="class.resourcebundle.html" class="classname">ResourceBundle</a></span> 现在实现了
+   <span class="interfacename"><a href="class.countable.html" class="interfacename">Countable</a></span>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.ldap">
+  <h3 class="title">轻量级目录访问协议</h3>
+  <p class="para">
+   移除对 nsldap 和 umich_ldap 的支持。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.libxml">
+  <h3 class="title">Libxml</h3>
+  <p class="para">
+   所有基于 libxml 的扩展现在都需要 libxml 2.7.6 及其更高的版本。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.mbstring">
+  <h3 class="title">多字节字符串</h3>
+  <p class="para">
+   oniguruma 库不再与 PHP 捆绑，而是需要在系统上提供 libonig。或者可以使用 <strong class="option configure">--disable-mbregex</strong> 禁用 mbregex 组件。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.opcache">
+  <h3 class="title">OPcache</h3>
+  <p class="para">
+   <strong class="option configure">--disable-opcache-file</strong> 和
+   <strong class="option configure">--enable-opcache-file</strong> 配置选项已移除，以支持
+   <a href="opcache.configuration.html#ini.opcache.file-cache" class="link">opcache.file_cache</a> INI 指令。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.password">
+  <h3 class="title">密码散列</h3>
+  <p class="para">
+   现在 <span class="function"><a href="function.password-hash.html" class="function">password_hash()</a></span> 和 <span class="function"><a href="function.password-needs-rehash.html" class="function">password_needs_rehash()</a></span>
+   函数接受可以为 null 的字符串和 int 作为 <code class="literal">$algo</code> 参数。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.pear">
+  <h3 class="title">PEAR</h3>
+  <p class="para">
+   默认不再启用 PEAR（包括 PECL）的安装。可以使用 <strong class="option configure">--with-pear</strong> 手动启用它。此选项已弃用，将来可能会移除。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.reflection">
+  <h3 class="title">Reflection</h3>
+  <p class="para">
+   <span class="classname"><a href="class.reflectionclass.html" class="classname">ReflectionClass</a></span>、<span class="classname"><a href="class.reflectionfunction.html" class="classname">ReflectionFunction</a></span>、<span class="classname"><a href="class.reflectionmethod.html" class="classname">ReflectionMethod</a></span>、<span class="classname"><a href="class.reflectionobject.html" class="classname">ReflectionObject</a></span>
+   和 <span class="classname"><a href="class.reflectionproperty.html" class="classname">ReflectionProperty</a></span> 类的修饰符常量
+   (<code class="literal">IS_ABSTRACT</code>、<code class="literal">IS_DEPRECATED</code>、<code class="literal">IS_EXPLICIT_ABSTRACT</code>、<code class="literal">IS_FINAL</code>、<code class="literal">IS_IMPLICIT_ABSTRACT</code>、<code class="literal">IS_PRIVATE</code>、<code class="literal">IS_PROTECTED</code>、<code class="literal">IS_PUBLIC</code>
+   和 <code class="literal">IS_STATIC</code>) 的数值已经更改。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.simplexml">
+  <h3 class="title">SimpleXML</h3>
+  <p class="para">
+   <span class="classname"><a href="class.simplexmlelement.html" class="classname">SimpleXMLElement</a></span> 现在实现了
+   <span class="interfacename"><a href="class.countable.html" class="interfacename">Countable</a></span>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.sqlite3">
+  <h3 class="title">SQLite3</h3>
+  <p class="para">
+   捆绑的 libsqlite 已移除。要编译 <a href="book.sqlite3.html" class="link">SQLite3</a> 扩展，现在需要系统
+   libsqlite3 ≥ 3.7.4。要编译 <a href="ref.pdo-sqlite.html" class="link">PDO_SQLite</a> 扩展，现在需要系统 libsqlite3 ≥ 3.5.0。
+  </p>
+  <p class="para">
+   现在明确禁止 <span class="classname"><a href="class.sqlite3.html" class="classname">SQLite3</a></span>、<span class="classname"><a href="class.sqlite3stmt.html" class="classname">SQLite3Stmt</a></span> 和 <span class="classname"><a href="class.sqlite3result.html" class="classname">SQLite3Result</a></span>
+   的序列化和反序列化。以前，可以序列化这些类的实例，但反序列化会产生不能用的对象。
+  </p>
+  <p class="para">
+   <code class="literal">@param</code> 表示法现在也可用于表示 SQL 查询参数。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration74.other-changes.zip">
+  <h3 class="title">Zip</h3>
+  <p class="para">
+   捆绑的 libzip 库已移除。编译 zip 扩展现在需要系统 libzip &gt;= 0.11。
+  </p>
+ </div>
+
+</div></div></div><script type="text/javascript" src="search-combined.js"></script><script type="text/javascript" src="js/67ae199ee27cc87120cab9ba49d1b776-FuzzySearch.min.js"></script><script type="text/javascript" src="js/f5555778cd757f2cb49676062898832b-search.js"></script>    <div id="search-modal__backdrop" class="search-modal__backdrop">
+      <div
+        role="dialog"
+        aria-label="Search modal"
+        id="search-modal"
+        class="search-modal"
+      >
+        <div class="search-modal__header">
+          <div class="search-modal__form">
+            <div class="search-modal__input-icon">
+              <!-- https://feathericons.com search -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                width="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input
+              type="search"
+              id="search-modal__input"
+              class="search-modal__input"
+              placeholder="Search docs"
+              aria-label="Search docs"
+            />
+          </div>
+    
+          <button aria-label="Close" class="search-modal__close">
+            <!-- https://pictogrammers.com/library/mdi/icon/close/ -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+        <div
+          role="listbox"
+          aria-label="Search results"
+          id="search-modal__results"
+          class="search-modal__results"
+        ></div>
+        <div class="search-modal__helper-text">
+          <div>
+            <kbd>↑</kbd> and <kbd>↓</kbd> to navigate •
+            <kbd>Enter</kbd> to select •
+            <kbd>Esc</kbd> to close • <kbd>/</kbd> to open
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            /*{{{Search Modal*/
+            const language = 'local';
+            initSearchModal();
+            initPHPSearch(language).then((searchCallback) => {
+                initSearchUI({language, searchCallback, limit: 30});
+            });
+            /*}}}*/
+        });
+    </script></body></html>

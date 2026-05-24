@@ -1,0 +1,812 @@
+    <!DOCTYPE HTML>
+    <html>
+     <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <style>
+        .navbar__local {
+          flex-grow: 1;
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr min-content 1fr;
+          margin: 0;
+          height: 100%;
+          
+          .navbar__item {
+            align-content: center;
+          }
+          .navbar__link {
+            display: inline;
+          }
+          .search {
+            text-align: center;
+          }
+          .next {
+            text-align: right;
+          }
+        }
+      </style>
+      <title>不向后兼容的变更</title>
+      <link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-base.css" />
+<link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-medium.css" />
+
+     </head>
+     <body class="docs">    <div class="navbar navbar-fixed-top">
+      <div class="navbar__inner clearfix">
+          <ul class="navbar__local">
+            <li class="navbar__item prev"><a href="migration84.constants.html" class="navbar__link">« 新的全局常量</a></li>
+            <li class="navbar__item search">
+              <!-- Desktop encanced search -->
+              <button
+                id="navbar__search-button"
+                class="navbar__search-button"
+                hidden
+              >
+                    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        width="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+                Search
+              </button>
+            </li>
+            <li class="navbar__item next"><a href="migration84.deprecated.html" class="navbar__link">弃用功能 »</a></li>
+          </ul>
+      </div>
+    </div>    <div id="breadcrumbs" class="clearfix">
+      <ul class="breadcrumbs-container">
+        <li><a href="index.html">PHP Manual</a></li>
+        <li><a href="migration84.html">从 PHP 8.3.x 移植到 PHP 8.4.x</a></li>
+        <li>不向后兼容的变更</li>
+      </ul>
+    </div>    <div id="layout">
+      <div id="layout-content"><div id="migration84.incompatible" class="sect1">
+ <h2 class="title">不向后兼容的变更</h2>
+
+ <p class="simpara">
+  尽管本节没有明确说明，但每个新<a href="migration84.new-functions.html" class="link">函数</a>、<a href="migration84.new-classes.html" class="link">类、interface、枚举</a>或<a href="migration84.constants.html" class="link">常量</a>都可能导致抛出重复声明
+  <span class="exceptionname"><a href="class.error.html" class="exceptionname">Error</a></span>。
+ </p>
+
+ <div class="sect2" id="migration84.incompatible.core">
+  <h3 class="title">PHP 核心</h3>
+
+  
+  <div class="sect3" id="migration84.incompatible.core.exit">
+   <h4 class="title"><span class="function"><a href="function.exit.html" class="function">exit()</a></span> 行为变更</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.exit.html" class="function">exit()</a></span>（和 <span class="function"><a href="function.die.html" class="function">die()</a></span>）语言结构现在的行为更像函数。这意味着现在可以传递
+    <span class="type"><a href="language.types.callable.html" class="type callable">callable</a></span>，受 <code class="literal">strict_types</code> 声明语句的影响，并且现在执行往常的类型强制，而不是将任何非整数值转换为字符串。
+   </p>
+
+   <p class="simpara">
+    因此，将无效类型传递给 <span class="function"><a href="function.exit.html" class="function">exit()</a></span> 和 <span class="function"><a href="function.die.html" class="function">die()</a></span> 现在会导致抛出 <span class="exceptionname"><a href="class.typeerror.html" class="exceptionname">TypeError</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.core.recursion-comparison">
+   <h4 class="title">比较过程中的递归</h4>
+
+   <p class="simpara">
+    比较期间遇到递归现在会导致 <span class="exceptionname"><a href="class.error.html" class="exceptionname">Error</a></span> 异常，而不是 <strong><code><a href="errorfunc.constants.html#constant.e-error">E_ERROR</a></code></strong> 致命错误。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.core.readonly-indirect-modification">
+   <h4 class="title">间接修改 readonly 属性</h4>
+
+   
+   <p class="simpara">
+    不再允许在 <code class="code">__clone()</code> 里间接修改 readonly 属性，例如 <code class="code">$ref = &amp;$this-&gt;readonly</code>。这在 readonly
+    初始化中已禁止，并且是“克隆期间 readonly 重新初始化”实现中的一个疏忽。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.core.constant-type-change">
+   <h4 class="title">常量的类型变更</h4>
+
+   <p class="simpara">
+    <strong><code><a href="reserved.constants.html#constant.php-debug">PHP_DEBUG</a></code></strong> 和 <strong><code><a href="reserved.constants.html#constant.php-zts">PHP_ZTS</a></code></strong> 常量现在为 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span> 类型。以前为 <span class="type"><a href="language.types.integer.html" class="type int">int</a></span> 类型。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.core.tempnam-length">
+   <h4 class="title">临时文件名长度</h4>
+
+   <p class="simpara">
+    上传文件和 <span class="function"><a href="function.tempnam.html" class="function">tempnam()</a></span> 函数创建的文件名现在为 13 个字节。总长度仍取决于平台。
+   </p>
+  </div>
+
+  
+  <div class="sect3" id="migration84.incompatible.core.e-strict">
+   <h4 class="title">移除 <strong><code><a href="errorfunc.constants.html#constant.e-strict">E_STRICT</a></code></strong> 错误级别</h4>
+
+   <p class="simpara">
+    已移除 <strong><code><a href="errorfunc.constants.html#constant.e-strict">E_STRICT</a></code></strong> 错误级别，因为其在 PHP 引擎中不再使用。已弃用 <strong><code><a href="errorfunc.constants.html#constant.e-strict">E_STRICT</a></code></strong> 常量。
+   </p>
+  </div>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.typed-constants">
+  <h3 class="title">扩展类常量现已类型化</h3>
+
+  <p class="para">
+   以下扩展类常量现在在其常量上声明类型：
+   <ul class="simplelist">
+    <li><a href="book.datetime.html" class="link">Date</a></li>
+    <li><a href="book.intl.html" class="link">Intl</a></li>
+    <li><a href="book.pdo.html" class="link">PDO</a></li>
+    <li><a href="book.reflection.html" class="link">Reflection</a></li>
+    <li><a href="book.spl.html" class="link">SPL</a></li>
+    <li><a href="book.sqlite3.html" class="link">Sqlite</a></li>
+    <li><a href="book.xmlreader.html" class="link">XMLReader</a></li>
+   </ul>
+  </p>
+ </div>
+
+ 
+ <div class="sect2" id="migration84.incompatible.resource2object">
+  <h3 class="title">迁移资源到对象</h3>
+
+  <p class="simpara">
+   多个 <span class="type"><a href="language.types.resource.html" class="type resource">resource</a></span> 已迁移到 <span class="type"><a href="language.types.object.html" class="type object">object</a></span>。除非另有说明，否则 <span class="function"><a href="function.is-resource.html" class="function">is_resource()</a></span>
+   的返回值检查应替换为 <strong><code><a href="reserved.constants.html#constant.false">false</a></code></strong> 检查。
+  </p>
+
+  <div class="sect3" id="migration84.incompatible.resource2object.dba">
+   <h4 class="title">DBA</h4>
+
+   <p class="simpara">
+    <a href="book.dba.html" class="link">DBA</a> 函数现在接受并返回
+    <span class="classname"><a href="class.dba-connection.html" class="classname">Dba\Connection</a></span> 对象，而不是
+    <code class="literal">dba_connection</code> <span class="type"><a href="language.types.resource.html" class="type resource">resource</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.resource2object.odbc">
+   <h4 class="title">ODBC</h4>
+
+   <p class="simpara">
+    <a href="book.uodbc.html" class="link">ODBC</a> 函数现在接受并返回
+    <span class="classname"><a href="class.odbc-result.html" class="classname">Odbc\Result</a></span> 对象，而不是
+    <code class="literal">odbc_result</code> <span class="type"><a href="language.types.resource.html" class="type resource">resource</a></span>。
+   </p>
+
+   <p class="simpara">
+    <a href="book.uodbc.html" class="link">ODBC</a> 函数现在接受并返回
+    <span class="classname"><a href="class.odbc-connection.html" class="classname">Odbc\Connection</a></span> 对象，而不是
+    <code class="literal">odbc_connection</code> <span class="type"><a href="language.types.resource.html" class="type resource">resource</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.resource2object.soap">
+   <h4 class="title">SOAP</h4>
+
+   <p class="simpara">
+    <span class="property"><a href="class.soapclient.html#soapclient.props.httpurl">SoapClient::$httpurl</a></span> 属性现在是
+    <span class="classname"><strong class="classname">Soap\Url</strong></span> 对象，而不是
+    <code class="literal">soap_url</code> <span class="type"><a href="language.types.resource.html" class="type resource">resource</a></span>。
+    检查使用 <span class="function"><a href="function.is-resource.html" class="function">is_resource()</a></span>（即
+    <code class="code">is_resource($client-&gt;httpurl)</code>）应该替换为检查
+    是否为 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong>（即 <code class="code">$client-&gt;httpurl !== null</code>）。
+   </p>
+   <p class="simpara">
+    <span class="property"><a href="class.soapclient.html#soapclient.props.sdl">SoapClient::$sdl</a></span> 属性现在是
+    <span class="classname"><strong class="classname">Soap\Sdl</strong></span> 对象，而不是
+    <code class="literal">soap_sdl</code> <span class="type"><a href="language.types.resource.html" class="type resource">resource</a></span>。
+    检查使用 <span class="function"><a href="function.is-resource.html" class="function">is_resource()</a></span>（即
+    <code class="code">is_resource($client-&gt;sdl)</code>）应该替换为检查
+    是否为 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong>（即 <code class="code">$client-&gt;sdl !== null</code>）。
+   </p>
+  </div>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.new-warnings-exceptions">
+  <h3 class="title">新的警告和异常</h3>
+
+  <p class="simpara">
+   添加了因编程错误（即将无效值提供给参数）而触发新的警告和异常。
+  </p>
+
+  <div class="sect3" id="migration84.incompatible.new-warnings-exceptions.curl">
+   <h4 class="title">Curl</h4>
+
+   <p class="simpara">
+    如果 <code class="parameter">timeout</code> 参数小于 <code class="literal">0</code> 或大于
+    <strong><code><a href="reserved.constants.html#constant.php-int-max">PHP_INT_MAX</a></code></strong>，<span class="function"><a href="function.curl-multi-select.html" class="function">curl_multi_select()</a></span>
+    现在会抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.new-warnings-exceptions.gd">
+   <h4 class="title">Gd</h4>
+
+   <p class="para">
+    当传入无效的 <code class="parameter">quality</code>
+    时，<span class="simplelist"><span class="function"><a href="function.imagejpeg.html" class="function">imagejpeg()</a></span>, <span class="function"><a href="function.imagewebp.html" class="function">imagewebp()</a></span>, <span class="function"><a href="function.imagepng.html" class="function">imagepng()</a></span>, <span class="function"><a href="function.imageavif.html" class="function">imageavif()</a></span></span>
+    现在抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+
+   <p class="simpara">
+    当传递无效的 <code class="parameter">speed</code> 参数值时，<span class="function"><a href="function.imageavif.html" class="function">imageavif()</a></span>
+    现在将抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+
+   <p class="simpara">
+    如果 <code class="parameter">width</code> 或 <code class="parameter">height</code>
+    参数溢出，<span class="function"><a href="function.imagescale.html" class="function">imagescale()</a></span> 现在将抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+
+   <p class="simpara">
+    当传入无效的 <code class="parameter">mode</code> 参数时，<span class="function"><a href="function.imagescale.html" class="function">imagescale()</a></span>
+    现在将抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+
+   <p class="simpara">
+    如果 <code class="parameter">sub</code> 或 <code class="parameter">plus</code>
+    参数溢出，<span class="function"><a href="function.imagefilter.html" class="function">imagefilter()</a></span> 现在使用 <strong><code><a href="image.constants.html#constant.img-filter-scatter">IMG_FILTER_SCATTER</a></code></strong>
+    过滤器将抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.new-warnings-exceptions.gettext">
+   <h4 class="title">Gettext</h4>
+
+   <p class="para">
+    如果 <code class="parameter">domain</code> 是空字符串，<span class="simplelist"><span class="function"><a href="function.bind-textdomain-codeset.html" class="function">bind_textdomain_codeset()</a></span>, <span class="function"><a href="function.textdomain.html" class="function">textdomain()</a></span>, <span class="function">d<span class="replaceable">*</span>gettext</span></span> 现在 抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.new-warnings-exceptions.intl">
+   <h4 class="title">Intl</h4>
+
+   <p class="para">
+    <span class="function"><a href="resourcebundle.get.html" class="function">resourcebundle_get()</a></span>、<span class="methodname"><a href="resourcebundle.get.html" class="methodname">ResourceBundle::get()</a></span>
+    和在 <span class="classname"><a href="class.resourcebundle.html" class="classname">ResourceBundle</a></span> 对象上访问偏移量现在会抛出：
+    <ul class="simplelist">
+     <li>
+      无效偏移类型的 <span class="exceptionname"><a href="class.typeerror.html" class="exceptionname">TypeError</a></span>
+     </li>
+     <li>
+      空 <span class="type"><a href="language.types.string.html" class="type string">string</a></span> 的 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>
+     </li>
+     <li>
+      如果整数索引不符合有符号的 32 位整数，则 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>
+     </li>
+    </ul>
+   </p>
+
+   <p class="simpara">
+    如果 <code class="parameter">locale</code> 无效，则
+    <span class="methodname"><a href="intldateformatter.create.html" class="methodname">IntlDateFormatter::__construct()</a></span> 抛出
+    <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+
+   <p class="simpara">
+    如果 <code class="parameter">locale</code> 无效，则
+    <span class="methodname"><a href="numberformatter.create.html" class="methodname">NumberFormatter::__construct()</a></span> 抛出
+    <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.new-warnings-exceptions.mbstring">
+   <h4 class="title">MBString</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.mb-encode-numericentity.html" class="function">mb_encode_numericentity()</a></span> 和
+    <span class="function"><a href="function.mb-decode-numericentity.html" class="function">mb_decode_numericentity()</a></span> 现在检测
+    <code class="parameter">map</code> 是否仅由 <span class="type"><a href="language.types.integer.html" class="type int">int</a></span>
+    构成，如果不是，则抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+
+   <p class="simpara">
+    如果 <code class="parameter">type</code> 无效，<span class="function"><a href="function.mb-http-input.html" class="function">mb_http_input()</a></span>
+    现在始终抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.mb-http-output.html" class="function">mb_http_output()</a></span> 现在检测
+    <code class="parameter">encoding</code> 是不是不包含 null 字节，如果包含，会抛出
+    <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.new-warnings-exceptions.odbc">
+   <h4 class="title">ODBC</h4>
+
+   <p class="simpara">
+    当 <code class="parameter">row</code> 小于或等于 <code class="literal">0</code>
+    时，<span class="function"><a href="function.odbc-fetch-row.html" class="function">odbc_fetch_row()</a></span> 返回 <strong><code><a href="reserved.constants.html#constant.false">false</a></code></strong>。在这种情况下会发出 warning。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.new-warnings-exceptions.pcntl">
+   <h4 class="title">PCNTL</h4>
+
+   <p class="para">
+    <span class="function"><a href="function.pcntl-sigprocmask.html" class="function">pcntl_sigprocmask()</a></span>、<span class="function"><a href="function.pcntl-sigwaitinfo.html" class="function">pcntl_sigwaitinfo()</a></span> 和
+    <span class="function"><a href="function.pcntl-sigtimedwait.html" class="function">pcntl_sigtimedwait()</a></span> 函数现在会抛出：
+    <ul class="simplelist">
+     <li>
+      如果 <code class="parameter">signals</code> 数组为空，则抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>（如果
+      <code class="parameter">mode</code> <strong><code><a href="pcntl.constants.html#constant.sig-setmask">SIG_SETMASK</a></code></strong> 则
+      <span class="function"><a href="function.pcntl-sigprocmask.html" class="function">pcntl_sigprocmask()</a></span> 除外）
+     </li>
+     <li>
+      如果 <code class="parameter">signals</code> 数组的值不是 <span class="type"><a href="language.types.integer.html" class="type int">int</a></span>，则抛出 <span class="exceptionname"><a href="class.typeerror.html" class="exceptionname">TypeError</a></span>
+     </li>
+     <li>
+      如果 <code class="parameter">signals</code> 数组不是有效的信号编号，则抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>
+     </li>
+    </ul>
+   </p>
+
+   <p class="simpara">
+    如果 <code class="parameter">mode</code> 不是 <strong><code><a href="pcntl.constants.html#constant.sig-block">SIG_BLOCK</a></code></strong>、<strong><code><a href="pcntl.constants.html#constant.sig-unblock">SIG_UNBLOCK</a></code></strong>
+    或 <strong><code><a href="pcntl.constants.html#constant.sig-setmask">SIG_SETMASK</a></code></strong> 中的一个，<span class="function"><a href="function.pcntl-sigprocmask.html" class="function">pcntl_sigprocmask()</a></span>
+    现在将抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+
+   <p class="para">
+    <span class="function"><a href="function.pcntl-sigtimedwait.html" class="function">pcntl_sigtimedwait()</a></span> 函数现在将抛出：
+    <ul class="simplelist">
+     <li>
+      如果 <code class="parameter">seconds</code> 小于 <code class="literal">0</code> 则抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>
+     </li>
+     <li>
+      如果 <code class="parameter">nanoseconds</code> 小于 <code class="literal">0</code> 或者大于
+      <code class="literal">1e9</code>，则抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>
+     </li>
+     <li>
+      如果 <code class="parameter">seconds</code> 和 <code class="parameter">nanoseconds</code>
+      是 <code class="literal">0</code>，则抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>
+     </li>
+    </ul>
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.new-warnings-exceptions.session">
+   <h4 class="title">Session</h4>
+
+   <p class="simpara">
+    设置一个非正值的 <a href="session.configuration.html#ini.session.gc-divisor" class="link">session.gc_divisor</a>
+    或者一个负值的 <a href="session.configuration.html#ini.session.gc-probability" class="link">session.gc_probability</a>
+    现在会发出警告。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.new-warnings-exceptions.simplexml">
+   <h4 class="title">SimpleXML</h4>
+
+   <p class="simpara">
+    使用非 XML 对象调用 <span class="function"><a href="function.simplexml-import-dom.html" class="function">simplexml_import_dom()</a></span> 将抛出
+    <span class="exceptionname"><a href="class.typeerror.html" class="exceptionname">TypeError</a></span> 而不是 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.new-warnings-exceptions.standard">
+   <h4 class="title">标准</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.round.html" class="function">round()</a></span> 函数现在会验证 <code class="parameter">mode</code>
+    的值，如果无效，则抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。之前无效模式会解释为 <strong><code><a href="math.constants.html#constant.php-round-half-up">PHP_ROUND_HALF_UP</a></code></strong>。
+   </p>
+
+   <p class="simpara">
+    当 <code class="parameter">separator</code> 和 <code class="parameter">enclosure</code> 参数值的长度不为一个字节，或者
+    <code class="parameter">escape</code> 参数值不为一个字节或者空字符串，<span class="function"><a href="function.str-getcsv.html" class="function">str_getcsv()</a></span> 现在将抛出
+    <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。该行为已与 <span class="function"><a href="function.fputcsv.html" class="function">fputcsv()</a></span> 和
+    <span class="function"><a href="function.fgetcsv.html" class="function">fgetcsv()</a></span> 行为相同。
+   </p>
+
+   <p class="simpara">
+    如果 <code class="parameter">mode</code> 无效，<span class="function"><a href="function.php-uname.html" class="function">php_uname()</a></span>
+    函数现在会抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+
+   <p class="simpara">
+    <span class="function"><a href="function.unserialize.html" class="function">unserialize()</a></span> 的 <code class="literal">&quot;allowed_classes&quot;</code>
+    选项如果不是类名 <span class="type"><a href="language.types.array.html" class="type array">array</a></span>，现在会抛出 <span class="exceptionname"><a href="class.typeerror.html" class="exceptionname">TypeError</a></span>
+    和 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.new-warnings-exceptions.xmlreader">
+   <h4 class="title">XMLReader</h4>
+
+   <p class="simpara">
+    传递无效的字符编码给 <span class="methodname"><a href="xmlreader.open.html" class="methodname">XMLReader::open()</a></span> 或 <span class="methodname"><a href="xmlreader.xml.html" class="methodname">XMLReader::XML()</a></span>
+    现在会引发 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+
+   <p class="simpara">
+    传递包含 null 字节的 <span class="type"><a href="language.types.string.html" class="type string">string</a></span>，之前会发出 warning，现在会引发 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.new-warnings-exceptions.xmlwriter">
+   <h4 class="title">XMLWriter</h4>
+
+   <p class="simpara">
+    传递包含 null 字节的 <span class="type"><a href="language.types.string.html" class="type string">string</a></span>，之前会发出 warning，现在会引发 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.incompatible.new-warnings-exceptions.xsl">
+   <h4 class="title">XSL</h4>
+
+   <p class="simpara">
+    <span class="methodname"><a href="xsltprocessor.setparameter.html" class="methodname">XSLTProcessor::setParameter()</a></span> 现在会在参数包含 null 字节时抛出
+    <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。这实际上从一开始就没有正确运行过，这就是它现在抛出异常的原因。
+   </p>
+
+   <p class="simpara">
+    现在，使用非 XML 对象调用 <span class="methodname"><a href="xsltprocessor.importstylesheet.html" class="methodname">XSLTProcessor::importStyleSheet()</a></span> 会引发
+    <span class="exceptionname"><a href="class.typeerror.html" class="exceptionname">TypeError</a></span> 而不是 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+   </p>
+
+   
+   <p class="simpara">
+    如果在求值期间调用 PHP 函数回调失败，则现在会抛出而不是发出 warning。
+   </p>
+  </div>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.date">
+  <h3 class="title">Date</h3>
+
+  <p class="para">
+   <a href="datetime.formats.html#datetime.formats.relative" class="link">相对格式</a>的 <code class="literal">number</code> 符号再次接受多个符号，例如 <code class="literal">+-2</code>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.dom">
+  <h3 class="title">DOM</h3>
+
+  <p class="simpara">
+   如果无法分配新节点，某些 DOM 方法以前会返回 <strong><code><a href="reserved.constants.html#constant.false">false</a></code></strong> 或带有 code <strong><code><a href="dom.constants.html#constant.dom-php-err">DOM_PHP_ERR</a></code></strong> 的
+   <span class="exceptionname"><a href="class.domexception.html" class="exceptionname">DOMException</a></span>。现在，它们会一致地抛出带有 code <strong><code><a href="dom.constants.html#constant.dom-invalid-state-err">DOM_INVALID_STATE_ERR</a></code></strong>
+   的 <span class="exceptionname"><a href="class.domexception.html" class="exceptionname">DOMException</a></span>。这种情况极少发生，受影响的可能性也很低。因此，<span class="methodname"><a href="domimplementation.createdocument.html" class="methodname">DOMImplementation::createDocument()</a></span>
+   现在暂定返回类型为 <span class="classname"><a href="class.domdocument.html" class="classname">DOMDocument</a></span>，而不是 <code class="code">DOMDocument|false</code>。
+  </p>
+
+  <p class="simpara">
+   以前，可以克隆 <span class="classname"><a href="class.domxpath.html" class="classname">DOMXPath</a></span> 对象，但会导致对象不可用。现在则不可以，克隆
+   <span class="classname"><a href="class.domxpath.html" class="classname">DOMXPath</a></span> 对象会引发 <span class="exceptionname"><a href="class.error.html" class="exceptionname">Error</a></span>。
+  </p>
+
+  
+  <p class="simpara">
+   已移除 <span class="methodname"><strong>DOMImplementation::getFeature()</strong></span> 方法。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.gmp">
+  <h3 class="title">GMP</h3>
+
+  
+  <p class="simpara">
+   <span class="classname"><a href="class.gmp.html" class="classname">GMP</a></span> 类现在是 final，并且再也不能继承。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.mbstring">
+  <h3 class="title">MBString</h3>
+
+  <p class="simpara">
+   对于无效字符串（包含编码错误），<span class="function"><a href="function.mb-substr.html" class="function">mb_substr()</a></span> 现在以与大多数其他 mbstring
+   函数相同的方式解释字符索引。这意味着 <span class="function"><a href="function.mb-strpos.html" class="function">mb_strpos()</a></span> 返回的字符索引可以传递给
+   <span class="function"><a href="function.mb-substr.html" class="function">mb_substr()</a></span>。
+  </p>
+
+  <p class="simpara">
+   对于 SJIS-Mac (MacJapanese) 字符串，传递给 <span class="function"><a href="function.mb-substr.html" class="function">mb_substr()</a></span> 的字符索引现在指向的是将字符串转换为
+   Unicode 时生成的 Unicode 码点的索引。这很重要，因为大约 40 个 SJIS-Mac 字符在转换为 Unicode
+   时会变成多个 Unicode 代码点的序列。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.mysqli">
+  <h3 class="title">MySQLi</h3>
+
+  <p class="simpara">
+   已移除未使用和未记录的常量 <strong><code>MYSQLI_SET_CHARSET_DIR</code></strong>。
+  </p>
+
+  <p class="simpara">
+   已移除 <strong><code><a href="mysqli.constants.html#constant.mysqli-stmt-attr-prefetch-rows">MYSQLI_STMT_ATTR_PREFETCH_ROWS</a></code></strong> 常量。mysqlnd 无法使用该功能。
+  </p>
+
+  <p class="simpara">
+   已移除 <strong><code><a href="mysqli.constants.html#constant.mysqli-cursor-type-for-update">MYSQLI_CURSOR_TYPE_FOR_UPDATE</a></code></strong> 和 <strong><code><a href="mysqli.constants.html#constant.mysqli-cursor-type-scrollable">MYSQLI_CURSOR_TYPE_SCROLLABLE</a></code></strong>
+   常量。此功能从未实现过，无论是 mysqlnd 还是 libmysql。
+  </p>
+
+  <p class="simpara">
+   已移除未使用的 <strong><code><a href="mysqli.constants.html#constant.mysqli-type-interval">MYSQLI_TYPE_INTERVAL</a></code></strong> 常量（当前是 <strong><code><a href="mysqli.constants.html#constant.mysqli-type-enum">MYSQLI_TYPE_ENUM</a></code></strong> 的存根（stub）和别名）。
+   
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.mysqlnd">
+  <h3 class="title">MySQLnd</h3>
+
+  <p class="simpara">
+   对于 MySQL 服务器 8.0.24 及以上版本，MySQL 服务器等待超时报告的错误 code 已从 <code class="literal">2006</code> 更改为 <code class="literal">4031</code>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.opcache">
+  <h3 class="title">Opcache</h3>
+
+  <p class="simpara">
+   64 位架构上 <a href="opcache.configuration.html#ini.opcache.interned-strings-buffer" class="link">opcache.interned_strings_buffer</a>
+   设置的最大值现在是 <code class="literal">32767</code>。以前是 <code class="literal">4095</code>。
+  </p>
+
+  <div class="sect3">
+   <h4 class="title">JIT</h4>
+
+   <p class="simpara">
+    JIT 的默认配置值分别从 <a href="opcache.configuration.html#ini.opcache.jit" class="link"><code class="literal">opcache.jit=tracing</code></a> 和 <a href="opcache.configuration.html#ini.opcache.jit-buffer-size" class="link"><code class="literal">opcache.jit_buffer_size=0</code></a> 更改为 <a href="opcache.configuration.html#ini.opcache.jit" class="link"><code class="literal">opcache.jit=disable</code></a> 和 <a href="opcache.configuration.html#ini.opcache.jit-buffer-size" class="link"><code class="literal">opcache.jit_buffer_size=64M</code></a>。
+   </p>
+
+   <p class="simpara">
+    这不会影响默认的可观察行为，因为默认情况下 JIT 仍处于禁用状态。但是，现在是通过 <a href="opcache.configuration.html#ini.opcache.jit" class="link">opcache.jit</a>
+    设置而不是 <a href="opcache.configuration.html#ini.opcache.jit-buffer-size" class="link">opcache.jit_buffer_size</a> 禁用。这可能会影响之前仅通过 <a href="opcache.configuration.html#ini.opcache.jit-buffer-size" class="link">opcache.jit_buffer_size</a> 启用 JIT 的用户，而无需使用 <a href="opcache.configuration.html#ini.opcache.jit" class="link">opcache.jit</a> 指定 JIT 模式。要启用 JIT 编译，请相应地设置 <a href="opcache.configuration.html#ini.opcache.jit" class="link">opcache.jit</a> 配置值。
+   </p>
+
+   <p class="simpara">
+    如果启用了 <abbr>JIT</abbr> 编译，当 <abbr>JIT</abbr> 编译器的初始化因任何原因而失败时，<abbr title="PHP: Hypertext Preprocessor">PHP</abbr>
+    将在启动时退出并出现致命错误。
+   </p>
+  </div>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.pcntl">
+  <h3 class="title">PCNTL</h3>
+
+  <p class="simpara">
+   <span class="function"><a href="function.pcntl-sigprocmask.html" class="function">pcntl_sigprocmask()</a></span>、<span class="function"><a href="function.pcntl-sigwaitinfo.html" class="function">pcntl_sigwaitinfo()</a></span> 和
+   <span class="function"><a href="function.pcntl-sigtimedwait.html" class="function">pcntl_sigtimedwait()</a></span> 函数现在在失败时始终返回 <strong><code><a href="reserved.constants.html#constant.false">false</a></code></strong>。以前在某些情况下，它可能返回值 <code class="literal">-1</code>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.pcre">
+  <h3 class="title">PCRE</h3>
+
+  <p class="simpara">
+   捆绑的 pcre2lib 已更新至版本 10.44。因此，这意味着 <code class="literal">{,3}</code> 现在识别为量词而不是文本。此外，UCP
+   模式下某些字符类的含义已发生改变。请参阅 <a href="https://github.com/PCRE2Project/pcre2/blob/master/NEWS" class="link external">&raquo;&nbsp;PCRE2
+   变更日志</a>，了解完整的变更日志。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.pdo-dblib">
+  <h3 class="title">PDO_DBLIB</h3>
+
+  <p class="simpara">
+   <strong><code><a href="class.pdo-dblib.html#pdo-dblib.constants.attr-stringify-uniqueidentifier">Pdo\Dblib::ATTR_STRINGIFY_UNIQUEIDENTIFIER</a></code></strong> 和 <strong><code><a href="class.pdo-dblib.html#pdo-dblib.constants.attr-datetime-convert">Pdo\Dblib::ATTR_DATETIME_CONVERT</a></code></strong>
+   属性现在是 bool 属性，而不是 int 属性。因此，通过 <span class="methodname"><a href="pdo.setattribute.html" class="methodname">PDO::setAttribute()</a></span> 设置属性并通过
+   <span class="methodname"><a href="pdo.getattribute.html" class="methodname">PDO::getAttribute()</a></span> 检索属性并返回 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span> 值。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.pdo-firebird">
+  <h3 class="title">PDO_FIREBIRD</h3>
+
+  <p class="simpara">
+   <strong><code><a href="pdo.constants.html#pdo.constants.attr-autocommit">PDO::ATTR_AUTOCOMMIT</a></code></strong> 属性现在是 bool 属性，而不是 int 属性。因此，通过 <span class="methodname"><a href="pdo.setattribute.html" class="methodname">PDO::setAttribute()</a></span>
+   设置属性并通过 <span class="methodname"><a href="pdo.getattribute.html" class="methodname">PDO::getAttribute()</a></span> 检索属性并返回 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span> 值。
+  </p>
+
+  <p class="simpara">
+   该扩展现在公开了一些 Firebird C++ API，因此编译此扩展现在需要 C++ 编译器。此外，现在必须针对 fbclient 3.0 或更高版本编译该扩展。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.pdo-mysql">
+  <h3 class="title">PDO_MYSQL</h3>
+
+  <p class="simpara">
+   <strong><code><a href="pdo.constants.html#pdo.constants.attr-autocommit">PDO::ATTR_AUTOCOMMIT</a></code></strong>、<strong><code><a href="pdo.constants.html#pdo.constants.attr-emulate-prepares">PDO::ATTR_EMULATE_PREPARES</a></code></strong> 和
+   <strong><code><a href="ref.pdo-mysql.html#pdo.constants.mysql-attr-direct-query">PDO::MYSQL_ATTR_DIRECT_QUERY</a></code></strong> 属性现在是 bool 属性，而不是 int 属性。因此，通过
+   <span class="methodname"><a href="pdo.setattribute.html" class="methodname">PDO::setAttribute()</a></span> 设置属性并通过 <span class="methodname"><a href="pdo.getattribute.html" class="methodname">PDO::getAttribute()</a></span>
+   检索属性并返回 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span> 值。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.pdo-pgsql">
+  <h3 class="title">PDO_PGSQL</h3>
+
+  <p class="simpara">
+   DSN 的凭证在设置时优先于 PDO 构造方法中的凭证，更接近文档状态。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.simplexml">
+  <h3 class="title">SimpleXML</h3>
+
+  <p class="simpara">
+   <span class="classname"><a href="class.simplexmlelement.html" class="classname">SimpleXMLElement</a></span> 不仅是 XML 元素的表示，而且还是 <span class="classname"><a href="class.recursiveiterator.html" class="classname">RecursiveIterator</a></span>。在 PHP 8.4.0
+   之前，它的某些方法（例如 <span class="methodname"><a href="simplexmlelement.asxml.html" class="methodname">SimpleXMLElement::asXML()</a></span> 或
+   <span class="methodname"><a href="simplexmlelement.getname.html" class="methodname">SimpleXMLElement::getName()</a></span>）以及将此类实例转换 <span class="type"><a href="language.types.string.html" class="type string">string</a></span> 会隐式重置迭代器。
+  </p>
+  <p class="para">
+   这可能会导致意外的无限循环，因为已倒回迭代器。例如：
+   <div class="informalexample">
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /><br />$xmlString </span><span style="color: #007700">= </span><span style="color: #DD0000">"&lt;root&gt;&lt;a&gt;&lt;b&gt;1&lt;/b&gt;&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;&lt;/a&gt;&lt;/root&gt;"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$xml </span><span style="color: #007700">= </span><span style="color: #0000BB">simplexml_load_string</span><span style="color: #007700">(</span><span style="color: #0000BB">$xmlString</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$nodes </span><span style="color: #007700">= </span><span style="color: #0000BB">$xml</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">b</span><span style="color: #007700">;<br />foreach (</span><span style="color: #0000BB">$nodes </span><span style="color: #007700">as </span><span style="color: #0000BB">$nodeData</span><span style="color: #007700">) {<br />    echo </span><span style="color: #DD0000">"nodeData: " </span><span style="color: #007700">. </span><span style="color: #0000BB">$nodeData </span><span style="color: #007700">. </span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />    </span><span style="color: #0000BB">$xml </span><span style="color: #007700">= </span><span style="color: #0000BB">$nodes</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">asXml</span><span style="color: #007700">();<br />}</span></span></code></div>
+    </div>
+
+    <p class="simpara">
+     会导致无限循环。
+    </p>
+    <div class="example-contents screen">
+<div class="cdata"><pre>
+nodeData: 1
+nodeData: 2
+nodeData: 2
+nodeData: 2
+nodeData: 2
+nodeData: 2
+nodeData: 2
+// ...
+</pre></div>
+    </div>
+    <p class="simpara">
+     但是，此行为现已得到纠正，除非明确倒回，否则 <span class="classname"><a href="class.simplexmlelement.html" class="classname">SimpleXMLElement</a></span> 将不再隐式重置迭代器数据。这意味着前面的示例现在将导致：
+    </p>
+    <div class="example-contents screen">
+<div class="cdata"><pre>
+nodeData: 1
+nodeData: 2
+nodeData: 3
+</pre></div>
+    </div>
+   </div>
+  </p>
+  
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.soap">
+  <h3 class="title">SOAP</h3>
+
+  <p class="simpara">
+   <span class="property"><a href="class.soapclient.html#soapclient.props.typemap">SoapClient::$typemap</a></span> 现在是 <span class="type"><a href="language.types.array.html" class="type array">array</a></span>，而不是 <span class="type"><a href="language.types.resource.html" class="type resource">resource</a></span>。使用
+   <span class="function"><a href="function.is-resource.html" class="function">is_resource()</a></span> 检查（即 <code class="code">is_resource($client-&gt;typemap)</code>）应替换为对 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong>
+   的检查（即 <code class="code">$client-&gt;typemap !== null</code>）。
+  </p>
+
+  <p class="simpara">
+   SOAP 扩展获得了对 <a href="book.session.html" class="link">session</a> 扩展的可选依赖。如果在编译 PHP 时未使用 session
+   扩展，并且启用了 <strong class="option unknown">--enable-rtld-now</strong> 配置 flag，则如果还使用了 <a href="book.soap.html" class="link">SOAP</a>
+   扩展，则将发生启动错误。要解决此问题，请不要使用 rtld-now 或加载 session 扩展。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.standard">
+  <h3 class="title">标准</h3>
+
+  <p class="simpara">
+   当使用 <span class="function"><a href="function.strcspn.html" class="function">strcspn()</a></span> 并将 <code class="parameter">characters</code>
+   设为空字符串时，现在将返回字符串的长度，而不是错误地停止在第一个 null 字节处。
+   
+  </p>
+
+  <p class="simpara">
+   <span class="function"><a href="function.http-build-query.html" class="function">http_build_query()</a></span> 现在可以正确处理支持的枚举。
+  </p>
+
+  
+  <p class="simpara">
+   <span class="function"><a href="function.stream-bucket-make-writeable.html" class="function">stream_bucket_make_writeable()</a></span> 和 <span class="function"><a href="function.stream-bucket-new.html" class="function">stream_bucket_new()</a></span>
+   现在将返回 <span class="classname"><strong class="classname">StreamBucket</strong></span> 实例而不是 <span class="classname"><a href="class.stdclass.html" class="classname">stdClass</a></span> 实例。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.tidy">
+  <h3 class="title">Tidy</h3>
+
+  <p class="simpara">
+   构造方法失败现在会引发 exception，而不是发出 warning 并导致对象损坏。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.incompatible.xml">
+  <h3 class="title">XML</h3>
+
+  <p class="simpara">
+   <span class="function">xml_set_<span class="replaceable">*</span>_handler</span> 函数现在声明并检查 <code class="parameter">handler</code>
+   参数的 <span class="type"><span class="type"><a href="language.types.callable.html" class="type callable">callable</a></span>|<span class="type"><a href="language.types.string.html" class="type string">string</a></span>|<span class="type"><a href="language.types.null.html" class="type null">null</a></span></span> 有效签名。此外，现在检查与使用
+   <span class="function"><a href="function.xml-set-object.html" class="function">xml_set_object()</a></span> 设置的对象方法名称相对应的 <span class="type"><a href="language.types.string.html" class="type string">string</a></span> 类型的值，以查看该方法是否存在于先前传递的对象的类中。这意味着现在必须始终在将方法名称设置为
+   <span class="type"><a href="language.types.callable.html" class="type callable">callable</a></span> 之前调用 <span class="function"><a href="function.xml-set-object.html" class="function">xml_set_object()</a></span>。传递空字符串来禁用处理程序仍然是允许的，但已弃用。
+  </p>
+
+  <p class="simpara">
+   然而，由于 <span class="function"><a href="function.xml-set-object.html" class="function">xml_set_object()</a></span> 和传递非 <span class="type"><a href="language.types.callable.html" class="type callable">callable</a></span> 的字符串已弃用。建议使用直接引用该方法的 <span class="type"><a href="language.types.callable.html" class="type callable">callable</a></span> 来更改此类实例。
+  </p>
+ </div>
+
+</div></div></div><script type="text/javascript" src="search-combined.js"></script><script type="text/javascript" src="js/67ae199ee27cc87120cab9ba49d1b776-FuzzySearch.min.js"></script><script type="text/javascript" src="js/f5555778cd757f2cb49676062898832b-search.js"></script>    <div id="search-modal__backdrop" class="search-modal__backdrop">
+      <div
+        role="dialog"
+        aria-label="Search modal"
+        id="search-modal"
+        class="search-modal"
+      >
+        <div class="search-modal__header">
+          <div class="search-modal__form">
+            <div class="search-modal__input-icon">
+              <!-- https://feathericons.com search -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                width="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input
+              type="search"
+              id="search-modal__input"
+              class="search-modal__input"
+              placeholder="Search docs"
+              aria-label="Search docs"
+            />
+          </div>
+    
+          <button aria-label="Close" class="search-modal__close">
+            <!-- https://pictogrammers.com/library/mdi/icon/close/ -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+        <div
+          role="listbox"
+          aria-label="Search results"
+          id="search-modal__results"
+          class="search-modal__results"
+        ></div>
+        <div class="search-modal__helper-text">
+          <div>
+            <kbd>↑</kbd> and <kbd>↓</kbd> to navigate •
+            <kbd>Enter</kbd> to select •
+            <kbd>Esc</kbd> to close • <kbd>/</kbd> to open
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            /*{{{Search Modal*/
+            const language = 'local';
+            initSearchModal();
+            initPHPSearch(language).then((searchCallback) => {
+                initSearchUI({language, searchCallback, limit: 30});
+            });
+            /*}}}*/
+        });
+    </script></body></html>

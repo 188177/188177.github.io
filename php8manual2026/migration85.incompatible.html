@@ -1,0 +1,618 @@
+    <!DOCTYPE HTML>
+    <html>
+     <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <style>
+        .navbar__local {
+          flex-grow: 1;
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr min-content 1fr;
+          margin: 0;
+          height: 100%;
+          
+          .navbar__item {
+            align-content: center;
+          }
+          .navbar__link {
+            display: inline;
+          }
+          .search {
+            text-align: center;
+          }
+          .next {
+            text-align: right;
+          }
+        }
+      </style>
+      <title>不向后兼容的变更</title>
+      <link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-base.css" />
+<link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-medium.css" />
+
+     </head>
+     <body class="docs">    <div class="navbar navbar-fixed-top">
+      <div class="navbar__inner clearfix">
+          <ul class="navbar__local">
+            <li class="navbar__item prev"><a href="migration85.constants.html" class="navbar__link">« 新的全局常量</a></li>
+            <li class="navbar__item search">
+              <!-- Desktop encanced search -->
+              <button
+                id="navbar__search-button"
+                class="navbar__search-button"
+                hidden
+              >
+                    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        width="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+                Search
+              </button>
+            </li>
+            <li class="navbar__item next"><a href="migration85.deprecated.html" class="navbar__link">弃用功能 »</a></li>
+          </ul>
+      </div>
+    </div>    <div id="breadcrumbs" class="clearfix">
+      <ul class="breadcrumbs-container">
+        <li><a href="index.html">PHP Manual</a></li>
+        <li><a href="migration85.html">从 PHP 8.4.x 移植到 PHP 8.5.x</a></li>
+        <li>不向后兼容的变更</li>
+      </ul>
+    </div>    <div id="layout">
+      <div id="layout-content"><div id="migration85.incompatible" class="sect1">
+ <h2 class="title">不向后兼容的变更</h2>
+
+ <div class="sect2" id="migration85.incompatible.core">
+  <h3 class="title">PHP 核心</h3>
+
+  <div class="sect3" id="migration85.incompatible.core.array-callable-alias">
+   <h4 class="title"><code class="literal">&quot;array&quot;</code> 和 <code class="literal">&quot;callable&quot;</code> 别名</h4>
+
+   <p class="simpara">
+    在 <span class="function"><a href="function.class-alias.html" class="function">class_alias()</a></span> 中，不再允许使用 <code class="literal">&quot;array&quot;</code> 和 <code class="literal">&quot;callable&quot;</code> 作为类的别名名称
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.incompatible.core.loosely-comparing-object">
+   <h4 class="title">宽松比较不可比较的对象</h4>
+
+   <p class="simpara">
+    之前，对不可比较的对象（例如枚举、<span class="classname"><a href="class.curlhandle.html" class="classname">CurlHandle</a></span> 和其他内部类）进行宽松布尔比较时存在不一致性。如果与布尔字面量
+    <code class="code">$object == true</code> 进行比较，则其行为与 <code class="code">(bool)$object</code> 相同；如果与静态未知值 <code class="code">$object == $true</code>
+    进行比较，则始终返回 <strong><code><a href="reserved.constants.html#constant.false">false</a></code></strong>。此行为现已统一，始终遵循 <code class="code">(bool)$object</code> 的行为。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.incompatible.core.gc-collect-cycles">
+   <h4 class="title">gc_collect_cycles 的返回值</h4>
+
+   <p class="simpara">
+    <span class="function"><a href="function.gc-collect-cycles.html" class="function">gc_collect_cycles()</a></span> 的返回值不再包括通过循环间接收集的字符串和资源。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.incompatible.core.substitute-final-subclasses">
+   <h4 class="title">在 final 子类中替换 static 关键字</h4>
+
+   <p class="simpara">
+    现在允许在 final 子类中将 <span class="type">static</span> 替换为 <span class="type">self</span> 或具体类名。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.incompatible.core.tick-handlers">
+   <h4 class="title">tick 处理程序</h4>
+
+   <p class="simpara">
+    tick 处理程序现在会在所有关闭函数和析构方法执行完毕、输出处理程序清理完成后停用。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.incompatible.core.trait-binding">
+   <h4 class="title">Trait 绑定</h4>
+
+   <p class="simpara">
+    Trait 现在会在父类之前绑定。这是一个细微的行为变更，但更符合用户的预期。
+    
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.incompatible.core.errors-compilation-and-linking">
+   <h4 class="title">编译和类链接过程中的错误</h4>
+
+   <p class="simpara">
+    编译和类链接过程中产生的错误现在一律延迟处理，并在编译或类链接完成后统一处理。若在编译或类链接期间产生致命错误，将立即处理所有已延迟的错误，且不调用用户定义的错误处理程序。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.incompatible.core.exception-by-userdefined-handler">
+   <h4 class="title">用户定义的错误处理程序抛出的异常</h4>
+
+   <p class="simpara">
+    用户定义的错误处理程序在处理类链接错误时抛出的异常，不再升级为致命错误，也不会阻止链接过程。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.incompatible.core.attribute-during-compilation">
+   <h4 class="title">应用的注解在编译期间出错</h4>
+
+   <p class="simpara">
+    将 <code class="code">#[\Attribute]</code> 应用于抽象类、枚举、接口或 Trait 时，会在编译期间触发错误。此前，该注解虽可添加，但在调用
+    <span class="methodname"><a href="reflectionattribute.newinstance.html" class="methodname">ReflectionAttribute::newInstance()</a></span> 时才会抛出错误。通过使用新的
+    <code class="code">#[\DelayedTargetValidation]</code> 注解，可将此错误从编译期延迟至运行时。
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.incompatible.core.disable-ini-setting">
+   <h4 class="title">disable_classes INI 配置项</h4>
+
+   <p class="simpara">
+    已移除 <a href="ini.core.html#ini.disable-classes" class="link">disable_classes</a> INI 配置项，因其会导致引擎的多项假设失效。
+    
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.incompatible.core.destruct-non-array-values">
+   <h4 class="title">解构非数组值</h4>
+
+   <p class="simpara">
+    使用 <code class="literal">[]</code> 或 <span class="function"><a href="function.list.html" class="function">list()</a></span> 解构非数组值（<strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong> 除外）时，现在会发出警告。
+    
+   </p>
+
+  </div>
+
+  <div class="sect3" id="migration85.incompatible.core.warning-related-to-cast">
+   <h4 class="title">与类型转换相关的警告</h4>
+
+   <p class="simpara">
+    当浮点数（或看起来像浮点数的字符串）无法精确表示为整数时，将其转换为整型会发出警告。此行为适用于显式和隐式的整型转换。
+    
+   </p>
+
+   <p class="simpara">
+    将 NAN 转换为其他类型时，现在会发出警告。
+    
+   </p>
+
+  </div>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.bzip2">
+  <h3 class="title">Bzip2</h3>
+
+  <p class="simpara">
+   当 <code class="parameter">$block_size</code> 不在 1 到 9 之间时，<span class="function"><a href="function.bzcompress.html" class="function">bzcompress()</a></span>
+   现在会抛出 <span class="classname"><a href="class.valueerror.html" class="classname">ValueError</a></span>。
+  </p>
+
+  <p class="simpara">
+   当 <code class="parameter">$work_factor</code> 不在 0 到 250 之间时，<span class="function"><a href="function.bzcompress.html" class="function">bzcompress()</a></span>
+   现在会抛出 <span class="classname"><a href="class.valueerror.html" class="classname">ValueError</a></span>。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.dom">
+  <h3 class="title">DOM</h3>
+
+  <p class="simpara">
+   现在克隆 <span class="classname"><a href="class.domnamednodemap.html" class="classname">DOMNamedNodeMap</a></span>、<span class="classname"><a href="class.domnodelist.html" class="classname">DOMNodeList</a></span>、<span class="classname"><a href="class.dom-namednodemap.html" class="classname">Dom\NamedNodeMap</a></span>、<span class="classname"><a href="class.dom-nodelist.html" class="classname">Dom\NodeList</a></span>、<span class="classname"><a href="class.dom-htmlcollection.html" class="classname">Dom\HTMLCollection</a></span>
+   和 <span class="classname"><a href="class.dom-dtdnamednodemap.html" class="classname">Dom\DtdNamedNodeMap</a></span> 会失败。此前此类操作从未生成有效的对象，因此预计不会产生实际影响。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.fileinfo">
+  <h3 class="title">FileInfo</h3>
+
+  <p class="simpara">
+   当 <code class="parameter">$filename</code> 包含 nul 字节时，<span class="function"><a href="function.finfo-file.html" class="function">finfo_file()</a></span> 和
+   <span class="methodname"><a href="finfo.file.html" class="methodname">finfo::file()</a></span> 现在抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>
+   而非 <span class="exceptionname"><a href="class.typeerror.html" class="exceptionname">TypeError</a></span>，以使抛出的错误类型与语言其他部分保持一致。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.intl">
+  <h3 class="title">Intl</h3>
+
+  <p class="simpara">
+   该扩展现在要求最低 ICU 57.1。
+  </p>
+
+  <p class="simpara">
+   <span class="methodname"><a href="intldateformatter.settimezone.html" class="methodname">IntlDateFormatter::setTimeZone()</a></span>/<span class="function"><a href="intldateformatter.settimezone.html" class="function">datefmt_set_timezone()</a></span>
+   在类未初始化或克隆失败时，现在会抛出 <span class="exceptionname"><a href="class.intlexception.html" class="exceptionname">IntlException</a></span>。
+  </p>
+
+  <p class="simpara">
+   所有 <span class="classname"><a href="class.locale.html" class="classname">Locale</a></span> 方法在 locale 参数包含 null 字节时，现在均抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+  </p>
+
+  <p class="simpara">
+   <strong><code><a href="class.collator.html#collator.constants.sort-regular">Collator::SORT_REGULAR</a></code></strong>在处理数字字符串时的行为现已与
+   ext/standard 中的 <strong><code><a href="array.constants.html#constant.sort-regular">SORT_REGULAR</a></code></strong> 保持一致。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.ldap">
+  <h3 class="title">LDAP</h3>
+
+  <p class="simpara">
+   <span class="function"><a href="function.ldap-get-option.html" class="function">ldap_get_option()</a></span> 和 <span class="function"><a href="function.ldap-set-option.html" class="function">ldap_set_option()</a></span>
+   当传递无效选项时现在抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.mbstring">
+  <h3 class="title">MBString</h3>
+
+  <p class="simpara">
+   Unicode 数据表已更新至 Unicode 17.0
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.mysqli">
+  <h3 class="title">MySQLi</h3>
+
+  <p class="simpara">
+   对已构造的对象再次调用 mysqli 构造方法现已不可行，并会抛出 <span class="exceptionname"><a href="class.error.html" class="exceptionname">Error</a></span>。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.odbc">
+  <h3 class="title">ODBC</h3>
+
+  <p class="simpara">
+   ODBC 现在假定至少支持 ODBC 3.5 的功能，已移除用于控制相关 ODBCVER 定义及构建系统 flag。
+  </p>
+
+  <p class="simpara">
+   ODBC 不再提供针对特定驱动（DB2 除外）的构建 flag，并移除了针对这些驱动的特殊处理。在非
+   Windows 系统上，强烈建议使用 iODBC 或 unixODBC 等驱动管理程序。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.opcache">
+  <h3 class="title">Opcache</h3>
+
+  <p class="simpara">
+   Opcache 扩展现已始终内置于 PHP 二进制文件中，并始终加载。INI 配置项 <a href="opcache.configuration.html#ini.opcache.enable" class="link">opcache.enable</a> 和 <a href="opcache.configuration.html#ini.opcache.enable-cli" class="link">opcache.enable_cli</a> 仍会生效。
+  </p>
+
+  <p class="simpara">
+   已移除 <strong class="option configure">--enable-opcache</strong>/<strong class="option configure">--disable-opcache</strong>
+   配置选项，构建过程不再生成 <var class="filename">opcache.so</var> 或 <var class="filename">php_opcache.dll</var> 文件。
+  </p>
+
+  <p class="simpara">
+   使用 <code class="literal">zend_extension=opcache.so</code> 或
+   <code class="literal">zend_extension=php_opcache.dll</code> 的 INI 配置项会触发警告。
+
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.pcntl">
+  <h3 class="title">PCNTL</h3>
+
+  <p class="simpara">
+   <span class="function"><a href="function.pcntl-exec.html" class="function">pcntl_exec()</a></span> 在 <code class="parameter">$args</code> 参数的元素包含
+   null 字节时会抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+  </p>
+
+  <p class="simpara">
+   <span class="function"><a href="function.pcntl-exec.html" class="function">pcntl_exec()</a></span> 在 <code class="parameter">$env_vars</code>
+   参数的元素或 key 包含 null 字节时会抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.pcre">
+  <h3 class="title">PCRE</h3>
+
+  <p class="simpara">
+   该扩展在编译时未启用半废弃的 PCRE2_EXTRA_ALLOW_LOOKAROUND_BSK 编译选项。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.pdo">
+  <h3 class="title">PDO</h3>
+
+  <p class="simpara">
+   与 <strong><code><a href="pdo.constants.fetch-modes.html#pdo.constants.fetch-class">PDO::FETCH_CLASS</a></code></strong> 结合使用的构造方法参数现在遵循标准的
+   CUFA（<span class="function"><a href="function.call-user-func-array.html" class="function">call_user_func_array()</a></span>）语义。这意味着字符串 key
+   将作为命名参数。此外，不再自动包装按值参数，传递给引用参数，而是会发出常规的 <strong><code><a href="errorfunc.constants.html#constant.e-warning">E_WARNING</a></code></strong>
+   警告。若需将变量以引用方式传入构造方法参数，应使用通用的数组值引用赋值方式：<code class="code">$ctor_args = [&amp;$valByRef]</code>。
+  </p>
+
+  <p class="simpara">
+   在调用 <span class="methodname"><strong>PDO::fetch()</strong></span>、<span class="methodname"><strong>PDO::fetchObject()</strong></span> 或 <span class="methodname"><strong>PDO::fetchAll()</strong></span>
+   期间尝试调用 <span class="methodname"><a href="pdostatement.setfetchmode.html" class="methodname">PDOStatement::setFetchMode()</a></span>，例如通过将语句对象作为构造方法参数传入以实现对象映射等技巧，现在会抛出
+   <span class="exceptionname"><a href="class.error.html" class="exceptionname">Error</a></span>。
+  </p>
+
+  <p class="simpara">
+   常量 <strong><code><a href="pdo.constants.fetch-modes.html#pdo.constants.fetch-group">PDO::FETCH_GROUP</a></code></strong>、<strong><code><a href="pdo.constants.fetch-modes.html#pdo.constants.fetch-unique">PDO::FETCH_UNIQUE</a></code></strong>、<strong><code><a href="pdo.constants.fetch-modes.html#pdo.constants.fetch-classtype">PDO::FETCH_CLASSTYPE</a></code></strong>、<strong><code><a href="pdo.constants.fetch-modes.html#pdo.constants.fetch-props-late">PDO::FETCH_PROPS_LATE</a></code></strong>
+   和 <strong><code><a href="pdo.constants.fetch-modes.html#pdo.constants.fetch-serialize">PDO::FETCH_SERIALIZE</a></code></strong> 的值已发生变化。
+  </p>
+
+  <p class="simpara">
+   若 <strong><code><a href="pdo.constants.fetch-modes.html#pdo.constants.fetch-props-late">PDO::FETCH_PROPS_LATE</a></code></strong> 与非 <strong><code><a href="pdo.constants.fetch-modes.html#pdo.constants.fetch-class">PDO::FETCH_CLASS</a></code></strong>
+   的获取模式一同使用，现在会抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>，与其他获取 flag 的行为保持一致。
+  </p>
+
+  <p class="simpara">
+   若在 <span class="methodname"><strong>PDO::fetchAll()</strong></span> 中将 <strong><code><a href="pdo.constants.fetch-modes.html#pdo.constants.fetch-into">PDO::FETCH_INTO</a></code></strong>
+   用作获取模式，现在会抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>，与
+   <strong><code><a href="pdo.constants.fetch-modes.html#pdo.constants.fetch-lazy">PDO::FETCH_LAZY</a></code></strong> 的行为类似。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.pdo-firebird">
+  <h3 class="title">PDO_FIREBIRD</h3>
+
+  <p class="simpara">
+   当尝试为 Firebird 驱动返回的 <span class="classname"><a href="class.pdostatement.html" class="classname">PDOStatement</a></span>
+   设置过长的游标名称时，现在会抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.pdo-sqlite">
+  <h3 class="title">PDO_SQLITE</h3>
+
+  <p class="simpara">
+   SQLite 的 <span class="methodname"><a href="pdo.quote.html" class="methodname">PDO::quote()</a></span> 在字符串包含 null 字节时，会根据错误模式抛出异常或发出警告。
+  </p>
+
+  <p class="simpara">
+   <span class="methodname"><a href="pdo.sqlitecreatecollation.html" class="methodname">PDO::sqliteCreateCollation()</a></span> 在 callback 返回类型不正确时会抛出异常，使其行为更符合
+   <span class="methodname"><a href="pdo-sqlite.createcollation.html" class="methodname">Pdo\Sqlite::createCollation()</a></span>。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.posix">
+  <h3 class="title">POSIX</h3>
+
+  <p class="simpara">
+   <span class="function"><a href="function.posix-kill.html" class="function">posix_kill()</a></span> 在 process_id 参数超出平台支持范围（有符号整数或长整型范围）时会抛出
+   <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>；<span class="function"><a href="function.posix-setpgid.html" class="function">posix_setpgid()</a></span> 在 process_id
+   或 process_group_id 小于零或超出平台支持范围时也会抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+  </p>
+
+  <p class="simpara">
+   <span class="function"><a href="function.posix-setrlimit.html" class="function">posix_setrlimit()</a></span> 在 hard_limit 或 soft_limit 参数小于 -1，或 soft_limit
+   大于 hard_limit 时会抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.reflection">
+  <h3 class="title">Reflection</h3>
+
+  <p class="simpara">
+   <span class="methodname"><a href="reflectionattribute.newinstance.html" class="methodname">ReflectionAttribute::newInstance()</a></span> 现在可能在内部注解应用到无效目标时抛出错误，前提是该错误通过
+   #[\DelayedTargetValidation] 注解从编译时延迟到了运行时。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.session">
+  <h3 class="title">Session</h3>
+
+  <p class="simpara">
+   向会话写入数据时，若 <var class="varname"><a href="reserved.variables.session.html" class="classname">$_SESSION</a></var> 中的 key 包含竖线字符（<code class="literal">|</code>），现在会发出警告，而非静默失败。
+  </p>
+
+  <p class="simpara">
+   <span class="function"><a href="function.session-start.html" class="function">session_start()</a></span> 对 options 参数的校验更为严格：若该数组不是关联数组，会抛出
+   <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>；若 read_and_close 的值类型与 int 不兼容，则抛出
+   <span class="exceptionname"><a href="class.typeerror.html" class="exceptionname">TypeError</a></span>。
+  </p>
+
+  <p class="simpara">
+   将整数 <code class="literal">0</code> 作为 <code class="parameter">locales</code> 参数传递给
+   <span class="function"><a href="function.setlocale.html" class="function">setlocale()</a></span> 不再受支持，现会抛出 <span class="exceptionname"><a href="class.typeerror.html" class="exceptionname">TypeError</a></span>。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.simplexml">
+  <h3 class="title">SimpleXML</h3>
+
+  <p class="simpara">
+   向 <span class="methodname"><a href="simplexmlelement.xpath.html" class="methodname">SimpleXMLElement::xpath()</a></span> 传入返回结果非节点集的 XPath 表达式时，现在会发出警告并返回
+   <strong><code><a href="reserved.constants.html#constant.false">false</a></code></strong>，而非静默失败并返回空数组。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.snmp">
+  <h3 class="title">SNMP</h3>
+
+  <p class="simpara">
+   <span class="function"><a href="function.snmpget.html" class="function">snmpget()</a></span>、<span class="function"><a href="function.snmpset.html" class="function">snmpset()</a></span>、<span class="function"><a href="function.snmp2-get.html" class="function">snmp2_get()</a></span>、<span class="function"><a href="function.snmp2-set.html" class="function">snmp2_set()</a></span>、<span class="function"><a href="function.snmp3-get.html" class="function">snmp3_get()</a></span>、<span class="function"><a href="function.snmp3-set.html" class="function">snmp3_set()</a></span>
+   和 <span class="methodname"><a href="snmp.construct.html" class="methodname">SNMP::__construct()</a></span> 在主机名过长或包含 null
+   字节、端口号为负数或大于 65535、超时或重试次数小于 -1 或过大时，会抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.soap">
+  <h3 class="title">SOAP</h3>
+
+  <p class="simpara">
+   <span class="methodname"><a href="soapclient.dorequest.html" class="methodname">SoapClient::__doRequest()</a></span> 现在接受新的可选参数 <code class="parameter">$uriParserClass</code>，该参数可接收
+   string 或 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong>。传入 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong> 表示使用原有的基于 <span class="function"><a href="function.parse-url.html" class="function">parse_url()</a></span> 的方法，而传入
+   <span class="classname"><a href="class.uri-rfc3986-uri.html" class="classname">Uri\Rfc3986\Uri</a></span> 或 <span class="classname"><a href="class.uri-whatwg-url.html" class="classname">Uri\WhatWg\Url</a></span> 时则会使用新的后端解析器。
+   
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.sockets">
+  <h3 class="title">Sockets</h3>
+
+  <p class="simpara">
+   <span class="function"><a href="function.socket-create-listen.html" class="function">socket_create_listen()</a></span>、<span class="function"><a href="function.socket-bind.html" class="function">socket_bind()</a></span> 和 <span class="function"><a href="function.socket-sendto.html" class="function">socket_sendto()</a></span>
+   在端口号小于 0 或大于 65535，或提示数组中的任一项使用数字索引时，会抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+  </p>
+
+  <p class="simpara">
+   <span class="function"><a href="function.socket-addrinfo-lookup.html" class="function">socket_addrinfo_lookup()</a></span> 在提示值无法转换为整数时会抛出
+   <span class="exceptionname"><a href="class.typeerror.html" class="exceptionname">TypeError</a></span>，若这些值发生溢出，则可能抛出 <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+  </p>
+
+  <p class="simpara">
+   使用 <strong><code><a href="sockets.constants.html#constant.mcast-leave-group">MCAST_LEAVE_GROUP</a></code></strong>/<strong><code><a href="sockets.constants.html#constant.mcast-leave-source-group">MCAST_LEAVE_SOURCE_GROUP</a></code></strong> 选项调用
+   <span class="function"><a href="function.socket-set-option.html" class="function">socket_set_option()</a></span> 时，若传入的值不是有效的对象或数组，会抛出异常。
+  </p>
+
+  <p class="simpara">
+   在多播上下文中调用 <span class="function"><a href="function.socket-set-option.html" class="function">socket_set_option()</a></span> 时，若创建的套接字不属于
+   <strong><code><a href="sockets.constants.html#constant.af-inet">AF_INET</a></code></strong>/<strong><code><a href="sockets.constants.html#constant.af-inet6">AF_INET6</a></code></strong> 协议族，会抛出
+   <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>。
+
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.spl">
+  <h3 class="title">SPL</h3>
+
+  <p class="simpara">
+   <span class="classname"><a href="class.arrayobject.html" class="classname">ArrayObject</a></span> 不再接受枚举，因为修改 <span class="property">$name</span>
+   或 <span class="property">$value</span> 属性可能破坏引擎设想。
+  </p>
+
+  <p class="simpara">
+   <span class="methodname"><a href="splfileobject.fwrite.html" class="methodname">SplFileObject::fwrite()</a></span> 的参数 <code class="parameter">$length</code>
+   现在允许为 null，默认值由 <code class="literal">0</code> 改为 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong>。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.standard">
+  <h3 class="title">标准</h3>
+
+  <p class="simpara">
+   此前，使用 printf 系列函数时，若格式化字符串中的格式符未指定精度，会错误地将精度重置，而非将其视为精度为 0。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.incompatible.tidy">
+  <h3 class="title">Tidy</h3>
+
+  <p class="simpara">
+   <span class="methodname"><a href="tidy.construct.html" class="methodname">tidy::__construct()</a></span>、<span class="methodname"><a href="tidy.parsefile.html" class="methodname">tidy::parseFile()</a></span> 和
+   <span class="methodname"><a href="tidy.parsestring.html" class="methodname">tidy::parseString()</a></span> 在配置中包含无效值或尝试设置只读内部条目时会抛出
+   <span class="exceptionname"><a href="class.valueerror.html" class="exceptionname">ValueError</a></span>；若配置 key 不是 string，则抛出
+   <span class="exceptionname"><a href="class.typeerror.html" class="exceptionname">TypeError</a></span>。
+  </p>
+
+ </div>
+
+</div></div></div><script type="text/javascript" src="search-combined.js"></script><script type="text/javascript" src="js/67ae199ee27cc87120cab9ba49d1b776-FuzzySearch.min.js"></script><script type="text/javascript" src="js/f5555778cd757f2cb49676062898832b-search.js"></script>    <div id="search-modal__backdrop" class="search-modal__backdrop">
+      <div
+        role="dialog"
+        aria-label="Search modal"
+        id="search-modal"
+        class="search-modal"
+      >
+        <div class="search-modal__header">
+          <div class="search-modal__form">
+            <div class="search-modal__input-icon">
+              <!-- https://feathericons.com search -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                width="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input
+              type="search"
+              id="search-modal__input"
+              class="search-modal__input"
+              placeholder="Search docs"
+              aria-label="Search docs"
+            />
+          </div>
+    
+          <button aria-label="Close" class="search-modal__close">
+            <!-- https://pictogrammers.com/library/mdi/icon/close/ -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+        <div
+          role="listbox"
+          aria-label="Search results"
+          id="search-modal__results"
+          class="search-modal__results"
+        ></div>
+        <div class="search-modal__helper-text">
+          <div>
+            <kbd>↑</kbd> and <kbd>↓</kbd> to navigate •
+            <kbd>Enter</kbd> to select •
+            <kbd>Esc</kbd> to close • <kbd>/</kbd> to open
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            /*{{{Search Modal*/
+            const language = 'local';
+            initSearchModal();
+            initPHPSearch(language).then((searchCallback) => {
+                initSearchUI({language, searchCallback, limit: 30});
+            });
+            /*}}}*/
+        });
+    </script></body></html>

@@ -1,0 +1,556 @@
+    <!DOCTYPE HTML>
+    <html>
+     <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <style>
+        .navbar__local {
+          flex-grow: 1;
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr min-content 1fr;
+          margin: 0;
+          height: 100%;
+          
+          .navbar__item {
+            align-content: center;
+          }
+          .navbar__link {
+            display: inline;
+          }
+          .search {
+            text-align: center;
+          }
+          .next {
+            text-align: right;
+          }
+        }
+      </style>
+      <title>弃用功能</title>
+      <link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-base.css" />
+<link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-medium.css" />
+
+     </head>
+     <body class="docs">    <div class="navbar navbar-fixed-top">
+      <div class="navbar__inner clearfix">
+          <ul class="navbar__local">
+            <li class="navbar__item prev"><a href="migration84.incompatible.html" class="navbar__link">« 不向后兼容的变更</a></li>
+            <li class="navbar__item search">
+              <!-- Desktop encanced search -->
+              <button
+                id="navbar__search-button"
+                class="navbar__search-button"
+                hidden
+              >
+                    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        width="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+                Search
+              </button>
+            </li>
+            <li class="navbar__item next"><a href="migration84.removed-extensions.html" class="navbar__link">移除的扩展 »</a></li>
+          </ul>
+      </div>
+    </div>    <div id="breadcrumbs" class="clearfix">
+      <ul class="breadcrumbs-container">
+        <li><a href="index.html">PHP Manual</a></li>
+        <li><a href="migration84.html">从 PHP 8.3.x 移植到 PHP 8.4.x</a></li>
+        <li>弃用功能</li>
+      </ul>
+    </div>    <div id="layout">
+      <div id="layout-content"><div id="migration84.deprecated" class="sect1">
+ <h2 class="title">弃用功能</h2>
+
+ <div class="sect2" id="migration84.deprecated.core">
+  <h3 class="title">PHP 核心</h3>
+
+  <div class="sect3" id="migration84.deprecated.core.implicitly-nullable-parameter">
+   
+   <h4 class="title">隐式可空参数</h4>
+
+   <p class="simpara">
+    如果参数的默认值为 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong>，则其类型会被隐式扩展为接受 <span class="type"><a href="language.types.null.html" class="type null">null</a></span>。
+   </p>
+
+   <p class="para">
+    以下代码：
+    <div class="informalexample">
+     <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function </span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">T1 $a </span><span style="color: #007700">= </span><span style="color: #0000BB">null</span><span style="color: #007700">) {}</span></span></code></div>
+     </div>
+
+    </div>
+    应改为：
+    <div class="informalexample">
+     <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function </span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">T1</span><span style="color: #007700">|</span><span style="color: #0000BB">null $a </span><span style="color: #007700">= </span><span style="color: #0000BB">null</span><span style="color: #007700">) {}</span></span></code></div>
+     </div>
+
+    </div>
+    或
+    <div class="informalexample">
+     <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function </span><span style="color: #0000BB">foo</span><span style="color: #007700">(?</span><span style="color: #0000BB">T1 $a </span><span style="color: #007700">= </span><span style="color: #0000BB">null</span><span style="color: #007700">) {}</span></span></code></div>
+     </div>
+
+    </div>
+   </p>
+
+   <p class="para">
+    但是，如果此类参数声明后面跟着一个必需参数：
+    <div class="informalexample">
+     <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function </span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">T1 $a</span><span style="color: #007700">, </span><span style="color: #0000BB">T2 $b </span><span style="color: #007700">= </span><span style="color: #0000BB">null</span><span style="color: #007700">, </span><span style="color: #0000BB">T3 $c</span><span style="color: #007700">) {}</span></span></code></div>
+     </div>
+
+    </div>
+    则必须改为：
+    <div class="informalexample">
+     <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function </span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">T1 $a</span><span style="color: #007700">, </span><span style="color: #0000BB">T2</span><span style="color: #007700">|</span><span style="color: #0000BB">null $b</span><span style="color: #007700">, </span><span style="color: #0000BB">T3 $c</span><span style="color: #007700">) {}</span></span></code></div>
+     </div>
+
+    </div>
+    或
+    <div class="informalexample">
+     <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function </span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">T1 $a</span><span style="color: #007700">, ?</span><span style="color: #0000BB">T2 $b</span><span style="color: #007700">, </span><span style="color: #0000BB">T3 $c</span><span style="color: #007700">) {}</span></span></code></div>
+     </div>
+
+    </div>
+    因为在必需参数前面放置可选参数已被弃用。
+   </p>
+  </div>
+
+  <div class="sect3">
+   
+   <h4 class="title">零的负数次幂</h4>
+
+   <p class="simpara">
+    一个数的负数次幂等于该数正指数次幂的倒数。即
+    <code class="literal">10<sup class="superscript">-2</sup></code> 等同于
+    <code class="literal">1 / 10<sup class="superscript">2</sup></code>。
+    因此，将 <code class="literal">0</code> 进行负数次幂相当于除以 <code class="literal">0</code>，即
+    <code class="literal">0<sup class="superscript">-2</sup></code> 等同于
+    <code class="literal">1 / 0<sup class="superscript">2</sup></code>，也就是
+    <code class="literal">1 / 0</code>。因此，此行为已被弃用。
+   </p>
+
+   <p class="simpara">
+    这影响幂运算符 <code class="literal">**</code>
+    和 <span class="function"><a href="function.pow.html" class="function">pow()</a></span> 函数。
+   </p>
+
+   <p class="simpara">
+    如果需要 IEEE 754 语义，应使用新的
+    <span class="function"><a href="function.fpow.html" class="function">fpow()</a></span> 函数。
+   </p>
+  </div>
+
+  <div class="sect3" id="migration84.deprecated.core.underscore-class-name">
+   
+   <h4 class="title">使用下划线 <code class="literal">_</code> 作为类名</h4>
+
+   <p class="para">
+    将类命名为 <code class="literal">_</code> 现已弃用：
+    <div class="informalexample">
+     <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">_ </span><span style="color: #007700">{}</span></span></code></div>
+     </div>
+
+    </div>
+   </p>
+
+   <blockquote class="note"><p><strong class="note">注意</strong>: 
+    <p class="para">
+     以下划线开头的类名<em>不受</em>此弃用影响：
+     <div class="informalexample">
+      <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class </span><span style="color: #0000BB">_MyClass </span><span style="color: #007700">{}</span></span></code></div>
+      </div>
+
+     </div>
+    </p>
+   </p></blockquote>
+  </div>
+
+  <div class="sect3">
+   
+   <h4 class="title">
+    将 <strong><code><a href="errorfunc.constants.html#constant.e-user-error">E_USER_ERROR</a></code></strong> 传递给
+    <span class="function"><a href="function.trigger-error.html" class="function">trigger_error()</a></span>
+   </h4>
+
+   <p class="simpara">
+    以 <code class="parameter">error_level</code> 设为
+    <strong><code><a href="errorfunc.constants.html#constant.e-user-error">E_USER_ERROR</a></code></strong> 调用 <span class="function"><a href="function.trigger-error.html" class="function">trigger_error()</a></span>
+    现已弃用。
+   </p>
+
+   <p class="simpara">
+    此类用法应替换为抛出异常或调用 <span class="function"><a href="function.exit.html" class="function">exit()</a></span>，视具体情况选择更合适的方式。
+   </p>
+  </div>
+
+  <div class="sect3">
+   
+   <h4 class="title">
+    <strong><code><a href="errorfunc.constants.html#constant.e-strict">E_STRICT</a></code></strong> 常量
+   </h4>
+
+   <p class="simpara">
+    由于 <strong><code><a href="errorfunc.constants.html#constant.e-strict">E_STRICT</a></code></strong> 错误级别已被移除，此常量现已弃用。
+   </p>
+  </div>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.core.curl">
+  <h3 class="title">cURL</h3>
+
+  <p class="simpara">
+   <strong><code><a href="curl.constants.html#constant.curlopt-binarytransfer">CURLOPT_BINARYTRANSFER</a></code></strong> 常量现已弃用。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.core.date">
+  <h3 class="title">Date</h3>
+
+  <p class="simpara">
+   <code class="code"> DatePeriod::__construct(string $isostr, int $options = 0)</code>
+   签名已被弃用。请改用
+   <span class="methodname"><a href="dateperiod.createfromiso8601string.html" class="methodname">DatePeriod::createFromISO8601String()</a></span>。
+  </p>
+
+  
+  <p class="simpara">
+   <strong><code><a href="datetime.constants.html#constant.sunfuncs-ret-timestamp">SUNFUNCS_RET_TIMESTAMP</a></code></strong>、<strong><code><a href="datetime.constants.html#constant.sunfuncs-ret-string">SUNFUNCS_RET_STRING</a></code></strong>
+   和 <strong><code><a href="datetime.constants.html#constant.sunfuncs-ret-double">SUNFUNCS_RET_DOUBLE</a></code></strong> 常量现已弃用。这是继 PHP 8.1.0 弃用
+   <span class="function"><a href="function.date-sunset.html" class="function">date_sunset()</a></span> 和 <span class="function"><a href="function.date-sunrise.html" class="function">date_sunrise()</a></span> 函数之后的后续操作。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.core.dba">
+  <h3 class="title">DBA</h3>
+
+  
+  <p class="simpara">
+   现已弃用向 <span class="function"><a href="function.dba-key-split.html" class="function">dba_key_split()</a></span> 传递 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong> 或
+   <strong><code><a href="reserved.constants.html#constant.false">false</a></code></strong>。在这些情况下，该函数始终返回 <strong><code><a href="reserved.constants.html#constant.false">false</a></code></strong>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.core.dom">
+  <h3 class="title">DOM</h3>
+
+  
+  <p class="simpara">
+   <strong><code><a href="dom.constants.html#constant.dom-php-err">DOM_PHP_ERR</a></code></strong> 常量现已弃用。
+  </p>
+
+  
+  <p class="para">
+   以下属性已被正式弃用：
+   <ul class="simplelist">
+    <li><span class="property"><a href="class.domdocument.html#domdocument.props.actualencoding">DOMDocument::$actualEncoding</a></span></li>
+    <li><span class="property"><a href="class.domdocument.html#domdocument.props.config">DOMDocument::$config</a></span></li>
+    <li><span class="property"><a href="class.domentity.html#domentity.props.actualencoding">DOMEntity::$actualEncoding</a></span></li>
+    <li><span class="property"><a href="class.domentity.html#domentity.props.encoding">DOMEntity::$encoding</a></span></li>
+    <li><span class="property"><a href="class.domentity.html#domentity.props.version">DOMEntity::$version</a></span></li>
+   </ul>
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.core.hash">
+  <h3 class="title">Hash</h3>
+
+  
+  <p class="simpara">
+   向哈希函数传递无效选项现已弃用。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.intl">
+  <h3 class="title">Intl</h3>
+
+  <p class="simpara">
+   使用超过两个参数调用 <span class="function"><strong>intlcal_set()</strong></span> 或
+   <span class="methodname"><a href="intlcalendar.set.html" class="methodname">IntlCalendar::set()</a></span>
+   已被弃用。请改用 <span class="methodname"><a href="intlcalendar.setdate.html" class="methodname">IntlCalendar::setDate()</a></span> 或
+   <span class="methodname"><a href="intlcalendar.setdatetime.html" class="methodname">IntlCalendar::setDateTime()</a></span>。
+  </p>
+
+  <p class="simpara">
+   使用超过两个参数调用 <span class="function"><strong>intlgregcal_create_instance()</strong></span> 或
+   <span class="methodname"><a href="intlgregoriancalendar.construct.html" class="methodname">IntlGregorianCalendar::__construct()</a></span>
+   已被弃用。请改用
+   <span class="methodname"><a href="intlgregoriancalendar.createfromdate.html" class="methodname">IntlGregorianCalendar::createFromDate()</a></span> 或
+   <span class="methodname"><a href="intlgregoriancalendar.createfromdatetime.html" class="methodname">IntlGregorianCalendar::createFromDateTime()</a></span>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.ldap">
+  <h3 class="title">LDAP</h3>
+
+  <p class="simpara">
+   使用超过两个参数调用 <span class="function"><a href="function.ldap-connect.html" class="function">ldap_connect()</a></span>
+   已被弃用。请改用 <span class="function"><a href="function.ldap-connect-wallet.html" class="function">ldap_connect_wallet()</a></span>。
+  </p>
+
+  <p class="simpara">
+   使用超过四个参数调用 <span class="function"><a href="function.ldap-exop.html" class="function">ldap_exop()</a></span>
+   已被弃用。请改用 <span class="function"><a href="function.ldap-exop-sync.html" class="function">ldap_exop_sync()</a></span>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.core.mysqli">
+  <h3 class="title">MySQLi</h3>
+
+  
+  <p class="simpara">
+   <span class="function"><a href="mysqli.ping.html" class="function">mysqli_ping()</a></span> 函数和 <span class="methodname"><a href="mysqli.ping.html" class="methodname">mysqli::ping()</a></span>
+   方法现已弃用，因为重连功能已在 PHP 8.2.0 中移除。
+  </p>
+
+  
+  <p class="simpara">
+   <span class="function"><a href="mysqli.kill.html" class="function">mysqli_kill()</a></span> 函数和 <span class="methodname"><a href="mysqli.kill.html" class="methodname">mysqli::kill()</a></span>
+   方法现已弃用。如果需要此功能，可以改用 SQL <code class="literal">KILL</code> 命令。
+  </p>
+
+  
+  <p class="simpara">
+   <span class="function"><a href="mysqli.refresh.html" class="function">mysqli_refresh()</a></span> 函数和 <span class="methodname"><a href="mysqli.refresh.html" class="methodname">mysqli::refresh()</a></span>
+   方法现已弃用。如果需要此功能，可以改用 SQL <code class="literal">FLUSH</code> 命令。所有
+   <strong><code><a href="mysqli.constants.html#constant.mysqli-refresh-grant">MYSQLI_REFRESH_<span class="replaceable">*</span></a></code></strong> 常量也已被弃用。
+  </p>
+
+  
+  <p class="simpara">
+   显式传递 <code class="parameter">mode</code> 参数给 <span class="function"><a href="mysqli.store-result.html" class="function">mysqli_store_result()</a></span>
+   已被弃用。由于 <strong><code><a href="mysqli.constants.html#constant.mysqli-store-result-copy-data">MYSQLI_STORE_RESULT_COPY_DATA</a></code></strong>
+   常量仅与此函数配合使用，因此也已被弃用。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.core.pdo-pgsql">
+  <h3 class="title">PDO_PGSQL</h3>
+
+  <p class="simpara">
+   在美元引用字符串中使用转义的问号（<code class="literal">??</code>）已被弃用。由于 PDO_PGSQL
+   现在拥有自己的支持美元引用字符串的 SQL 解析器，不再需要在其中转义问号。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.core.pgsql">
+  <h3 class="title">PGSQL</h3>
+
+  <p class="simpara">
+   <span class="function"><a href="function.pg-fetch-result.html" class="function">pg_fetch_result()</a></span>、
+   <span class="function"><a href="function.pg-field-prtlen.html" class="function">pg_field_prtlen()</a></span> 和
+   <span class="function"><a href="function.pg-field-is-null.html" class="function">pg_field_is_null()</a></span> 的两参数签名现已弃用。
+   请改用三参数签名，并将 <code class="parameter">row</code> 设置为
+   <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.random">
+  <h3 class="title">Random</h3>
+
+  
+  <p class="simpara">
+   <span class="function"><a href="function.lcg-value.html" class="function">lcg_value()</a></span> 现已弃用，因为该函数存在多方面的问题。请改用
+   <span class="methodname"><a href="random-randomizer.getfloat.html" class="methodname">Random\Randomizer::getFloat()</a></span>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.reflection">
+  <h3 class="title">Reflection</h3>
+
+  <p class="simpara">
+   使用一个参数调用 <span class="methodname"><a href="reflectionmethod.construct.html" class="methodname">ReflectionMethod::__construct()</a></span>
+   已被弃用。请改用 <span class="methodname"><a href="reflectionmethod.createfrommethodname.html" class="methodname">ReflectionMethod::createFromMethodName()</a></span>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.session">
+  <h3 class="title">Session</h3>
+
+  <p class="simpara">
+   使用超过两个参数调用 <span class="function"><a href="function.session-set-save-handler.html" class="function">session_set_save_handler()</a></span>
+   已被弃用。请改用两参数签名。
+  </p>
+
+  
+  <p class="simpara">
+   修改
+   <a href="session.configuration.html#ini.session.sid-length" class="link"><code class="literal">session.sid_length</code></a> 和
+   <a href="session.configuration.html#ini.session.sid-bits-per-character" class="link"><code class="literal">session.sid_bits_per_character</code></a>
+   INI 设置的值已被弃用。请更新会话存储后端以接受 32 个字符的十六进制会话 ID，并停止修改这两个 INI 设置。
+  </p>
+
+  
+  <p class="simpara">
+   修改
+   <a href="session.configuration.html#ini.session.use-only-cookies" class="link"><code class="literal">session.use_only_cookies</code></a>、<a href="session.configuration.html#ini.session.use-trans-sid" class="link"><code class="literal">session.use_trans_sid</code></a>、<a href="session.configuration.html#ini.session.trans-sid-tags" class="link"><code class="literal">session.trans_sid_tags</code></a>、<a href="session.configuration.html#ini.session.trans-sid-hosts" class="link"><code class="literal">session.trans_sid_hosts</code></a>
+   和 <a href="session.configuration.html#ini.session.referer-check" class="link"><code class="literal">session.referer_check</code></a>
+   INI 设置的值已被弃用。<strong><code><a href="session.constants.html#constant.sid">SID</a></code></strong> 常量也已被弃用。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.core.soap">
+  <h3 class="title">SOAP</h3>
+
+  
+  <p class="simpara">
+   向 <span class="methodname"><a href="soapserver.addfunction.html" class="methodname">SoapServer::addFunction()</a></span> 传递
+   <span class="type"><a href="language.types.integer.html" class="type int">int</a></span> 现已弃用。如果需要提供所有 PHP 函数，请展平
+   <span class="function"><a href="function.get-defined-functions.html" class="function">get_defined_functions()</a></span> 返回的数组。
+  </p>
+
+  
+  <p class="simpara">
+   <strong><code><a href="soap.constants.html#constant.soap-functions-all">SOAP_FUNCTIONS_ALL</a></code></strong> 常量现已弃用。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.core.spl">
+  <h3 class="title">SPL</h3>
+
+  <p class="simpara">
+   <span class="methodname"><a href="splfixedarray.wakeup.html" class="methodname">SplFixedArray::__wakeup()</a></span> 方法现已弃用，因为该类实现了
+   <span class="methodname"><a href="splfixedarray.serialize.html" class="methodname">SplFixedArray::__serialize()</a></span> 和
+   <span class="methodname"><a href="splfixedarray.unserialize.html" class="methodname">SplFixedArray::__unserialize()</a></span>，应改用并重写这两个新方法。
+  </p>
+
+  
+  <p class="simpara">
+   对 <span class="methodname"><a href="splfileobject.setcsvcontrol.html" class="methodname">SplFileObject::setCsvControl()</a></span>、<span class="methodname"><a href="splfileobject.fputcsv.html" class="methodname">SplFileObject::fputcsv()</a></span> 和
+   <span class="methodname"><a href="splfileobject.fgetcsv.html" class="methodname">SplFileObject::fgetcsv()</a></span> 的 <code class="parameter">escape</code> 参数使用默认值现已弃用。
+   
+   必须通过位置参数或命名参数显式传递该值。如果已使用 <span class="methodname"><a href="splfileobject.setcsvcontrol.html" class="methodname">SplFileObject::setCsvControl()</a></span>
+   设置了新的默认值，则此规则不适用于 <span class="methodname"><a href="splfileobject.fputcsv.html" class="methodname">SplFileObject::fputcsv()</a></span>
+   和 <span class="methodname"><a href="splfileobject.fgetcsv.html" class="methodname">SplFileObject::fgetcsv()</a></span>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.standard">
+  <h3 class="title">标准</h3>
+
+  <p class="simpara">
+   使用两个参数调用 <span class="function"><a href="function.stream-context-set-option.html" class="function">stream_context_set_option()</a></span>
+   已被弃用。请改用 <span class="function"><a href="function.stream-context-set-options.html" class="function">stream_context_set_options()</a></span>。
+  </p>
+
+  
+  <p class="simpara">
+   使用 <span class="function"><a href="function.unserialize.html" class="function">unserialize()</a></span> 反序列化带有大写 <code class="literal">S</code>
+   标签的字符串已被弃用。
+  </p>
+
+  
+  <p class="simpara">
+   对 <span class="function"><a href="function.fputcsv.html" class="function">fputcsv()</a></span>、<span class="function"><a href="function.fgetcsv.html" class="function">fgetcsv()</a></span> 和
+   <span class="function"><a href="function.str-getcsv.html" class="function">str_getcsv()</a></span> 的 <code class="parameter">escape</code>
+   参数使用默认值现已弃用。
+   
+   必须通过位置参数或命名参数显式传递该值。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration84.deprecated.core.xml">
+  <h3 class="title">XML</h3>
+
+  
+  <p class="simpara">
+   <span class="function"><a href="function.xml-set-object.html" class="function">xml_set_object()</a></span> 函数已被弃用。
+  </p>
+
+  
+  <p class="simpara">
+   向 <span class="function">xml_set_<span class="replaceable">*</span></span>
+   函数传递非 <span class="type"><a href="language.types.callable.html" class="type callable">callable</a></span> 字符串现已弃用。
+  </p>
+ </div>
+
+</div></div></div><script type="text/javascript" src="search-combined.js"></script><script type="text/javascript" src="js/67ae199ee27cc87120cab9ba49d1b776-FuzzySearch.min.js"></script><script type="text/javascript" src="js/f5555778cd757f2cb49676062898832b-search.js"></script>    <div id="search-modal__backdrop" class="search-modal__backdrop">
+      <div
+        role="dialog"
+        aria-label="Search modal"
+        id="search-modal"
+        class="search-modal"
+      >
+        <div class="search-modal__header">
+          <div class="search-modal__form">
+            <div class="search-modal__input-icon">
+              <!-- https://feathericons.com search -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                width="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input
+              type="search"
+              id="search-modal__input"
+              class="search-modal__input"
+              placeholder="Search docs"
+              aria-label="Search docs"
+            />
+          </div>
+    
+          <button aria-label="Close" class="search-modal__close">
+            <!-- https://pictogrammers.com/library/mdi/icon/close/ -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+        <div
+          role="listbox"
+          aria-label="Search results"
+          id="search-modal__results"
+          class="search-modal__results"
+        ></div>
+        <div class="search-modal__helper-text">
+          <div>
+            <kbd>↑</kbd> and <kbd>↓</kbd> to navigate •
+            <kbd>Enter</kbd> to select •
+            <kbd>Esc</kbd> to close • <kbd>/</kbd> to open
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            /*{{{Search Modal*/
+            const language = 'local';
+            initSearchModal();
+            initPHPSearch(language).then((searchCallback) => {
+                initSearchUI({language, searchCallback, limit: 30});
+            });
+            /*}}}*/
+        });
+    </script></body></html>

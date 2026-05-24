@@ -1,0 +1,430 @@
+    <!DOCTYPE HTML>
+    <html>
+     <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <style>
+        .navbar__local {
+          flex-grow: 1;
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr min-content 1fr;
+          margin: 0;
+          height: 100%;
+          
+          .navbar__item {
+            align-content: center;
+          }
+          .navbar__link {
+            display: inline;
+          }
+          .search {
+            text-align: center;
+          }
+          .next {
+            text-align: right;
+          }
+        }
+      </style>
+      <title>不向下兼容的变更</title>
+      <link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-base.css" />
+<link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-medium.css" />
+
+     </head>
+     <body class="docs">    <div class="navbar navbar-fixed-top">
+      <div class="navbar__inner clearfix">
+          <ul class="navbar__local">
+            <li class="navbar__item prev"><a href="migration72.constants.html" class="navbar__link">« 新全局常量</a></li>
+            <li class="navbar__item search">
+              <!-- Desktop encanced search -->
+              <button
+                id="navbar__search-button"
+                class="navbar__search-button"
+                hidden
+              >
+                    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        width="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+                Search
+              </button>
+            </li>
+            <li class="navbar__item next"><a href="migration72.deprecated.html" class="navbar__link">PHP 7.2.x 中废弃的功能 »</a></li>
+          </ul>
+      </div>
+    </div>    <div id="breadcrumbs" class="clearfix">
+      <ul class="breadcrumbs-container">
+        <li><a href="index.html">PHP Manual</a></li>
+        <li><a href="migration72.html">从 PHP 7.1.x 移植到 PHP 7.2.x</a></li>
+        <li>不向下兼容的变更</li>
+      </ul>
+    </div>    <div id="layout">
+      <div id="layout-content"><div id="migration72.incompatible" class="sect1">
+ <h2 class="title">不向下兼容的变更</h2>
+
+ <div class="sect2" id="migration72.incompatible.number_format-no-neg-zero">
+  <h3 class="title">防止 <span class="function"><a href="function.number-format.html" class="function">number_format()</a></span> 返回负零</h3>
+
+  <p class="para">
+   之前版本中，<span class="function"><a href="function.number-format.html" class="function">number_format()</a></span>
+   有可能会返回 <code class="literal">-0</code>。虽然这是符合 IEEE 754
+   规范的，但是这样会导致可读性不好，新版本中会将这样的负数去掉。
+  </p>
+
+  <div class="informalexample">
+   <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /><br />var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">number_format</span><span style="color: #007700">(-</span><span style="color: #0000BB">0.01</span><span style="color: #007700">)); </span><span style="color: #FF8000">// 新版本输出 string(1) "0" 旧版本输出 string(2) "-0"</span></span></code></div>
+   </div>
+
+  </div>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.object-array-casts">
+  <h3 class="title">转换对象和数组中的数字键</h3>
+
+  <p class="para">
+   将数组转换为对象，或将对象转换为数组时，数字键现在得到了更好的处理（无论是通过显式转换还是通过
+   <span class="function"><a href="function.settype.html" class="function">settype()</a></span> 函数）。
+  </p>
+
+  <p class="para">
+   这意味着现在可以访问数组中的整数(或者说是字符串整数)键，这些键会映射到对象中：
+  </p>
+
+  <div class="informalexample">
+   <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">// 数组转为对象<br /></span><span style="color: #0000BB">$arr </span><span style="color: #007700">= [</span><span style="color: #0000BB">0 </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">1</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">$obj </span><span style="color: #007700">= (object) </span><span style="color: #0000BB">$arr</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(<br />    </span><span style="color: #0000BB">$obj</span><span style="color: #007700">,<br />    </span><span style="color: #0000BB">$obj</span><span style="color: #007700">-&gt;{</span><span style="color: #DD0000">'0'</span><span style="color: #007700">}, </span><span style="color: #FF8000">// 新写法<br />    </span><span style="color: #0000BB">$obj</span><span style="color: #007700">-&gt;{</span><span style="color: #0000BB">0</span><span style="color: #007700">} </span><span style="color: #FF8000">// 新写法<br /></span><span style="color: #007700">);</span></span></code></div>
+   </div>
+
+   <p class="simpara">以上示例会输出：</p>
+   <div class="example-contents screen">
+<div class="cdata"><pre>
+object(stdClass)#1 (1) {
+  [&quot;0&quot;]=&gt;    // 现在是字符串 key，而不是整数 key
+  int(1)
+}
+int(1)
+int(1)
+</pre></div>
+   </div>
+  </div>
+
+  <p class="para">
+   从对象转换成的数组中的整数（或者说是字符串整数）键现在也可以直接访问：
+  </p>
+
+  <div class="informalexample">
+   <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">// 对象转为数组<br /></span><span style="color: #0000BB">$obj </span><span style="color: #007700">= new class {<br />    public function </span><span style="color: #0000BB">__construct</span><span style="color: #007700">()<br />    {<br />        </span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;{</span><span style="color: #0000BB">0</span><span style="color: #007700">} = </span><span style="color: #0000BB">1</span><span style="color: #007700">;<br />    }<br />};<br /></span><span style="color: #0000BB">$arr </span><span style="color: #007700">= (array) </span><span style="color: #0000BB">$obj</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(<br />    </span><span style="color: #0000BB">$arr</span><span style="color: #007700">,<br />    </span><span style="color: #0000BB">$arr</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">], </span><span style="color: #FF8000">// 新写法<br />    </span><span style="color: #0000BB">$arr</span><span style="color: #007700">[</span><span style="color: #DD0000">'0'</span><span style="color: #007700">] </span><span style="color: #FF8000">// 新写法<br /></span><span style="color: #007700">);</span></span></code></div>
+   </div>
+
+   <p class="simpara">以上示例会输出：</p>
+   <div class="example-contents screen">
+<div class="cdata"><pre>
+array(1) {
+  [0]=&gt;    // 现在是整数 key，而不是字符串 key
+  int(1)
+}
+int(1)
+int(1)
+</pre></div>
+   </div>
+  </div>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.no-null-to-get_class">
+  <h3 class="title"><span class="function"><a href="function.get-class.html" class="function">get_class()</a></span> 函数不再接受 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong> 参数</h3>
+
+  <p class="para">
+   之前版本中，传递 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong> 给 <span class="function"><a href="function.get-class.html" class="function">get_class()</a></span>
+   函数将返回当前类名。在新版本中，此行为会抛出一个
+   <strong><code><a href="errorfunc.constants.html#constant.e-warning">E_WARNING</a></code></strong> 错误。如果想实现与之前版本同样的效果，请不要传递任何参数进来。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.warn-on-non-countable-types">
+  <h3 class="title">计算非可数类型（non-countable）时发出警告</h3>
+
+  <p class="para">
+   对非可数类型调用 <span class="function"><a href="function.count.html" class="function">count()</a></span>（或
+   <span class="function"><a href="function.sizeof.html" class="function">sizeof()</a></span>）函数，会抛出一个
+   <strong><code><a href="errorfunc.constants.html#constant.e-warning">E_WARNING</a></code></strong> 错误。
+  </p>
+
+  <div class="informalexample">
+   <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /><br />var_dump</span><span style="color: #007700">(<br />    </span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">null</span><span style="color: #007700">), </span><span style="color: #FF8000">// NULL 不可数<br />    </span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">), </span><span style="color: #FF8000">// 整数不可数<br />    </span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #DD0000">'abc'</span><span style="color: #007700">), </span><span style="color: #FF8000">// 字符串不可数<br />    </span><span style="color: #0000BB">count</span><span style="color: #007700">(new </span><span style="color: #0000BB">stdClass</span><span style="color: #007700">), </span><span style="color: #FF8000">// 没有实现 Countable 接口的对象不可数<br />    </span><span style="color: #0000BB">count</span><span style="color: #007700">([</span><span style="color: #0000BB">1</span><span style="color: #007700">,</span><span style="color: #0000BB">2</span><span style="color: #007700">]) </span><span style="color: #FF8000">// 数组可数<br /></span><span style="color: #007700">);</span></span></code></div>
+   </div>
+
+   <p class="simpara">以上示例会输出：</p>
+   <div class="example-contents screen">
+<div class="cdata"><pre>
+Warning: count(): Parameter must be an array or an object that implements Countable in %s on line %d
+
+Warning: count(): Parameter must be an array or an object that implements Countable in %s on line %d
+
+Warning: count(): Parameter must be an array or an object that implements Countable in %s on line %d
+
+Warning: count(): Parameter must be an array or an object that implements Countable in %s on line %d
+int(0)
+int(1)
+int(1)
+int(1)
+int(2)
+</pre></div>
+   </div>
+  </div>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.hash-ext-to-objects">
+  <h3 class="title">ext/hash 从资源变成对象</h3>
+
+  <p class="para">
+   作为长期迁移资源的一部分，<a href="book.hash.html" class="link">Hash</a> 扩展已更新为使用对象而不是资源。对于 PHP 开发人员来说，该更改应该是无缝整合，除了
+   <span class="function"><a href="function.is-resource.html" class="function">is_resource()</a></span> 检查的地方（需要更新为 <span class="function"><a href="function.is-object.html" class="function">is_object()</a></span>）。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.ssl-tls-defaults">
+  <h3 class="title">SSL/TLS 的默认选项的改进</h3>
+
+  <p class="para">
+   下列默认选项被修改：
+  </p>
+
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <span class="simpara">
+     <code class="literal">tls://</code> 默认为 TLSv1.0、TLSv1.1 或 TLSv1.2
+    </span>
+   </li>
+   <li class="listitem">
+    <span class="simpara">
+     <code class="literal">ssl://</code> 成为 <code class="literal">tls://</code> 的别名
+    </span>
+   </li>
+   <li class="listitem">
+    <span class="simpara">
+     <code class="literal">STREAM_CRYPTO_METHOD_TLS_*</code> 常量默认为 TLSv1.0
+     或 TLSv1.1 + TLSv1.2，替代之前的 TLSv1.0
+    </span>
+   </li>
+  </ul>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.gettype-on-closed-resource">
+  <h3 class="title"><span class="function"><a href="function.gettype.html" class="function">gettype()</a></span> 在闭包资源中的返回值</h3>
+
+  <p class="para">
+   之前版本中，如果在一个闭包资源中使用 <span class="function"><a href="function.gettype.html" class="function">gettype()</a></span>
+   会返回字符串 <code class="literal">&quot;unknown type&quot;</code>，现在将会返回字符
+   <code class="literal">&quot;resource (closed)&quot;</code>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.is_object-on-incomplete_class">
+  <h3 class="title"><span class="function"><a href="function.is-object.html" class="function">is_object()</a></span> 和 <span class="classname"><a href="class.php-incomplete-class.html" class="classname">__PHP_Incomplete_Class</a></span></h3>
+
+  <p class="para">
+   之前版本中，对 <span class="classname"><a href="class.php-incomplete-class.html" class="classname">__PHP_Incomplete_Class</a></span>
+   调用 <span class="function"><a href="function.is-object.html" class="function">is_object()</a></span> 函数会返回
+   <strong><code><a href="reserved.constants.html#constant.false">false</a></code></strong>，现在会返回 <strong><code><a href="reserved.constants.html#constant.true">true</a></code></strong>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.undefined-constants">
+  <h3 class="title">提升未定义常量的错误级别</h3>
+
+  <p class="para">
+   调用未定义的常量，现在会抛出一个
+   <strong><code><a href="errorfunc.constants.html#constant.e-warning">E_WARNING</a></code></strong> 错误(之前版本中为 <strong><code><a href="errorfunc.constants.html#constant.e-notice">E_NOTICE</a></code></strong>)。在下一个
+   PHP 大版本中，将会抛出一个
+   <span class="classname"><a href="class.error.html" class="classname">Error</a></span> 错误。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.windows-support">
+  <h3 class="title">Windows 支持</h3>
+
+  <p class="para">
+   官方支持的最低 Windows 版本为 Windows 7/Server
+   2008 R2。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.trait-properties">
+  <h3 class="title">检测 trait 的默认属性值</h3>
+
+  <p class="para">
+   对 trait 默认属性值的兼容性检查将不再执行强制转换。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.object-reserved-word">
+  <h3 class="title"><code class="literal">object</code> 保留字的变化</h3>
+
+  <p class="para">
+   <code class="literal">object</code> 在之前的 PHP 7.0 版本
+   中被声明为软保留字（soft-reserved）。现在变更为强制保留字，禁止在任何类或接口中使用该名称。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.netware-support">
+  <h3 class="title">NetWare 支持</h3>
+
+  <p class="para">
+   不再支持 NetWare。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.array-unique">
+  <h3 class="title">带 <strong><code><a href="array.constants.html#constant.sort-string">SORT_STRING</a></code></strong> 的 <span class="function"><a href="function.array-unique.html" class="function">array_unique()</a></span></h3>
+
+  <p class="para">
+   带 <strong><code><a href="array.constants.html#constant.sort-string">SORT_STRING</a></code></strong> 的
+   <span class="function"><a href="function.array-unique.html" class="function">array_unique()</a></span>，之前复制数组并删除唯一元素（之后不会打包元素），但现在通过添加唯一元素来构建新数组。这可能会导致不同的数字索引。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.bcmod-and-floats">
+  <h3 class="title"><span class="function"><a href="function.bcmod.html" class="function">bcmod()</a></span> 的浮点数变更</h3>
+
+  <p class="para">
+   <span class="function"><a href="function.bcmod.html" class="function">bcmod()</a></span> 函数不再将小数截断为整数。因此，其行为现在遵循 <span class="function"><a href="function.fmod.html" class="function">fmod()</a></span>，而不是
+   <code class="literal">%</code> 运算符。例如 <code class="literal">bcmod(&#039;4&#039;, &#039;3.5&#039;)</code> 现在返回 <code class="literal">0.5</code> 而不是 <code class="literal">1</code>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.hash-functions">
+  <h3 class="title">散列函数和非加密散列</h3>
+
+  <p class="para">
+   <span class="function"><a href="function.hash-hmac.html" class="function">hash_hmac()</a></span>、<span class="function"><a href="function.hash-hmac-file.html" class="function">hash_hmac_file()</a></span>、<span class="function"><a href="function.hash-pbkdf2.html" class="function">hash_pbkdf2()</a></span>
+   和 <span class="function"><a href="function.hash-init.html" class="function">hash_init()</a></span>（使用 <strong><code><a href="hash.constants.html#constant.hash-hmac">HASH_HMAC</a></code></strong>）函数将不再接受非加密散列。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.json_decode-changes">
+  <h3 class="title"><span class="function"><a href="function.json-decode.html" class="function">json_decode()</a></span> 函数变更</h3>
+
+  <p class="para">
+   如果 <span class="function"><a href="function.json-decode.html" class="function">json_decode()</a></span> 的第二个选项（assoc） 为 <strong><code><a href="reserved.constants.html#constant.null">null</a></code></strong>，则现在会使用
+   <strong><code><a href="json.constants.html#constant.json-object-as-array">JSON_OBJECT_AS_ARRAY</a></code></strong>，之前始终会忽略 <strong><code><a href="json.constants.html#constant.json-object-as-array">JSON_OBJECT_AS_ARRAY</a></code></strong>。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.rand-mt_rand-output">
+  <h3 class="title"><span class="function"><a href="function.rand.html" class="function">rand()</a></span> 和 <span class="function"><a href="function.mt-rand.html" class="function">mt_rand()</a></span> 输出</h3>
+
+  <p class="para">
+   在 64 位机器上，自 PHP 7.1 起，由 <span class="function"><a href="function.rand.html" class="function">rand()</a></span> 和 <span class="function"><a href="function.mt-rand.html" class="function">mt_rand()</a></span>
+   为特定的种子生成的一系列随机数可能与之前版本不同（å在实现中修复了一个模偏置错误）。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.sqlsafe_mode-ini-setting">
+  <h3 class="title"><a href="ini.core.html#ini.sql.safe-mode" class="link"><code class="parameter">sql.safe_mode</code></a> ini 选项移除</h3>
+
+  <p class="para">
+   <code class="parameter">sql.safe_mode</code> ini 设置项已被移除。
+  </p>
+ </div>
+
+ <div class="sect2" id="migration72.incompatible.date_parse_from_format">
+  <h3 class="title"><span class="function"><a href="function.date-parse.html" class="function">date_parse()</a></span> 和 <span class="function"><a href="function.date-parse-from-format.html" class="function">date_parse_from_format()</a></span> 的变更</h3>
+
+  <p class="para">
+   <span class="function"><a href="function.date-parse.html" class="function">date_parse()</a></span> 和 <span class="function"><a href="function.date-parse-from-format.html" class="function">date_parse_from_format()</a></span> 返回数组的 <code class="literal">zone</code>
+   元素现在表示秒而不是分钟，并且其符号反转。例如 <code class="literal">-120</code> 现在是 <code class="literal">7200</code>。
+  </p>
+ </div>
+
+  <div class="sect2" id="migration72.incompatible.cookie-decode">
+  <h3 class="title">传入 Cookies</h3>
+
+  <p class="para">
+   自 PHP 7.2.34 起，出于安全原因，传入 cookie 的 <em>names</em> 不再进行 url 解码。
+  </p>
+ </div>
+ 
+</div></div></div><script type="text/javascript" src="search-combined.js"></script><script type="text/javascript" src="js/67ae199ee27cc87120cab9ba49d1b776-FuzzySearch.min.js"></script><script type="text/javascript" src="js/f5555778cd757f2cb49676062898832b-search.js"></script>    <div id="search-modal__backdrop" class="search-modal__backdrop">
+      <div
+        role="dialog"
+        aria-label="Search modal"
+        id="search-modal"
+        class="search-modal"
+      >
+        <div class="search-modal__header">
+          <div class="search-modal__form">
+            <div class="search-modal__input-icon">
+              <!-- https://feathericons.com search -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                width="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input
+              type="search"
+              id="search-modal__input"
+              class="search-modal__input"
+              placeholder="Search docs"
+              aria-label="Search docs"
+            />
+          </div>
+    
+          <button aria-label="Close" class="search-modal__close">
+            <!-- https://pictogrammers.com/library/mdi/icon/close/ -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+        <div
+          role="listbox"
+          aria-label="Search results"
+          id="search-modal__results"
+          class="search-modal__results"
+        ></div>
+        <div class="search-modal__helper-text">
+          <div>
+            <kbd>↑</kbd> and <kbd>↓</kbd> to navigate •
+            <kbd>Enter</kbd> to select •
+            <kbd>Esc</kbd> to close • <kbd>/</kbd> to open
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            /*{{{Search Modal*/
+            const language = 'local';
+            initSearchModal();
+            initPHPSearch(language).then((searchCallback) => {
+                initSearchUI({language, searchCallback, limit: 30});
+            });
+            /*}}}*/
+        });
+    </script></body></html>

@@ -1,0 +1,198 @@
+    <!DOCTYPE HTML>
+    <html>
+     <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <style>
+        .navbar__local {
+          flex-grow: 1;
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr min-content 1fr;
+          margin: 0;
+          height: 100%;
+          
+          .navbar__item {
+            align-content: center;
+          }
+          .navbar__link {
+            display: inline;
+          }
+          .search {
+            text-align: center;
+          }
+          .next {
+            text-align: right;
+          }
+        }
+      </style>
+      <title>Windows 支持</title>
+      <link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-base.css" />
+<link media="all" rel="stylesheet" type="text/css" href="styles/03e73060321a0a848018724a6c83de7f-theme-medium.css" />
+
+     </head>
+     <body class="docs">    <div class="navbar navbar-fixed-top">
+      <div class="navbar__inner clearfix">
+          <ul class="navbar__local">
+            <li class="navbar__item prev"><a href="migration85.other-changes.html" class="navbar__link">« 其它变更</a></li>
+            <li class="navbar__item search">
+              <!-- Desktop encanced search -->
+              <button
+                id="navbar__search-button"
+                class="navbar__search-button"
+                hidden
+              >
+                    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        width="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+                Search
+              </button>
+            </li>
+            <li class="navbar__item next"><a href="migration84.html" class="navbar__link">从 PHP 8.3.x 移植到 PHP 8.4.x »</a></li>
+          </ul>
+      </div>
+    </div>    <div id="breadcrumbs" class="clearfix">
+      <ul class="breadcrumbs-container">
+        <li><a href="index.html">PHP Manual</a></li>
+        <li><a href="migration85.html">从 PHP 8.4.x 移植到 PHP 8.5.x</a></li>
+        <li>Windows 支持</li>
+      </ul>
+    </div>    <div id="layout">
+      <div id="layout-content"><div id="migration85.windows-support" class="sect1">
+ <h2 class="title">Windows 支持</h2>
+
+ <div class="sect2" id="migration85.windows-support.core">
+  <h3 class="title">核心</h3>
+
+  <p class="simpara">
+   配置变量 <strong><code><a href="reserved.constants.html#constant.php-version">PHP_VERSION</a></code></strong>、<strong><code><a href="reserved.constants.html#constant.php-minor-version">PHP_MINOR_VERSION</a></code></strong> 和
+   <strong><code><a href="reserved.constants.html#constant.php-release-version">PHP_RELEASE_VERSION</a></code></strong> 现在始终为数值类型。此前，在使用 buildconf 构建时，这些变量为字符串类型。
+  </p>
+
+  <p class="simpara">
+   <strong class="command">phpize</strong> 构建现在会在构建目录中反映源代码树结构（与树内构建的行为保持一致）；部分扩展的构建方式（尤其是使用 Makefile.frag.w32 时）可能需要相应调整。
+  </p>
+
+  <p class="simpara">
+   MSVC 构建现已支持 <strong class="option configure">--enable-sanitizer</strong>
+   选项。该选项启用 ASan 和调试断言，要求 MSVC 16.10 及以上版本和 Windows 10。
+  </p>
+
+  <p class="simpara">
+   不再支持针对 clang 构建的 <strong class="option configure">--with-uncritical-warn-choke</strong>
+   配置选项，应改用 CFLAGS 指定需抑制的警告。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.windows-support.com">
+  <h3 class="title">COM</h3>
+
+  <p class="simpara">
+   该扩展现在默认以共享方式构建；此前默认为静态扩展，尽管官方 Windows 二进制版本一直采用共享扩展。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.windows-support.ffi">
+  <h3 class="title">FFI</h3>
+
+  <p class="simpara">
+   使用 <span class="methodname"><a href="ffi.cdef.html" class="methodname">FFI::cdef()</a></span> 和 <span class="methodname"><a href="ffi.load.html" class="methodname">FFI::load()</a></span> 时不再需要指定库。但此便捷功能不建议在生产环境中使用。
+  </p>
+
+ </div>
+
+ <div class="sect2" id="migration85.windows-support.streams">
+  <h3 class="title">Stream</h3>
+
+  <p class="simpara">
+   如果 <code class="parameter">$read</code> 数组仅包含管道流，且 <code class="parameter">$write</code> 和 <code class="parameter">$except</code>
+   数组为空，<span class="function"><a href="function.stream-select.html" class="function">stream_select()</a></span> 现在的行为与 POSIX
+   系统一致，即函数仅在至少有一个管道可读或超时到期时才返回。此前，<span class="function"><a href="function.stream-select.html" class="function">stream_select()</a></span> 会立即返回，并报告所有流均处于可读状态。
+  </p>
+
+ </div>
+
+</div></div></div><script type="text/javascript" src="search-combined.js"></script><script type="text/javascript" src="js/67ae199ee27cc87120cab9ba49d1b776-FuzzySearch.min.js"></script><script type="text/javascript" src="js/f5555778cd757f2cb49676062898832b-search.js"></script>    <div id="search-modal__backdrop" class="search-modal__backdrop">
+      <div
+        role="dialog"
+        aria-label="Search modal"
+        id="search-modal"
+        class="search-modal"
+      >
+        <div class="search-modal__header">
+          <div class="search-modal__form">
+            <div class="search-modal__input-icon">
+              <!-- https://feathericons.com search -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                width="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input
+              type="search"
+              id="search-modal__input"
+              class="search-modal__input"
+              placeholder="Search docs"
+              aria-label="Search docs"
+            />
+          </div>
+    
+          <button aria-label="Close" class="search-modal__close">
+            <!-- https://pictogrammers.com/library/mdi/icon/close/ -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              width="24"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
+        </div>
+        <div
+          role="listbox"
+          aria-label="Search results"
+          id="search-modal__results"
+          class="search-modal__results"
+        ></div>
+        <div class="search-modal__helper-text">
+          <div>
+            <kbd>↑</kbd> and <kbd>↓</kbd> to navigate •
+            <kbd>Enter</kbd> to select •
+            <kbd>Esc</kbd> to close • <kbd>/</kbd> to open
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            /*{{{Search Modal*/
+            const language = 'local';
+            initSearchModal();
+            initPHPSearch(language).then((searchCallback) => {
+                initSearchUI({language, searchCallback, limit: 30});
+            });
+            /*}}}*/
+        });
+    </script></body></html>
