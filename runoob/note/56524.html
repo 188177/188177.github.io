@@ -1,0 +1,555 @@
+<!Doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta property="qc:admins" content="465267610762567726375" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name='robots' content='max-image-preview:large' />
+<link rel="canonical" href="../note.html" />
+<meta name="keywords" content="笔记详情页面">
+<meta name="description" content="菜鸟教程-笔记详情页面..">
+		<title>Git 常用命令大全</title>
+
+
+
+	<link rel="shortcut icon" href="https://static.runoob.com/images/favicon.ico" mce_href="//static.runoob.com/images/favicon.ico" type="image/x-icon" >
+	<link rel="stylesheet" href="../wp-content/themes/runoob/style-v=1.143.css" type="text/css" media="all" />	
+	<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css" media="all" />	
+	<!--[if gte IE 9]><!-->
+	<script src="https://cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+	<!--<![endif]-->
+	<!--[if lt IE 9]>
+	 <script src="//cdn.staticfile.org/jquery/1.9.1/jquery.min.js"></script>
+	 <script src="//cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+	<![endif]-->
+	<link rel="apple-touch-icon" href="https://static.runoob.com/images/icon/mobile-icon.png"/>
+	<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+</head>
+<body>
+
+<!--  头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="../note.html">
+      <input class="placeholder" value="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="../index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+        <div class="col search search-desktop last">
+      <form action="../index.html" target="_blank">
+        <input class="placeholder" id="s" name="s" value="搜索……"  autocomplete="off">
+      </form>
+    </div>
+  </div>
+</div>
+<style>.List-header{
+position: relative;
+    height: 44px;
+    margin: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: end;
+    -ms-flex-align: end;
+    align-items: flex-end;
+    border-bottom: 0;
+    box-sizing: border-box;
+}
+.List-headerText {
+    position: relative;
+    z-index: 1;
+    padding: 0 20px;
+    background: #fff;
+    top: -3px;
+    color: #8590a6;
+    font-weight: 400;
+}
+p.note-author {
+	border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    font-weight: bold;
+    color: #78a15a;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+}
+</style>
+<!-- 导航栏 -->
+<div class="container navigation">
+	<div class="row">
+		<div class="col nav">
+			<ul class="pc-nav" id="runoob-detail-nav">
+				<li><a href="../index.html">首页</a></li>
+				<li><a href="../html/html-tutorial.html">HTML</a></li>
+				<li><a href="../css/css-tutorial.html">CSS</a></li>
+				<li><a href="../js/js-tutorial.html">JavaScript</a></li>
+				<li><a href="javascript:void(0);" data-id="vue">Vue</a></li>
+				<li><a href="javascript:void(0);" data-id="bootstrap">Bootstrap</a></li>
+				<li><a href="../nodejs/nodejs-tutorial.html">NodeJS</a></li>
+				<li><a href="../python3/python3-tutorial.html">Python3</a></li>
+				<li><a href="../python/python-tutorial.html">Python2</a></li>
+				<li><a href="../java/java-tutorial.html">Java</a></li>
+				<li><a href="../cprogramming/c-tutorial.html">C</a></li>
+				<li><a href="../cplusplus/cpp-tutorial.html">C++</a></li>
+				<li><a href="../csharp/csharp-tutorial.html">C#</a></li>
+				<li><a href="../go/go-tutorial.html">Go</a></li>
+				<li><a href="../sql/sql-tutorial.html">SQL</a></li>
+				<li><a href="../linux/linux-tutorial.html">Linux</a></li>
+				<li><a href="../jquery/jquery-tutorial.html">jQuery</a></li>
+				<li><a href="../browser-history.html">本地书签</a></li>
+				<!--
+			
+				<li><a href="/w3cnote/knowledge-start.html" style="font-weight: bold;" onclick="_hmt.push(['_trackEvent', '星球', 'click', 'start'])" title="我的圈子">我的圈子</a></li>				
+				<li><a href="javascript:;" class="runoob-pop">登录</a></li>
+				-->
+      		</ul>
+			<ul class="mobile-nav">
+				<li><a href="../index.html">首页</a></li>
+				<li><a href="../html/html-tutorial.html">HTML</a></li>
+				<li><a href="../css/css-tutorial.html">CSS</a></li>
+				<li><a href="../js/js-tutorial.html">JS</a></li>
+				<li><a href="../browser-history.html">本地书签</a></li>
+				<li><a href="javascript:void(0)" class="search-reveal">Search</a> </li>
+			</ul>
+			
+		</div>
+	</div>
+</div>
+
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+	<div class="row">
+		<div class="col nav-sub">
+		<ul id="python">
+			<li class="cat-item"><a href="../python3/python3-tutorial.html">Python3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+			<li class="cat-item"><a href="../python/python-tutorial.html">Python2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+		</ul>
+		<ul id="vue">
+			<li class="cat-item"><a href="../vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+			<li class="cat-item"><a href="../vue2/vue-tutorial.html">vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+		</ul>
+
+		<ul id="bootstrap">
+			<li class="cat-item"><a href="../bootstrap/bootstrap-tutorial.html">Bootstrap3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+			<li class="cat-item"><a href="../bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+			<li class="cat-item"><a href="../bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+			<li class="cat-item"><a href="../bootstrap/bootstrap-v2-tutorial.html">Bootstrap2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+		</ul>
+		</div>
+	</div>
+</div><!--  内容  -->
+<div class="container main">
+	<div class="row">
+	<div class="col middle-column big-middle-column">
+	 
+		<div class="article" style="background:#f6f6f6;border: 0px solid #efefef; */">
+			<div class="article-heading">
+				<h2>Git 常用命令大全</h2>
+
+				<h3><em>原文: </em> <a target="_blank" href="../git/git-basic-operations.html" title="Git 基本操作" >Git 基本操作</a> </h3>
+			</div>
+			<div class="article-body note-body" style="margin-bottom: 10px;background: #fff;overflow: hidden;border-radius: 2px;box-shadow: 0 1px 3px rgba(26,26,26,.1);box-sizing: border-box;">
+				<div class="article-intro">
+					<p class="note-author"><i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;&nbsp;
+					DGd<a style="float: right;" href="https://gist.github.com/guweigang/9848271" target="_blank" rel="nofollow"><i class="fa fa-link" aria-hidden="true"></i>  参考文章</a>					
+					</p>
+					<h3 data-title>Git 常用命令大全</h3>
+<p>git 常用命令(<strong>点击图片查看大图</strong>)：</p>
+<p><a href="../wp-content/uploads/2015/02/011500266295799.jpg" target="_blnak" rel="noopener noreferrer"><img src="../wp-content/uploads/2015/02/011500266295799.jpg"></a></p>
+<pre>git init                                                  # 初始化本地git仓库（创建新仓库）
+git config --global user.name "xxx"                       # 配置用户名
+git config --global user.email "xxx@xxx.com"              # 配置邮件
+git config --global color.ui true                         # git status等命令自动着色
+git config --global color.status auto
+git config --global color.diff auto
+git config --global color.branch auto
+git config --global color.interactive auto
+git config --global --unset http.proxy                    # remove  proxy configuration on git
+git clone git+ssh://git@192.168.53.168/VT.git             # clone远程仓库
+git status                                                # 查看当前版本状态（是否修改）
+git add xyz                                               # 添加xyz文件至index
+git add .                                                 # 增加当前子目录下所有更改过的文件至index
+git commit -m 'xxx'                                       # 提交
+git commit --amend -m 'xxx'                               # 合并上一次提交（用于反复修改）
+git commit -am 'xxx'                                      # 将add和commit合为一步
+git rm xxx                                                # 删除index中的文件
+git rm -r *                                               # 递归删除
+git log                                                   # 显示提交日志
+git log -1                                                # 显示1行日志 -n为n行
+git log -5
+git log --stat                                            # 显示提交日志及相关变动文件
+git log -p -m
+git show dfb02e6e4f2f7b573337763e5c0013802e392818         # 显示某个提交的详细内容
+git show dfb02                                            # 可只用commitid的前几位
+git show HEAD                                             # 显示HEAD提交日志
+git show HEAD^                                            # 显示HEAD的父（上一个版本）的提交日志 ^^为上两个版本 ^5为上5个版本
+git tag                                                   # 显示已存在的tag
+git tag -a v2.0 -m 'xxx'                                  # 增加v2.0的tag
+git show v2.0                                             # 显示v2.0的日志及详细内容
+git log v2.0                                              # 显示v2.0的日志
+git diff                                                  # 显示所有未添加至index的变更
+git diff --cached                                         # 显示所有已添加index但还未commit的变更
+git diff HEAD^                                            # 比较与上一个版本的差异
+git diff HEAD -- ./lib                                    # 比较与HEAD版本lib目录的差异
+git diff origin/master..master                            # 比较远程分支master上有本地分支master上没有的
+git diff origin/master..master --stat                     # 只显示差异的文件，不显示具体内容
+git remote add origin git+ssh://git@192.168.53.168/VT.git # 增加远程定义（用于push/pull/fetch）
+git branch                                                # 显示本地分支
+git branch --contains 50089                               # 显示包含提交50089的分支
+git branch -a                                             # 显示所有分支
+git branch -r                                             # 显示所有原创分支
+git branch --merged                                       # 显示所有已合并到当前分支的分支
+git branch --no-merged                                    # 显示所有未合并到当前分支的分支
+git branch -m master master_copy                          # 本地分支改名
+git checkout -b master_copy                               # 从当前分支创建新分支master_copy并检出
+git checkout -b master master_copy                        # 上面的完整版
+git checkout features/performance                         # 检出已存在的features/performance分支
+git checkout --track hotfixes/BJVEP933                    # 检出远程分支hotfixes/BJVEP933并创建本地跟踪分支
+git checkout v2.0                                         # 检出版本v2.0
+git checkout -b devel origin/develop                      # 从远程分支develop创建新本地分支devel并检出
+git checkout -- README                                    # 检出head版本的README文件（可用于修改错误回退）
+git merge origin/master                                   # 合并远程master分支至当前分支
+git cherry-pick ff44785404a8e                             # 合并提交ff44785404a8e的修改
+git push origin master                                    # 将当前分支push到远程master分支
+git push origin :hotfixes/BJVEP933                        # 删除远程仓库的hotfixes/BJVEP933分支
+git push --tags                                           # 把所有tag推送到远程仓库
+git fetch                                                 # 获取所有远程分支（不更新本地分支，另需merge）
+git fetch --prune                                         # 获取所有原创分支并清除服务器上已删掉的分支
+git pull origin master                                    # 获取远程分支master并merge到当前分支
+git mv README README2                                     # 重命名文件README为README2
+git reset --hard HEAD                                     # 将当前版本重置为HEAD（通常用于merge失败回退）
+git rebase
+git branch -d hotfixes/BJVEP933                           # 删除分支hotfixes/BJVEP933（本分支修改已合并到其他分支）
+git branch -D hotfixes/BJVEP933                           # 强制删除分支hotfixes/BJVEP933
+git ls-files                                              # 列出git index包含的文件
+git show-branch                                           # 图示当前分支历史
+git show-branch --all                                     # 图示所有分支历史
+git whatchanged                                           # 显示提交历史对应的文件修改
+git revert dfb02e6e4f2f7b573337763e5c0013802e392818       # 撤销提交dfb02e6e4f2f7b573337763e5c0013802e392818
+git ls-tree HEAD                                          # 内部命令：显示某个git对象
+git rev-parse v2.0                                        # 内部命令：显示某个ref对于的SHA1 HASH
+git reflog                                                # 显示所有提交，包括孤立节点
+git show HEAD@{5}
+git show master@{yesterday}                               # 显示master分支昨天的状态
+git log --pretty=format:'%h %s' --graph                   # 图示提交日志
+git show HEAD~3
+git show -s --pretty=raw 2be7fcb476
+git stash                                                 # 暂存当前修改，将所有至为HEAD状态
+git stash list                                            # 查看所有暂存
+git stash show -p stash@{0}                               # 参考第一次暂存
+git stash apply stash@{0}                                 # 应用第一次暂存
+git grep "delete from"                                    # 文件中搜索文本&ldquo;delete from&rdquo;
+git grep -e '#define' --and -e SORT_DIRENT
+git gc
+git fsck</pre>				</div>
+			</div>
+					
+		</div>
+	
+	
+	</div>
+	<div class="listcol last right-column">
+
+
+
+
+
+	 <div class="sidebar-box cate-list">
+		 		
+
+	 	<div class="sidebar-box recommend-here list-link">
+			<a href="javascript:void(0);" style="font-size: 16px; color:#64854c;font-weight:bold;">教程列表</a>
+		</div>
+		
+		<div class="cate-items"> 
+				<a href="../ado/ado-tutorial.html">ADO 教程</a>
+	<a href="../ajax/ajax-tutorial.html">Ajax 教程</a>
+	<a href="../android/android-tutorial.html">Android 教程</a>
+	<a href="../angularjs2/angularjs2-tutorial.html">Angular2 教程</a>
+	<a href="../angularjs/angularjs-tutorial.html">AngularJS 教程</a>
+	<a href="../appml/appml-tutorial.html">AppML 教程</a>
+	<a href="../asp/asp-tutorial.html">ASP 教程</a>
+	<a href="../aspnet/aspnet-tutorial.html">ASP.NET 教程</a>
+	<a href="../bootstrap/bootstrap-tutorial.html">Bootstrap 教程</a>
+	<a href="../bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a>
+	<a href="../bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a>
+	<a href="../cprogramming/c-tutorial.html">C 教程</a>
+	<a href="../csharp/csharp-tutorial.html">C# 教程</a>
+	<a href="../cplusplus/cpp-tutorial.html">C++ 教程</a>
+	<a href="../chartjs/chartjs-tutorial.html">Chart.js 教程</a>
+	<a href="../cssref/css-reference.html">CSS 参考手册</a>
+	<a href="../css/css-tutorial.html">CSS 教程</a>
+	<a href="../css3/css3-tutorial.html">CSS3 教程</a>
+	<a href="../django/django-tutorial.html">Django 教程</a>
+	<a href="../docker/docker-tutorial.html">Docker 教程</a>
+	<a href="../dtd/dtd-tutorial.html">DTD 教程</a>
+	<a href="../echarts/echarts-tutorial.html">ECharts 教程</a>
+	<a href="../eclipse/eclipse-tutorial.html">Eclipse 教程</a>
+	<a href="../firebug/firebug-tutorial.html">Firebug 教程</a>
+	<a href="../font-awesome/fontawesome-tutorial.html">Font Awesome 图标</a>
+	<a href="../foundation/foundation-tutorial.html">Foundation 教程</a>
+	<a href="../git/git-tutorial.html">Git 教程</a>
+	<a href="../go/go-tutorial.html">Go 语言教程</a>
+	<a href="../googleapi/googleapi-tutorial.html">Google 地图 API 教程</a>
+	<a href="../highcharts/highcharts-tutorial.html">Highcharts 教程</a>
+	<a href="../htmldom/htmldom-tutorial.html">HTML DOM 教程</a>
+	<a href="../tags/html-reference.html">HTML 参考手册</a>
+	<a href="../charsets/html-charsets.html">HTML 字符集</a>
+	<a href="../html/html-tutorial.html">HTML 教程</a>
+	<a href="../http/http-tutorial.html">HTTP 教程</a>
+	<a href="../ionic/ionic-tutorial.html">ionic 教程</a>
+	<a href="../ios/ios-tutorial.html">iOS 教程</a>
+	<a href="../java/java-tutorial.html">Java 教程</a>
+	<a href="../jsref/jsref-tutorial.html">JavaScript 参考手册</a>
+	<a href="../js/js-tutorial.html">Javascript 教程</a>
+	<a href="../jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a>
+	<a href="../jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a>
+	<a href="../jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a>
+	<a href="../jquery/jquery-tutorial.html">jQuery 教程</a>
+	<a href="../json/json-tutorial.html">JSON 教程</a>
+	<a href="../jsp/jsp-tutorial.html">JSP 教程</a>
+	<a href="../julia/julia-tutorial.html">Julia 教程</a>
+	<a href="../kotlin/kotlin-tutorial.html">Kotlin 教程</a>
+	<a href="../linux/linux-tutorial.html">Linux 教程</a>
+	<a href="../lua/lua-tutorial.html">Lua 教程</a>
+	<a href="../markdown/md-tutorial.html">Markdown 教程</a>
+	<a href="../matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a>
+	<a href="../maven/maven-tutorial.html">Maven 教程</a>
+	<a href="../Memcached/Memcached-tutorial.html">Memcached 教程</a>
+	<a href="../mongodb/mongodb-tutorial.html">MongoDB 教程</a>
+	<a href="../mysql/mysql-tutorial.html">MySQL 教程</a>
+	<a href="../nodejs/nodejs-tutorial.html">Node.js 教程</a>
+	<a href="../numpy/numpy-tutorial.html">NumPy 教程</a>
+	<a href="../pandas/pandas-tutorial.html">Pandas 教程</a>
+	<a href="../perl/perl-tutorial.html">Perl 教程</a>
+	<a href="../php/php-tutorial.html">PHP 教程</a>
+	<a href="../postgresql/postgresql-tutorial.html">PostgreSQL 教程</a>
+	<a href="../python3/python3-tutorial.html">Python 3 教程</a>
+	<a href="../python/python-tutorial.html">Python 基础教程</a>
+	<a href="../r/r-tutorial.html">R 教程</a>
+	<a href="../rdf/rdf-tutorial.html">RDF 教程</a>
+	<a href="../react/react-tutorial.html">React 教程</a>
+	<a href="../redis/redis-tutorial.html">Redis 教程</a>
+	<a href="../rss/rss-tutorial.html">RSS 教程</a>
+	<a href="../ruby/ruby-tutorial.html">Ruby 教程</a>
+	<a href="../rust/rust-tutorial.html">Rust 教程</a>
+	<a href="../sass/sass-tutorial.html">Sass 教程</a>
+	<a href="../scala/scala-tutorial.html">Scala 教程</a>
+	<a href="../scipy/scipy-tutorial.html">SciPy 教程</a>
+	<a href="../servlet/servlet-tutorial.html">Servlet 教程</a>
+	<a href="../soap/soap-tutorial.html">SOAP 教程</a>
+	<a href="../sql/sql-tutorial.html">SQL 教程</a>
+	<a href="../sqlite/sqlite-tutorial.html">SQLite 教程</a>
+	<a href="../svg/svg-tutorial.html">SVG 教程</a>
+	<a href="../svn/svn-tutorial.html">SVN 教程</a>
+	<a href="../swift/swift-tutorial.html">Swift 教程</a>
+	<a href="../tcpip/tcpip-tutorial.html">TCP/IP 教程</a>
+	<a href="../typescript/ts-tutorial.html">TypeScript 教程</a>
+	<a href="../vbscript/vbscript-tutorial.html">VBScript 教程</a>
+	<a href="../vue2/vue-tutorial.html">Vue.js 教程</a>
+	<a href="../vue3/vue3-tutorial.html">Vue3 教程</a>
+	<a href="../w3c/w3c-tutorial.html">W3C 教程</a>
+	<a href="../webservices/webservices-tutorial.html">Web Service 教程</a>
+	<a href="../wsdl/wsdl-tutorial.html">WSDL 教程</a>
+	<a href="../xlink/xlink-tutorial.html">XLink 教程</a>
+	<a href="../dom/dom-tutorial.html">XML DOM 教程</a>
+	<a href="../schema/schema-tutorial.html">XML Schema 教程</a>
+	<a href="../xml/xml-tutorial.html">XML 教程</a>
+	<a href="../xpath/xpath-tutorial.html">XPath 教程</a>
+	<a href="../xquery/xquery-tutorial.html">XQuery 教程</a>
+	<a href="../xslfo/xslfo-tutorial.html">XSLFO 教程</a>
+	<a href="../xsl/xsl-tutorial.html">XSLT 教程</a>
+	<a href="../data-structures/data-structures-tutorial.html">数据结构</a>
+	<a href="../regexp/regexp-tutorial.html">正则表达式</a>
+	<a href="../typescript/ts-tutorial.html">测验</a>
+	<a href="../browsers/browser-information.html">浏览器</a>
+	<a href="../quality/quality-tutorial.html">网站品质</a>
+	<a href="../web/web-tutorial.html">网站建设指南</a>
+	<a href="../hosting/hosting-tutorial.html">网站服务器教程</a>
+	<a href="../design-pattern/design-pattern-tutorial.html">设计模式</a>
+			
+		</div> 
+		 	 </div>
+</div>
+	</div>
+</div>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="../html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../ajax/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="../jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="../charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://c.runoob.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://c.runoob.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://c.runoob.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://c.runoob.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                   <dd>
+       &middot;
+      <a href="../regexp/regexp-metachar-b.html" title="正则表达式 &#8211; 元字符 \b 与 \B">正则表达式 &#82...</a>
+      </dd>
+              <dd>
+       &middot;
+      <a href="../cssref/sel-element-class.html" title="CSS element.class 选择器">CSS element.cla...</a>
+      </dd>
+              <dd>
+       &middot;
+      <a href="../regexp/regexp-usage-summary.html" title="正则表达式 &#8211; 使用总结">正则表达式 &#82...</a>
+      </dd>
+              <dd>
+       &middot;
+      <a href="../cprogramming/c-static-dynamic-array.html" title="C 语言静态数组与动态数组">C 语言静态数组...</a>
+      </dd>
+              <dd>
+       &middot;
+      <a href="../browsers/browsers-edge.html" title="Edge 浏览器">Edge 浏览器</a>
+      </dd>
+              <dd>
+       &middot;
+      <a href="../js/js-string-templates.html" title="JavaScript 模板字符串">JavaScript 模板...</a>
+      </dd>
+              <dd>
+       &middot;
+      <a href="../python3/ref-stat-quantiles.html" title="Python statistics.quantiles() 方法">Python statisti...</a>
+      </dd>
+             </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a target="_blank" href="mailto:admin@runoob.com" rel="external nofollow">意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="../disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="../aboutus.html">关于我们</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="../archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2023    <strong><a href="../index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="../index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top" href="javascript:void(0)" title="返回顶部"> <i class="fa fa-angle-up"></i></a>
+    <a class="qrcode"  href="javascript:void(0)" title="关注我们"><i class="fa fa-qrcode"></i></a>
+    <a class="writer" style="display:none" href="javascript:void(0)"   title="标记/收藏"><i class="fa fa-star" aria-hidden="true"></i></a>
+    <!-- qrcode modal -->
+    <div id="bottom-qrcode" class="modal panel-modal hide fade in">
+      <h4>微信关注</h4>
+      <div class="panel-body"><img alt="微信关注" width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png"></div> 
+    </div>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="https://cdn.staticfile.org/clipboard.js/2.0.11/clipboard.js"></script>
+<script src="https://static.runoob.com/assets/libs/hl/run_prettify.js?v=1.162"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min-v=1.162.js"></script>
+</body>
+</html>

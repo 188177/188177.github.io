@@ -1,0 +1,656 @@
+<!Doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta property="qc:admins" content="465267610762567726375" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name='robots' content='max-image-preview:large' />
+<link rel="canonical" href="../note.html" />
+<meta name="keywords" content="笔记详情页面">
+<meta name="description" content="菜鸟教程-笔记详情页面..">
+		<title>指针和函数的关系</title>
+
+
+
+	<link rel="shortcut icon" href="https://static.runoob.com/images/favicon.ico" mce_href="//static.runoob.com/images/favicon.ico" type="image/x-icon" >
+	<link rel="stylesheet" href="../wp-content/themes/runoob/style-v=1.143.css" type="text/css" media="all" />	
+	<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css" media="all" />	
+	<!--[if gte IE 9]><!-->
+	<script src="https://cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+	<!--<![endif]-->
+	<!--[if lt IE 9]>
+	 <script src="//cdn.staticfile.org/jquery/1.9.1/jquery.min.js"></script>
+	 <script src="//cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+	<![endif]-->
+	<link rel="apple-touch-icon" href="https://static.runoob.com/images/icon/mobile-icon.png"/>
+	<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+</head>
+<body>
+
+<!--  头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="../note.html">
+      <input class="placeholder" value="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="../index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+        <div class="col search search-desktop last">
+      <form action="../index.html" target="_blank">
+        <input class="placeholder" id="s" name="s" value="搜索……"  autocomplete="off">
+      </form>
+    </div>
+  </div>
+</div>
+<style>.List-header{
+position: relative;
+    height: 44px;
+    margin: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: end;
+    -ms-flex-align: end;
+    align-items: flex-end;
+    border-bottom: 0;
+    box-sizing: border-box;
+}
+.List-headerText {
+    position: relative;
+    z-index: 1;
+    padding: 0 20px;
+    background: #fff;
+    top: -3px;
+    color: #8590a6;
+    font-weight: 400;
+}
+p.note-author {
+	border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    font-weight: bold;
+    color: #78a15a;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+}
+</style>
+<!-- 导航栏 -->
+<div class="container navigation">
+	<div class="row">
+		<div class="col nav">
+			<ul class="pc-nav" id="runoob-detail-nav">
+				<li><a href="../index.html">首页</a></li>
+				<li><a href="../html/html-tutorial.html">HTML</a></li>
+				<li><a href="../css/css-tutorial.html">CSS</a></li>
+				<li><a href="../js/js-tutorial.html">JavaScript</a></li>
+				<li><a href="javascript:void(0);" data-id="vue">Vue</a></li>
+				<li><a href="javascript:void(0);" data-id="bootstrap">Bootstrap</a></li>
+				<li><a href="../nodejs/nodejs-tutorial.html">NodeJS</a></li>
+				<li><a href="../python3/python3-tutorial.html">Python3</a></li>
+				<li><a href="../python/python-tutorial.html">Python2</a></li>
+				<li><a href="../java/java-tutorial.html">Java</a></li>
+				<li><a href="../cprogramming/c-tutorial.html">C</a></li>
+				<li><a href="../cplusplus/cpp-tutorial.html">C++</a></li>
+				<li><a href="../csharp/csharp-tutorial.html">C#</a></li>
+				<li><a href="../go/go-tutorial.html">Go</a></li>
+				<li><a href="../sql/sql-tutorial.html">SQL</a></li>
+				<li><a href="../linux/linux-tutorial.html">Linux</a></li>
+				<li><a href="../jquery/jquery-tutorial.html">jQuery</a></li>
+				<li><a href="../browser-history.html">本地书签</a></li>
+				<!--
+			
+				<li><a href="/w3cnote/knowledge-start.html" style="font-weight: bold;" onclick="_hmt.push(['_trackEvent', '星球', 'click', 'start'])" title="我的圈子">我的圈子</a></li>				
+				<li><a href="javascript:;" class="runoob-pop">登录</a></li>
+				-->
+      		</ul>
+			<ul class="mobile-nav">
+				<li><a href="../index.html">首页</a></li>
+				<li><a href="../html/html-tutorial.html">HTML</a></li>
+				<li><a href="../css/css-tutorial.html">CSS</a></li>
+				<li><a href="../js/js-tutorial.html">JS</a></li>
+				<li><a href="../browser-history.html">本地书签</a></li>
+				<li><a href="javascript:void(0)" class="search-reveal">Search</a> </li>
+			</ul>
+			
+		</div>
+	</div>
+</div>
+
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+	<div class="row">
+		<div class="col nav-sub">
+		<ul id="python">
+			<li class="cat-item"><a href="../python3/python3-tutorial.html">Python3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+			<li class="cat-item"><a href="../python/python-tutorial.html">Python2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+		</ul>
+		<ul id="vue">
+			<li class="cat-item"><a href="../vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+			<li class="cat-item"><a href="../vue2/vue-tutorial.html">vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+		</ul>
+
+		<ul id="bootstrap">
+			<li class="cat-item"><a href="../bootstrap/bootstrap-tutorial.html">Bootstrap3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+			<li class="cat-item"><a href="../bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+			<li class="cat-item"><a href="../bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+			<li class="cat-item"><a href="../bootstrap/bootstrap-v2-tutorial.html">Bootstrap2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+		</ul>
+		</div>
+	</div>
+</div><!--  内容  -->
+<div class="container main">
+	<div class="row">
+	<div class="col middle-column big-middle-column">
+	 
+		<div class="article" style="background:#f6f6f6;border: 0px solid #efefef; */">
+			<div class="article-heading">
+				<h2>指针和函数的关系</h2>
+
+				<h3><em>原文: </em> <a target="_blank" href="../cprogramming/c-passing-pointers-to-functions.html" title="C 传递指针给函数" >C 传递指针给函数</a> </h3>
+			</div>
+			<div class="article-body note-body" style="margin-bottom: 10px;background: #fff;overflow: hidden;border-radius: 2px;box-shadow: 0 1px 3px rgba(26,26,26,.1);box-sizing: border-box;">
+				<div class="article-intro">
+					<p class="note-author"><i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;&nbsp;
+					Wanghaha2333<a style="float: right;" href="https://blog.csdn.net/militala/article/details/3862588?depth_1-utm_source=distribute.pc_relevant.none-task-blog-OPENSEARCH-1&amp;utm_source=distribute.pc_relevant.none-task-blog-OPENSEARCH-1" target="_blank" rel="nofollow"><i class="fa fa-link" aria-hidden="true"></i>  参考文章</a>					
+					</p>
+					<h3 data-title>指针和函数的关系</h3>
+
+<p><strong>1、函数指针（指向函数的指针）</strong></p>
+<p>
+一个函数在编译之后，会占据一部分内存，而它的函数名，就是这段函数的首地址。</p>
+<p>
+可以把一个指针声明成为一个指向函数的指针。</p>
+<p>
+C 语言规定函数名会被转换为指向这个函数的指针，除非这个函数名作为 & 操作符或 sizeof 操作符的操作数(注意：函数名用于 sizeof 的操作数是非法的)。也就是说 f = test; 中 test 被自动转换为 &test，而 f = &test; 中已经显示使用了 &test，所以 test 就不会再发生转换了。因此直接引用函数名等效于在函数名上应用 & 运算符，两种方法都会得到指向该函数的指针。</p>
+<p>
+指向函数的指针必须初始化，或者具有 0 值，才能在函数调用中使用。</p>
+<p>
+与数组一样：</p>
+<ul><li>
+（1）禁止对指向函数的指针进行自增运算++ </li><li>（2）禁止对函数名赋值，函数名也不能用于进行算术运算。</li></ul>
+
+<p>示例1:</p>
+
+<pre>int fun1(int,int);
+int fun1(int a, int b){ 
+    return a+b;
+}
+int main(){
+    int (*pfun1)(int,int); 
+    pfun1=fun1;//这里&amp;fun1和fun1的值和类型都一样，用哪个无所谓 
+    int a=(*pfun1)(5,7); //通过函数指针调用函数。
+}</pre>
+<p>示例2:</p>
+
+<pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+int Max(int x, int y)  //定义Max函数
+{
+    int z;
+    if (x &gt; y) {
+        z = x;
+    }else { 
+        z = y;
+    }
+    return z;
+}
+int main() {//定义一个函数指针
+    int(*p)(int, int);
+    int a, b, c;//把函数Max赋给指针变量p, 使p指向Max函数
+    p = Max;
+    printf("please enter a and b:");
+    scanf("%d%d", &amp;a, &amp;b);//通过函数指针调用Max函数
+    c = (*p)(a, b);
+    printf("a = %d\nb = %d\nmax = %d\n", a, b, c);
+    system("pause");
+    return 0;
+}​</pre><p>
+示例2:</p>
+
+<pre>#include &lt;stdio.h&gt;​ ​
+void test( )​{​
+    printf("test called!/n");​
+}​ ​
+int main( )​{​   
+    void (*f) ( );​   
+    f = test; ​    
+    f ( );​ 
+    (*f)( );​    
+    //test++;             // error，标准禁止对指向函数的指针进行自增运算​          
+    //test = test + 2;    // error，不能对函数名赋值，函数名也不能用于进行算术运算​          
+    printf("%p/n", test);​          
+    printf("%p/n", &amp;test);​          
+    printf("%p/n", *test);​  
+    return 0;
+​}</pre><p>
+运行结果为：</p>
+<pre>
+test called!
+​test called!
+​004013EE​004013EE​004013EE</pre><p>
+这里的玄学就是 *test 为什么能和上面两个之前介绍过的输出一样的值。</p>
+<p>
+首先来看函数名 test，是一个符号用来标识一个函数的入口地址，在使用中函数名会被转换为指向这个函数的指针，指针的值就是函数的入口地址，&test 在前面已经说了：显示获取函数的地址。*test 可以认为由于 test 已经被转换成了函数指针, 指向这个函数，所以 *test 就是取这个指针所指向的函数名，而又根据函数名会被转换指向该函数的指针的规则，这个函数也转变成了一个指针，所以 *test 最终也是一个指向函数 test 的指针。也就是说:<span class="marked">*test --&gt; *(&test) --&gt; test --&gt; &test</span>。</p>
+<p>
+上述关系十分重要！</p><p>
+
+为了更加明确，把示例 1 做补充：</p>
+
+<pre>#include &lt;stdio.h&gt;
+int fun1(int,int);
+int fun1(int a, int b){
+    return a+b;
+}
+/* 要调用上面定义函数的主函数 */
+int main (){
+    int (*pfun1)(int,int);
+    pfun1=fun1;//这里&amp;fun1和fun1的值和类型都一样，用哪个无所谓
+    int a=(*pfun1)(5,7); //通过函数指针调用函数。
+    printf("%d\n",a);
+    int e = fun1(5,7);
+    printf("%d\n",d)
+    int b = (&amp;fun1)(5,7);
+    printf("%d\n",b);
+    int c = (*fun1)(5,7);
+    printf("%d",c);
+    return 0;
+}
+//根据关系 *fun1==*&amp;fun1==fun1==&amp;fun1 可知，以上的运行结果会得到4个5+7。
+//因此在下面的函数指针数组实例中，action[2]()就相当于这里的(&amp;fun1(5,7))，这点务必搞清楚。</pre>
+<p><strong>2、指针函数（返回值为指针的函数）</strong></p>
+<p>
+所谓指针函数，就是返回指针的函数。在前面笔记中“从函数返回数组”中已经介绍。</p>
+<p>
+C 语言的库函数中有很多都是指针函数，比如字符串处理函数，下面给出一些函数原型：</p>
+
+<pre>char *strcat( char *dest, const char *src );​
+char *strcpy( char *dest, const char *src );
+​char *strchr( const char *s, int c );​
+char *strstr( const char *src, const char *sub );</pre><p><strong>
+3、两者混用（不常用）</strong></p>
+<p>
+注意函数的返回值不仅仅局限于指向变量的指针，也可以是指向函数的指针。</p>
+<p>
+首先来看这个声明：*int (*function(int)) (double*, char); 要了解此声明的含义，首先来看 function(int)，将 function 声明为一个函数，它带有一个 int 型的形式参数，这个函数的返回值为一个指针，正是函数指针 int (*) (double*, char); 这个指针指向一个函数，此函数返回 int 型并带有两个分别是 double* 型和 char 型的形参。</p>
+<p>
+如果使用typedef可以将这个声明简化：（没看懂。。。。之后的结构体再补充）</p>
+<pre>
+typedef  int (*ptf) (double*, char);​
+ptf  function( int );</pre>
+<p>另一个例子：</p><pre>
+void (*signal (int sig, void (*func) (int siga)) ) ( int siga );</pre>
+
+<p>现在要分析的是 signal，因为紧邻 signal 的是优先级最高的括号，首先与括号结合，所以 signal 为一个函数，括号内为 signal 的两个形参，一个为int型，一个为指向函数的指针。接下来从向左看，* 表示指向某对象的指针，它所处的位置表明它是 signal 的返回值类型，现在可以把已经分析过的 signal 整体去掉，得到 void (*) ( int siga )。又是一个函数指针，这个指针与 signal 形参表中的第二个参数类型一样，都是指向接受一个 int 型形参且不返回任何值的函数的指针。</p>
+<p>
+用 typedef 可以将这个声明简化：</p>
+<pre>
+typedef int (*p_sig) (double*, char);​
+p_sig signal(int sig, p_sig func);</pre><p>
+这个 signal 函数是 C 语言的库函数，在 signal.h 中定义，用来处理系统中产生的信号。</p>
+<p><strong>
+4、函数指针数组</strong></p>
+<p>
+假设现在有一个文件处理程序，通过一个菜单按钮来选择相应的操作(打开文件，读文件，写文件，关闭文件)。这些操作都实现为函数且类型相同，分别为：</p>
+<pre>
+void open();
+void read();
+void write();
+void close();</pre><p>
+现在定义一个函数指针类型的别名PF：</p><pre>typedef void (*PF) ( );</pre>
+<p>
+把以上 4 种操作取地址放入一个数组中，得到：</p>
+<pre>
+PF file_options[ ] = {
+    &amp;open,
+    &amp;read,
+    &amp;write,
+    &amp;close
+};</pre><p>
+如果不使用 typedef，那么分析起来就会比较复杂，结果是 void (*file_options[ ]) ( );</p>
+<p>
+这个数组中的元素都是指向不接受参数且不返回任何值的函数的指针，因此这是一个函数指针数组。接下来，定义一个函数指针类型的指针action并初始化为函数指针数组的第一个元素：PF* action = file_options;，如果不好理解，可以类比一下:</p>
+<pre>
+int ia[4] = {0, 1, 2, 3};
+int *ip = ia;，</pre>
+<p>
+这里 PF 相当于 int，这样应该比较好懂了。</p>
+<p>
+复习：</p>
+<pre>
+int ia[4] = {0, 1, 2, 3};
+int *ip = ia; //ia就是&amp;ia[0]，因此ip指向ia[0]。与此同时ip[1]的含义又和*(ip+1)一样。
+printf("%p\n",ip);
+printf("%p\n",ip+1);   
+printf("%d\n",ip[1]);   
+printf("%d\n",*(ip+1));​/*输出结果0x7ffee4cca9b00x7ffee4cca9b411*/</pre><p>
+通过对指针 action 进行下标操作可以调用数组中的任一操作，如：action[2]( ) 会调用 write 操作，以此类推。在实际中，指针 action 可以和鼠标或者其他 GUI 对象相关联，以达到相应的目的。</p>
+<p><strong>
+5、函数与指针的复杂声明（不做要求，一般用 typedef 代替它）</strong></p>
+
+<p>只举一个例子：</p><pre>int *(*(*fp)(int)) [10];</pre>
+<p>
+阅读步骤：</p>
+<pre>
+1．从未定义的变量名开始阅读 -------------------------------------------- fp
+2．往右看，什么也没有，遇到了)，因此往左看，遇到一个* ------ 一个指向某对象的指针
+3．跳出括号，遇到了(int) ----------------------------------- 一个带一个int参数的函数
+4．向左看，发现一个* --------------------------------------- （函数）返回一个指向某对象的指针
+5．跳出括号，向右看，遇到[10] ------------------------------ 一个10元素的数组
+6．向左看，发现一个* --------------------------------------- 一个指向某对象指针
+7．向左看，发现int ----------------------------------------- int类型</pre><p>
+所以 fp 是指向函数的指针（函数指针）, 该函数返回一个指向数组的指针，此数组有 10 个 int* 型的元素。</p>
+
+int *(*(*fp)(int)) [10];
+(*fp)(int)是一个指向函数的指针ptr*(*fp)(int)相当于一个指针ptr1（指针函数的返回值）最后剩下int *ptr1[10]，可以理解。
+				</div>
+			</div>
+					
+		</div>
+	
+	
+	</div>
+	<div class="listcol last right-column">
+
+
+
+
+
+	 <div class="sidebar-box cate-list">
+		 		
+
+	 	<div class="sidebar-box recommend-here list-link">
+			<a href="javascript:void(0);" style="font-size: 16px; color:#64854c;font-weight:bold;">教程列表</a>
+		</div>
+		
+		<div class="cate-items"> 
+				<a href="../ado/ado-tutorial.html">ADO 教程</a>
+	<a href="../ajax/ajax-tutorial.html">Ajax 教程</a>
+	<a href="../android/android-tutorial.html">Android 教程</a>
+	<a href="../angularjs2/angularjs2-tutorial.html">Angular2 教程</a>
+	<a href="../angularjs/angularjs-tutorial.html">AngularJS 教程</a>
+	<a href="../appml/appml-tutorial.html">AppML 教程</a>
+	<a href="../asp/asp-tutorial.html">ASP 教程</a>
+	<a href="../aspnet/aspnet-tutorial.html">ASP.NET 教程</a>
+	<a href="../bootstrap/bootstrap-tutorial.html">Bootstrap 教程</a>
+	<a href="../bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a>
+	<a href="../bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a>
+	<a href="../cprogramming/c-tutorial.html">C 教程</a>
+	<a href="../csharp/csharp-tutorial.html">C# 教程</a>
+	<a href="../cplusplus/cpp-tutorial.html">C++ 教程</a>
+	<a href="../chartjs/chartjs-tutorial.html">Chart.js 教程</a>
+	<a href="../cssref/css-reference.html">CSS 参考手册</a>
+	<a href="../css/css-tutorial.html">CSS 教程</a>
+	<a href="../css3/css3-tutorial.html">CSS3 教程</a>
+	<a href="../django/django-tutorial.html">Django 教程</a>
+	<a href="../docker/docker-tutorial.html">Docker 教程</a>
+	<a href="../dtd/dtd-tutorial.html">DTD 教程</a>
+	<a href="../echarts/echarts-tutorial.html">ECharts 教程</a>
+	<a href="../eclipse/eclipse-tutorial.html">Eclipse 教程</a>
+	<a href="../firebug/firebug-tutorial.html">Firebug 教程</a>
+	<a href="../font-awesome/fontawesome-tutorial.html">Font Awesome 图标</a>
+	<a href="../foundation/foundation-tutorial.html">Foundation 教程</a>
+	<a href="../git/git-tutorial.html">Git 教程</a>
+	<a href="../go/go-tutorial.html">Go 语言教程</a>
+	<a href="../googleapi/googleapi-tutorial.html">Google 地图 API 教程</a>
+	<a href="../highcharts/highcharts-tutorial.html">Highcharts 教程</a>
+	<a href="../htmldom/htmldom-tutorial.html">HTML DOM 教程</a>
+	<a href="../tags/html-reference.html">HTML 参考手册</a>
+	<a href="../charsets/html-charsets.html">HTML 字符集</a>
+	<a href="../html/html-tutorial.html">HTML 教程</a>
+	<a href="../http/http-tutorial.html">HTTP 教程</a>
+	<a href="../ionic/ionic-tutorial.html">ionic 教程</a>
+	<a href="../ios/ios-tutorial.html">iOS 教程</a>
+	<a href="../java/java-tutorial.html">Java 教程</a>
+	<a href="../jsref/jsref-tutorial.html">JavaScript 参考手册</a>
+	<a href="../js/js-tutorial.html">Javascript 教程</a>
+	<a href="../jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a>
+	<a href="../jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a>
+	<a href="../jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a>
+	<a href="../jquery/jquery-tutorial.html">jQuery 教程</a>
+	<a href="../json/json-tutorial.html">JSON 教程</a>
+	<a href="../jsp/jsp-tutorial.html">JSP 教程</a>
+	<a href="../julia/julia-tutorial.html">Julia 教程</a>
+	<a href="../kotlin/kotlin-tutorial.html">Kotlin 教程</a>
+	<a href="../linux/linux-tutorial.html">Linux 教程</a>
+	<a href="../lua/lua-tutorial.html">Lua 教程</a>
+	<a href="../markdown/md-tutorial.html">Markdown 教程</a>
+	<a href="../matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a>
+	<a href="../maven/maven-tutorial.html">Maven 教程</a>
+	<a href="../Memcached/Memcached-tutorial.html">Memcached 教程</a>
+	<a href="../mongodb/mongodb-tutorial.html">MongoDB 教程</a>
+	<a href="../mysql/mysql-tutorial.html">MySQL 教程</a>
+	<a href="../nodejs/nodejs-tutorial.html">Node.js 教程</a>
+	<a href="../numpy/numpy-tutorial.html">NumPy 教程</a>
+	<a href="../pandas/pandas-tutorial.html">Pandas 教程</a>
+	<a href="../perl/perl-tutorial.html">Perl 教程</a>
+	<a href="../php/php-tutorial.html">PHP 教程</a>
+	<a href="../postgresql/postgresql-tutorial.html">PostgreSQL 教程</a>
+	<a href="../python3/python3-tutorial.html">Python 3 教程</a>
+	<a href="../python/python-tutorial.html">Python 基础教程</a>
+	<a href="../r/r-tutorial.html">R 教程</a>
+	<a href="../rdf/rdf-tutorial.html">RDF 教程</a>
+	<a href="../react/react-tutorial.html">React 教程</a>
+	<a href="../redis/redis-tutorial.html">Redis 教程</a>
+	<a href="../rss/rss-tutorial.html">RSS 教程</a>
+	<a href="../ruby/ruby-tutorial.html">Ruby 教程</a>
+	<a href="../rust/rust-tutorial.html">Rust 教程</a>
+	<a href="../sass/sass-tutorial.html">Sass 教程</a>
+	<a href="../scala/scala-tutorial.html">Scala 教程</a>
+	<a href="../scipy/scipy-tutorial.html">SciPy 教程</a>
+	<a href="../servlet/servlet-tutorial.html">Servlet 教程</a>
+	<a href="../soap/soap-tutorial.html">SOAP 教程</a>
+	<a href="../sql/sql-tutorial.html">SQL 教程</a>
+	<a href="../sqlite/sqlite-tutorial.html">SQLite 教程</a>
+	<a href="../svg/svg-tutorial.html">SVG 教程</a>
+	<a href="../svn/svn-tutorial.html">SVN 教程</a>
+	<a href="../swift/swift-tutorial.html">Swift 教程</a>
+	<a href="../tcpip/tcpip-tutorial.html">TCP/IP 教程</a>
+	<a href="../typescript/ts-tutorial.html">TypeScript 教程</a>
+	<a href="../vbscript/vbscript-tutorial.html">VBScript 教程</a>
+	<a href="../vue2/vue-tutorial.html">Vue.js 教程</a>
+	<a href="../vue3/vue3-tutorial.html">Vue3 教程</a>
+	<a href="../w3c/w3c-tutorial.html">W3C 教程</a>
+	<a href="../webservices/webservices-tutorial.html">Web Service 教程</a>
+	<a href="../wsdl/wsdl-tutorial.html">WSDL 教程</a>
+	<a href="../xlink/xlink-tutorial.html">XLink 教程</a>
+	<a href="../dom/dom-tutorial.html">XML DOM 教程</a>
+	<a href="../schema/schema-tutorial.html">XML Schema 教程</a>
+	<a href="../xml/xml-tutorial.html">XML 教程</a>
+	<a href="../xpath/xpath-tutorial.html">XPath 教程</a>
+	<a href="../xquery/xquery-tutorial.html">XQuery 教程</a>
+	<a href="../xslfo/xslfo-tutorial.html">XSLFO 教程</a>
+	<a href="../xsl/xsl-tutorial.html">XSLT 教程</a>
+	<a href="../data-structures/data-structures-tutorial.html">数据结构</a>
+	<a href="../regexp/regexp-tutorial.html">正则表达式</a>
+	<a href="../typescript/ts-tutorial.html">测验</a>
+	<a href="../browsers/browser-information.html">浏览器</a>
+	<a href="../quality/quality-tutorial.html">网站品质</a>
+	<a href="../web/web-tutorial.html">网站建设指南</a>
+	<a href="../hosting/hosting-tutorial.html">网站服务器教程</a>
+	<a href="../design-pattern/design-pattern-tutorial.html">设计模式</a>
+			
+		</div> 
+		 	 </div>
+</div>
+	</div>
+</div>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="../html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../ajax/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="../jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="../charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://c.runoob.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://c.runoob.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://c.runoob.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://c.runoob.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                   <dd>
+       &middot;
+      <a href="../regexp/regexp-metachar-b.html" title="正则表达式 &#8211; 元字符 \b 与 \B">正则表达式 &#82...</a>
+      </dd>
+              <dd>
+       &middot;
+      <a href="../cssref/sel-element-class.html" title="CSS element.class 选择器">CSS element.cla...</a>
+      </dd>
+              <dd>
+       &middot;
+      <a href="../regexp/regexp-usage-summary.html" title="正则表达式 &#8211; 使用总结">正则表达式 &#82...</a>
+      </dd>
+              <dd>
+       &middot;
+      <a href="../cprogramming/c-static-dynamic-array.html" title="C 语言静态数组与动态数组">C 语言静态数组...</a>
+      </dd>
+              <dd>
+       &middot;
+      <a href="../browsers/browsers-edge.html" title="Edge 浏览器">Edge 浏览器</a>
+      </dd>
+              <dd>
+       &middot;
+      <a href="../js/js-string-templates.html" title="JavaScript 模板字符串">JavaScript 模板...</a>
+      </dd>
+              <dd>
+       &middot;
+      <a href="../python3/ref-stat-quantiles.html" title="Python statistics.quantiles() 方法">Python statisti...</a>
+      </dd>
+             </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a target="_blank" href="mailto:admin@runoob.com" rel="external nofollow">意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="../disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="../aboutus.html">关于我们</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="../archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2023    <strong><a href="../index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="../index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top" href="javascript:void(0)" title="返回顶部"> <i class="fa fa-angle-up"></i></a>
+    <a class="qrcode"  href="javascript:void(0)" title="关注我们"><i class="fa fa-qrcode"></i></a>
+    <a class="writer" style="display:none" href="javascript:void(0)"   title="标记/收藏"><i class="fa fa-star" aria-hidden="true"></i></a>
+    <!-- qrcode modal -->
+    <div id="bottom-qrcode" class="modal panel-modal hide fade in">
+      <h4>微信关注</h4>
+      <div class="panel-body"><img alt="微信关注" width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png"></div> 
+    </div>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="https://cdn.staticfile.org/clipboard.js/2.0.11/clipboard.js"></script>
+<script src="https://static.runoob.com/assets/libs/hl/run_prettify.js?v=1.162"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min-v=1.162.js"></script>
+</body>
+</html>
